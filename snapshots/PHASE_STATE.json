@@ -1,0 +1,56 @@
+{
+  "project": "ORION",
+  "activePhase": {
+    "id": "PHASE_18_STABLE",
+    "name": "Phase 18 — Core Architecture Isolation & Snapshot Lock",
+    "description": "Establishment of cryptographic lock systems, structural version integrity registries, and manual/partial restore strategies to ensure the protection of the modular runtime prior to final cognitive expansion.",
+    "status": "COMPLETED",
+    "targetDate": "2026-05-23"
+  },
+  "history": [
+    {
+      "id": "PHASE_10",
+      "name": "Ecosystem Integration Final",
+      "status": "COMPLETED",
+      "achievements": [
+        "Google Home API and Graph synchronization bridge with OAuth/Firebase.",
+        "TriggerCMD desktop automation real-time sync with token hydration.",
+        "Calm Runtime Mode to reduce socket storming and connection floods."
+      ]
+    },
+    {
+      "id": "PHASE_14",
+      "name": "Core Architecture Freeze & Task Queue Stabilization",
+      "status": "COMPLETED",
+      "achievements": [
+        "Stable unique TaskRuntime and CommandExecutionQueue introduced.",
+        "AndroidRuntimeManager integration finalized for Android-first interactions.",
+        "Recovery Engine, degraded status gates, and auth-scoped persistence."
+      ]
+    },
+    {
+      "id": "PHASE_17",
+      "name": "Distributed System Coherence",
+      "status": "COMPLETED",
+      "achievements": [
+        "PresenceRuntime stabilized with multi-node awareness and fallback lease.",
+        "EnvironmentRuntime lock avoiding duplicate primary node state corruption."
+      ]
+    }
+  ],
+  "rules": {
+    "freezePolicy": "MANDATORY_ABSOLUTE",
+    "allowedModifications": [
+      "Local metadata additions",
+      "Snapshot/Restore files",
+      "External documentation"
+    ],
+    "strictlyProhibited": [
+      "Modifying TaskRuntime queue thread logic",
+      "Re-instantiating parallel CommandExecutionQueue objects",
+      "Altering auth-scoped or session serialization logic",
+      "Modifying SpeechPipeline audio input buffering/streaming behavior",
+      "Bypassing runtime-health/recovery-manager cooldown limits"
+    ]
+  }
+}

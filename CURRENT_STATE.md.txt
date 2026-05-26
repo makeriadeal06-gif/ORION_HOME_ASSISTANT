@@ -1,0 +1,322 @@
+# ORION — CURRENT_STATE.md
+
+## CURRENT DEVELOPMENT STATUS
+
+Current active phase:
+PHASE 10 — Ecosystem Integration Final
+
+The ORION project is currently transitioning from:
+
+* stabilized distributed runtime
+
+to:
+
+* fully operational ecosystem runtime.
+
+---
+
+# CURRENT ARCHITECTURE STATUS
+
+## STATUS
+
+STRUCTURALLY STABLE
+
+The following systems are operational and MUST NOT be removed or rewritten:
+
+* RuntimeInitializationOrchestrator
+* RuntimeHealthBus
+* SafeDistributedRuntimeGuard
+* ProductionRecoveryEngine
+* OrionCalmRuntimeMode
+* UnifiedModuleRegistry
+* Distributed Runtime Layer
+* Ecosystem Runtime Layer
+
+---
+
+# CURRENT RUNTIME MODE
+
+ORION currently operates in:
+
+* Calm Runtime Mode
+* Distributed Runtime Mode
+* Production Runtime Layer
+* Ecosystem Runtime Layer
+
+The system is currently optimized to:
+
+* reduce reconnect storms
+* reduce render storms
+* reduce websocket flooding
+* reduce MQTT flooding
+* stabilize runtime orchestration
+
+---
+
+# CURRENT FRONTEND STATUS
+
+Frontend stack:
+
+* React
+* Vite
+* TypeScript
+* Zustand
+* Framer Motion
+
+UI Status:
+
+* restored
+* operational
+* distributed telemetry active
+* ecosystem UI active
+
+Known issue:
+runtime loader instability involving TSX fetches.
+
+---
+
+# CURRENT BACKEND STATUS
+
+Backend stack:
+
+* Node.js
+* Express
+* Socket.IO
+* MQTT runtime
+* Firebase authentication
+* Google ecosystem integration
+
+Status:
+operational.
+
+---
+
+# CURRENT MQTT STATUS
+
+MQTT runtime:
+PARTIALLY STABLE
+
+Stabilized:
+
+* reconnect cooldown
+* anti-flood
+* adaptive throttling
+* recovery cooldown
+
+Known risks:
+
+* queue saturation
+* event storms
+* reconnect recursion
+
+Current objective:
+complete realtime ecosystem integration.
+
+---
+
+# CURRENT GOOGLE HOME STATUS
+
+Authentication layer:
+Firebase Auth
+
+Google APIs enabled:
+
+* Google Home API
+* Home Graph API
+* Smart Device Management API
+
+Current problem:
+Google Home devices still not appearing correctly inside ORION.
+
+OAuth status:
+partially stabilized.
+
+Known history:
+
+* redirect_uri mismatch
+* invalid scopes
+* unstable callback URLs
+* temporary AI Studio callback domains
+
+Current objective:
+complete stable ecosystem synchronization.
+
+---
+
+# CURRENT TRIGGERCMD STATUS
+
+TriggerCMD integration:
+PARTIALLY RESTORED
+
+Objectives:
+
+* restore command pipeline
+* restore realtime execution telemetry
+* restore desktop synchronization
+
+Current issue:
+devices and triggers are not fully appearing in UI.
+
+---
+
+# CURRENT DISTRIBUTED RUNTIME STATUS
+
+Distributed runtime:
+STABLE UNDER CALM MODE
+
+Current systems:
+
+* node arbitration
+* distributed sync
+* runtime recovery
+* node awareness
+
+Known risks:
+
+* race conditions
+* stale updates
+* duplicated primary node edge cases
+
+Future improvements:
+
+* versioned updates
+* vector clocks
+* stale state rejection
+
+---
+
+# CURRENT KNOWN CRITICAL ISSUE
+
+## ACTIVE ISSUE
+
+Runtime is generating:
+
+[API_REQ] GET /client/core/distributed-runtime/feedback/DistributedRuntimeErrorBoundary.tsx
+
+Diagnosis:
+Some runtime loader / preload system / lazy registry is attempting to fetch TSX source files through HTTP instead of relying on Vite chunk resolution.
+
+This is NOT a build issue anymore.
+
+Vite already compiled:
+dist/assets/DistributedRuntimeErrorBoundary-*.js
+
+Current objective:
+identify and remove invalid TSX fetch/preload behavior.
+
+---
+
+# IMPORTANT RUNTIME RULES
+
+NEVER:
+
+* fetch TSX files
+* fetch TS files
+* use frontend physical paths as routes
+* manually load Vite assets
+* bypass Vite chunk system
+
+ALWAYS:
+
+* use import()
+* use React.lazy()
+* trust Vite chunk resolution
+
+---
+
+# CURRENT LOGGING STATUS
+
+Logging is currently controlled but still under observation.
+
+Objectives:
+
+* reduce runtime flooding
+* reduce duplicated warnings
+* reduce recursive recovery logs
+
+Allowed logs:
+
+* critical runtime logs
+* ecosystem logs
+* subsystem health logs
+
+---
+
+# CURRENT PERFORMANCE STATUS
+
+The system previously reached:
+~232 runtime processes
+
+This was caused by:
+
+* recovery loops
+* reconnect storms
+* render storms
+
+Current state:
+significantly stabilized via Calm Runtime Mode.
+
+---
+
+# CURRENT ACTIVE GOALS
+
+## Phase 10 goals:
+
+* Google Home realtime integration
+* MQTT realtime ecosystem
+* TriggerCMD restoration
+* Unified device registry
+* Realtime state propagation
+* Unified command runtime
+* Autonomous runtime actions
+* Ecosystem observability
+
+---
+
+# CURRENT PRIORITY ORDER
+
+1. Runtime stability
+2. Ecosystem synchronization
+3. Realtime integrity
+4. Recovery safety
+5. Device synchronization
+6. Performance stabilization
+7. UI refinement
+8. New features
+
+---
+
+# IMPORTANT DEVELOPMENT DIRECTIVE
+
+The ORION project is NO LONGER a prototype.
+
+Treat the system as:
+
+* distributed infrastructure
+* production-oriented runtime
+* realtime ecosystem platform
+
+Before changing ANY runtime system:
+
+1. inspect dependencies
+2. inspect distributed impact
+3. inspect socket lifecycle
+4. inspect MQTT lifecycle
+5. inspect render lifecycle
+6. inspect recovery impact
+
+---
+
+# CURRENT NEXT OBJECTIVE
+
+Immediate next focus:
+fix invalid TSX runtime fetch behavior while preserving:
+
+* distributed runtime
+* ecosystem runtime
+* production runtime
+* calm mode
+* ecosystem integrations
+
+After stabilization:
+continue full ecosystem synchronization.

@@ -1,0 +1,449 @@
+# ORION — PROJECT_CONTEXT.md
+
+## PROJECT OVERVIEW
+
+ORION is an Android-first distributed cognitive home assistant platform inspired by adaptive AI systems such as Jarvis/Vy, but designed with its own architecture, identity and operational runtime.
+
+The project combines:
+
+* distributed runtime orchestration
+* realtime device synchronization
+* MQTT ecosystem integration
+* Google Home ecosystem integration
+* TriggerCMD desktop automation
+* cognitive runtime orchestration
+* adaptive contextual behavior
+* multi-node synchronization
+* production-ready runtime recovery
+
+ORION is NOT a simple frontend assistant anymore.
+
+It is currently evolving into:
+
+* a distributed ecosystem runtime
+* a realtime automation platform
+* a contextual cognitive orchestration layer
+
+---
+
+# CORE PRINCIPLES
+
+## DO NOT BREAK STABILITY
+
+The highest priority of the project is:
+runtime stability.
+
+Avoid:
+
+* reconnect storms
+* render storms
+* duplicated observers
+* duplicated sockets
+* duplicated MQTT clients
+* recursive runtime recovery
+* recursive effects
+* infinite loops
+
+---
+
+# CURRENT ARCHITECTURE
+
+## FRONTEND
+
+* React
+* Vite
+* TypeScript
+* Zustand
+* Socket.IO client
+* Framer Motion
+
+## BACKEND
+
+* Node.js
+* Express
+* Socket.IO
+* MQTT runtime
+* Firebase authentication
+* Google ecosystem bridge
+
+## RUNTIME
+
+* distributed runtime
+* node arbitration
+* runtime orchestration
+* recovery systems
+* adaptive throttling
+* realtime synchronization
+
+---
+
+# CURRENT SYSTEM STATE
+
+ORION currently operates in:
+
+* Calm Runtime Mode
+* Distributed Runtime Mode
+* Production Runtime Layer
+* Ecosystem Integration Phase
+
+The architecture is considered:
+STRUCTURALLY STABLE.
+
+DO NOT:
+
+* rewrite the architecture
+* replace runtime systems
+* rebuild the orchestration layer
+* remove distributed runtime systems
+
+---
+
+# EXISTING CORE SYSTEMS
+
+## RuntimeInitializationOrchestrator
+
+Responsible for:
+
+* boot order
+* runtime readiness
+* startup synchronization
+
+DO NOT REMOVE.
+
+---
+
+## RuntimeHealthBus
+
+Responsible for:
+
+* decoupled runtime health communication
+* recovery events
+* subsystem monitoring
+
+DO NOT REMOVE.
+
+---
+
+## SafeDistributedRuntimeGuard
+
+Responsible for:
+
+* preventing undefined runtime crashes
+* preventing render crashes
+* preventing hydration mismatch
+
+DO NOT REMOVE.
+
+---
+
+## ProductionRecoveryEngine
+
+Responsible for:
+
+* subsystem recovery
+* degraded runtime handling
+* runtime resilience
+
+WARNING:
+Avoid aggressive recovery loops.
+
+---
+
+## OrionCalmRuntimeMode
+
+Responsible for:
+
+* reducing CPU usage
+* reducing reconnect storms
+* reducing render storms
+* reducing runtime flooding
+
+THIS SYSTEM IS CRITICAL.
+
+---
+
+# DISTRIBUTED RUNTIME
+
+ORION currently supports:
+
+* multi-node runtime
+* node arbitration
+* node presence
+* distributed synchronization
+
+Current known risks:
+
+* race conditions
+* stale state propagation
+* duplicate primary nodes
+
+Future improvements:
+
+* versioned state updates
+* vector clocks
+* consensus arbitration
+
+---
+
+# GOOGLE HOME INTEGRATION
+
+Current stack:
+
+* Firebase Auth
+* Google Home APIs
+* Home Graph
+* Smart Device Management
+
+Known issue history:
+
+* OAuth callback instability
+* redirect_uri mismatch
+* invalid scopes
+* temporary callback domains
+
+The current architecture uses:
+Firebase authentication as stable identity layer.
+
+DO NOT:
+
+* revert to direct unstable OAuth implementations
+* bypass Firebase session persistence
+
+---
+
+# MQTT RUNTIME
+
+Current runtime:
+
+* persistent MQTT layer
+* adaptive reconnect policy
+* anti-flood protections
+* retained synchronization
+
+Known risks:
+
+* reconnect storms
+* event storms
+* socket saturation
+
+DO NOT:
+
+* create multiple MQTT clients
+* duplicate subscriptions
+* force reconnect aggressively
+
+---
+
+# TRIGGERCMD INTEGRATION
+
+TriggerCMD is responsible for:
+
+* desktop automation
+* PC command execution
+* realtime execution telemetry
+
+Current status:
+partially restored.
+
+---
+
+# DEVICE REGISTRY
+
+UnifiedDeviceRegistry merges:
+
+* Google Home devices
+* MQTT devices
+* TriggerCMD devices
+* ORION virtual devices
+
+Responsibilities:
+
+* deduplication
+* normalization
+* ownership mapping
+* realtime propagation
+
+---
+
+# RUNTIME SAFETY RULES
+
+## NEVER
+
+* fetch TSX files
+* request TSX files through HTTP
+* use physical frontend paths as routes
+* manually load Vite chunks
+
+## ALWAYS
+
+* use import()
+* use React.lazy()
+* trust Vite chunk resolution
+
+---
+
+# LOGGING POLICY
+
+Allowed:
+
+* critical logs
+* runtime health
+* ecosystem logs
+* subsystem warnings
+
+Avoid:
+
+* flooding
+* repeated warnings
+* repeated recovery logs
+* repeated socket logs
+
+---
+
+# PERFORMANCE POLICY
+
+ORION must prioritize:
+
+* stability
+* low runtime pressure
+* adaptive throttling
+* passive telemetry
+* graceful degradation
+
+NOT:
+
+* maximum aggressiveness
+* excessive realtime polling
+* excessive rendering
+
+---
+
+# CURRENT DEVELOPMENT PHASES
+
+Completed:
+
+* Module Registry Recovery
+* Router Recovery
+* Frontend/Backend separation
+* Realtime stabilization
+* MQTT stabilization
+* Firebase Authentication migration
+* Distributed Runtime stabilization
+* Production Runtime Layer
+* Ecosystem Runtime Layer
+
+Current Phase:
+PHASE 10 — Ecosystem Integration Final
+
+---
+
+# CURRENT KNOWN ISSUES
+
+## STILL UNDER OBSERVATION
+
+* stale distributed sync
+* node arbitration edge cases
+* MQTT queue saturation
+* soft recovery flows
+
+---
+
+# FUTURE ROADMAP
+
+## PHASE 11
+
+Cognitive Runtime Layer
+
+* contextual memory
+* adaptive cognition
+* behavioral orchestration
+
+## PHASE 12
+
+Voice Runtime
+
+* voice pipeline
+* realtime voice interaction
+* contextual speech
+
+## PHASE 13
+
+Production Deployment
+
+* persistent domain
+* SSL
+* deployment infra
+* persistent runtime hosting
+
+---
+
+# UI/UX GUIDELINES
+
+ORION UI must remain:
+
+* minimal
+* futuristic
+* responsive
+* Android-first
+* operational
+* stable
+
+Preferred design language:
+
+* glassmorphism
+* adaptive gradients
+* soft animations
+* distributed telemetry visuals
+
+DO NOT:
+
+* overcomplicate UI
+* overload dashboards
+* create unnecessary animations
+
+---
+
+# IMPORTANT ENGINEERING RULES
+
+Before modifying any runtime system:
+
+1. check runtime dependencies
+2. check distributed impact
+3. check reconnect impact
+4. check socket lifecycle
+5. check render lifecycle
+6. check MQTT lifecycle
+
+---
+
+# DEVELOPMENT PRIORITY ORDER
+
+Priority order:
+
+1. Stability
+2. Runtime safety
+3. Recovery safety
+4. Realtime integrity
+5. Ecosystem synchronization
+6. UI polish
+7. New features
+
+---
+
+# FINAL DIRECTIVE
+
+ORION is no longer a prototype.
+
+Treat the project as:
+
+* a distributed runtime platform
+* a production-oriented ecosystem
+* a resilient cognitive infrastructure
+
+Every new implementation must:
+
+* preserve runtime stability
+* preserve distributed integrity
+* preserve recovery safety
+* preserve ecosystem synchronization
+* avoid architectural regressions

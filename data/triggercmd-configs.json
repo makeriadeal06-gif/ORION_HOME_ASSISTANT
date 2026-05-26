@@ -1,0 +1,8 @@
+{
+  "TkOA4D6sywhUn5OfHE9w0IIYbTG2": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ODkyMGUyOGE5MTlmMDAxMzkxMGFjYiIsImlhdCI6MTc3OTQwMzE3Nn0.oebXKsX0D9gwAxD7pqq5iCt1sFXBzT4xWoUt6z5M2F8",
+    "endpoint": "https://www.triggercmd.com/api/command/list",
+    "deviceCount": 16,
+    "syncedAt": 1779403173450
+  }
+}

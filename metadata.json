@@ -1,0 +1,12 @@
+{
+  "name": "ORION Home Assistant",
+  "description": "Advanced AI-powered home automation orchestrator with real-time health monitoring and cognitive capabilities.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

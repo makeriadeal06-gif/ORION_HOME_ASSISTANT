@@ -1,0 +1,116 @@
+{
+  "version": "0.1.0-freeze",
+  "phase": "PHASE_18_STABLE",
+  "lockedAt": "2026-05-26T15:42:20.929Z",
+  "filesCount": 18,
+  "files": {
+    "client/core/task-runtime/TaskIntentTiming.ts": {
+      "path": "client/core/task-runtime/TaskIntentTiming.ts",
+      "expectedHash": "7562a1c9808d07250412b18a551e4fdf",
+      "expectedSize": 4073,
+      "lastLockedAt": "2026-05-26T15:42:20.892Z"
+    },
+    "client/core/task-runtime/TaskRuntime.ts": {
+      "path": "client/core/task-runtime/TaskRuntime.ts",
+      "expectedHash": "7006066cbd3876ab4e8d7bc8fbcb4ed0",
+      "expectedSize": 32104,
+      "lastLockedAt": "2026-05-26T15:42:20.920Z"
+    },
+    "client/core/task-runtime/types.ts": {
+      "path": "client/core/task-runtime/types.ts",
+      "expectedHash": "f3fe24aa50c2fa846c78574697948e10",
+      "expectedSize": 3880,
+      "lastLockedAt": "2026-05-26T15:42:20.921Z"
+    },
+    "client/core/voice-runtime/VoiceRuntimeManager.ts": {
+      "path": "client/core/voice-runtime/VoiceRuntimeManager.ts",
+      "expectedHash": "39189cca1e968c6314601580e35728d4",
+      "expectedSize": 34337,
+      "lastLockedAt": "2026-05-26T15:42:20.921Z"
+    },
+    "client/core/voice-runtime/types.ts": {
+      "path": "client/core/voice-runtime/types.ts",
+      "expectedHash": "01b12fa9dcf54689e056cdfb3d38000a",
+      "expectedSize": 2728,
+      "lastLockedAt": "2026-05-26T15:42:20.922Z"
+    },
+    "client/core/android-runtime/AndroidRuntimeManager.ts": {
+      "path": "client/core/android-runtime/AndroidRuntimeManager.ts",
+      "expectedHash": "b5b551312af903bec43ee939377bcd25",
+      "expectedSize": 30752,
+      "lastLockedAt": "2026-05-26T15:42:20.922Z"
+    },
+    "client/core/android-runtime/types.ts": {
+      "path": "client/core/android-runtime/types.ts",
+      "expectedHash": "8252bbb5e134c47c41436d2e4b6f1a22",
+      "expectedSize": 2170,
+      "lastLockedAt": "2026-05-26T15:42:20.922Z"
+    },
+    "client/core/presence/PresenceRuntime.ts": {
+      "path": "client/core/presence/PresenceRuntime.ts",
+      "expectedHash": "a4f8f2a107b220b5ecc4dd7fa903bf4d",
+      "expectedSize": 23562,
+      "lastLockedAt": "2026-05-26T15:42:20.923Z"
+    },
+    "client/core/presence/types.ts": {
+      "path": "client/core/presence/types.ts",
+      "expectedHash": "8c2f0ef84862116ba9dc60edc462046e",
+      "expectedSize": 2257,
+      "lastLockedAt": "2026-05-26T15:42:20.924Z"
+    },
+    "client/core/environment-runtime/EnvironmentRuntime.ts": {
+      "path": "client/core/environment-runtime/EnvironmentRuntime.ts",
+      "expectedHash": "1f098153d17061314b4cbdefa686ba78",
+      "expectedSize": 30882,
+      "lastLockedAt": "2026-05-26T15:42:20.924Z"
+    },
+    "client/core/environment-runtime/types.ts": {
+      "path": "client/core/environment-runtime/types.ts",
+      "expectedHash": "c69e609a29cec423d3e70cdc3b687ea0",
+      "expectedSize": 2876,
+      "lastLockedAt": "2026-05-26T15:42:20.924Z"
+    },
+    "client/core/automation-runtime/AutomationAssetRegistry.ts": {
+      "path": "client/core/automation-runtime/AutomationAssetRegistry.ts",
+      "expectedHash": "949ead5f5f482544f8f3f86bf1219852",
+      "expectedSize": 6319,
+      "lastLockedAt": "2026-05-26T15:42:20.925Z"
+    },
+    "client/core/automation-runtime/AutomationStore.ts": {
+      "path": "client/core/automation-runtime/AutomationStore.ts",
+      "expectedHash": "14f2e671e1c1fce5007dc413a3a23539",
+      "expectedSize": 58015,
+      "lastLockedAt": "2026-05-26T15:42:20.926Z"
+    },
+    "client/core/automation-runtime/types.ts": {
+      "path": "client/core/automation-runtime/types.ts",
+      "expectedHash": "cda50d4ca23d48358ee9720fbcb35f04",
+      "expectedSize": 6580,
+      "lastLockedAt": "2026-05-26T15:42:20.926Z"
+    },
+    "client/core/runtime/RuntimeIdentity.ts": {
+      "path": "client/core/runtime/RuntimeIdentity.ts",
+      "expectedHash": "4e15d0718abc0b71e0fb64597429093b",
+      "expectedSize": 11263,
+      "lastLockedAt": "2026-05-26T15:42:20.926Z"
+    },
+    "client/core/runtime/RuntimeManager.ts": {
+      "path": "client/core/runtime/RuntimeManager.ts",
+      "expectedHash": "0df7eb84d2c11667d66b09486cbdf326",
+      "expectedSize": 6750,
+      "lastLockedAt": "2026-05-26T15:42:20.927Z"
+    },
+    "client/core/command-runtime/types.ts": {
+      "path": "client/core/command-runtime/types.ts",
+      "expectedHash": "2799de53fe8e094539ca4c82f0a94814",
+      "expectedSize": 988,
+      "lastLockedAt": "2026-05-26T15:42:20.927Z"
+    },
+    "server/services/TriggerCMDService.ts": {
+      "path": "server/services/TriggerCMDService.ts",
+      "expectedHash": "6855d5bb56cbc06be0e21e064d686627",
+      "expectedSize": 35632,
+      "lastLockedAt": "2026-05-26T15:42:20.928Z"
+    }
+  }
+}
