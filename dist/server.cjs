@@ -1,19 +1,14 @@
+"use strict";
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __require = /* @__PURE__ */ ((x2) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x2, {
-  get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
-}) : x2)(function(x2) {
-  if (typeof require !== "undefined") return require.apply(this, arguments);
-  throw Error('Dynamic require of "' + x2 + '" is not supported');
-});
 var __esm = (fn, res) => function __init() {
   return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
 };
-var __commonJS = (cb, mod) => function __require2() {
+var __commonJS = (cb, mod) => function __require() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
 var __export = (target, all3) => {
@@ -36,10 +31,11 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
   mod
 ));
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
 // node_modules/retry/lib/retry_operation.js
 var require_retry_operation = __commonJS({
-  "node_modules/retry/lib/retry_operation.js"(exports, module) {
+  "node_modules/retry/lib/retry_operation.js"(exports2, module2) {
     function RetryOperation(timeouts, options) {
       if (typeof options === "boolean") {
         options = { forever: options };
@@ -60,7 +56,7 @@ var require_retry_operation = __commonJS({
         this._cachedTimeouts = this._timeouts.slice(0);
       }
     }
-    module.exports = RetryOperation;
+    module2.exports = RetryOperation;
     RetryOperation.prototype.reset = function() {
       this._attempts = 1;
       this._timeouts = this._originalTimeouts.slice(0);
@@ -174,17 +170,17 @@ var require_retry_operation = __commonJS({
 
 // node_modules/retry/lib/retry.js
 var require_retry = __commonJS({
-  "node_modules/retry/lib/retry.js"(exports) {
+  "node_modules/retry/lib/retry.js"(exports2) {
     var RetryOperation = require_retry_operation();
-    exports.operation = function(options) {
-      var timeouts = exports.timeouts(options);
+    exports2.operation = function(options) {
+      var timeouts = exports2.timeouts(options);
       return new RetryOperation(timeouts, {
         forever: options && (options.forever || options.retries === Infinity),
         unref: options && options.unref,
         maxRetryTime: options && options.maxRetryTime
       });
     };
-    exports.timeouts = function(options) {
+    exports2.timeouts = function(options) {
       if (options instanceof Array) {
         return [].concat(options);
       }
@@ -213,13 +209,13 @@ var require_retry = __commonJS({
       });
       return timeouts;
     };
-    exports.createTimeout = function(attempt, opts) {
+    exports2.createTimeout = function(attempt, opts) {
       var random = opts.randomize ? Math.random() + 1 : 1;
       var timeout = Math.round(random * Math.max(opts.minTimeout, 1) * Math.pow(opts.factor, attempt));
       timeout = Math.min(timeout, opts.maxTimeout);
       return timeout;
     };
-    exports.wrap = function(obj, options, methods) {
+    exports2.wrap = function(obj, options, methods) {
       if (options instanceof Array) {
         methods = options;
         options = null;
@@ -236,7 +232,7 @@ var require_retry = __commonJS({
         var method = methods[i2];
         var original = obj[method];
         obj[method] = function retryWrapper(original2) {
-          var op = exports.operation(options);
+          var op = exports2.operation(options);
           var args = Array.prototype.slice.call(arguments, 1);
           var callback = args.pop();
           args.push(function(err) {
@@ -260,14 +256,14 @@ var require_retry = __commonJS({
 
 // node_modules/retry/index.js
 var require_retry2 = __commonJS({
-  "node_modules/retry/index.js"(exports, module) {
-    module.exports = require_retry();
+  "node_modules/retry/index.js"(exports2, module2) {
+    module2.exports = require_retry();
   }
 });
 
 // node_modules/p-retry/index.js
 var require_p_retry = __commonJS({
-  "node_modules/p-retry/index.js"(exports, module) {
+  "node_modules/p-retry/index.js"(exports2, module2) {
     "use strict";
     var retry = require_retry2();
     var networkErrorMsgs = [
@@ -338,15 +334,15 @@ var require_p_retry = __commonJS({
         }
       });
     });
-    module.exports = pRetry2;
-    module.exports.default = pRetry2;
-    module.exports.AbortError = AbortError3;
+    module2.exports = pRetry2;
+    module2.exports.default = pRetry2;
+    module2.exports.AbortError = AbortError3;
   }
 });
 
 // node_modules/extend/index.js
 var require_extend = __commonJS({
-  "node_modules/extend/index.js"(exports, module) {
+  "node_modules/extend/index.js"(exports2, module2) {
     "use strict";
     var hasOwn2 = Object.prototype.hasOwnProperty;
     var toStr = Object.prototype.toString;
@@ -394,7 +390,7 @@ var require_extend = __commonJS({
       }
       return obj[name];
     };
-    module.exports = function extend2() {
+    module2.exports = function extend2() {
       var options, name, src, copy, copyIsArray, clone2;
       var target = arguments[0];
       var i2 = 1;
@@ -437,8 +433,8 @@ var require_extend = __commonJS({
 
 // node_modules/gaxios/package.json
 var require_package = __commonJS({
-  "node_modules/gaxios/package.json"(exports, module) {
-    module.exports = {
+  "node_modules/gaxios/package.json"(exports2, module2) {
+    module2.exports = {
       name: "gaxios",
       version: "7.1.4",
       description: "A simple common HTTP client specifically for Google APIs and services.",
@@ -550,27 +546,27 @@ var require_package = __commonJS({
 
 // node_modules/gaxios/build/cjs/src/util.cjs
 var require_util = __commonJS({
-  "node_modules/gaxios/build/cjs/src/util.cjs"(exports, module) {
+  "node_modules/gaxios/build/cjs/src/util.cjs"(exports2, module2) {
     "use strict";
     var pkg = require_package();
-    module.exports = { pkg };
+    module2.exports = { pkg };
   }
 });
 
 // node_modules/gaxios/build/cjs/src/common.js
 var require_common = __commonJS({
-  "node_modules/gaxios/build/cjs/src/common.js"(exports) {
+  "node_modules/gaxios/build/cjs/src/common.js"(exports2) {
     "use strict";
-    var __importDefault = exports && exports.__importDefault || function(mod) {
+    var __importDefault = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.GaxiosError = exports.GAXIOS_ERROR_SYMBOL = void 0;
-    exports.defaultErrorRedactor = defaultErrorRedactor;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.GaxiosError = exports2.GAXIOS_ERROR_SYMBOL = void 0;
+    exports2.defaultErrorRedactor = defaultErrorRedactor;
     var extend_1 = __importDefault(require_extend());
     var util_cjs_1 = __importDefault(require_util());
     var pkg = util_cjs_1.default.pkg;
-    exports.GAXIOS_ERROR_SYMBOL = /* @__PURE__ */ Symbol.for(`${pkg.name}-gaxios-error`);
+    exports2.GAXIOS_ERROR_SYMBOL = /* @__PURE__ */ Symbol.for(`${pkg.name}-gaxios-error`);
     var GaxiosError = class _GaxiosError extends Error {
       config;
       response;
@@ -624,7 +620,7 @@ var require_common = __commonJS({
        * @see {@link https://stackoverflow.com/questions/46618852/require-and-instanceof}
        * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/@@hasInstance#reverting_to_default_instanceof_behavior}
        */
-      [exports.GAXIOS_ERROR_SYMBOL] = pkg.version;
+      [exports2.GAXIOS_ERROR_SYMBOL] = pkg.version;
       /**
        * Support `instanceof` operator for `GaxiosError` across builds/duplicated files.
        *
@@ -632,7 +628,7 @@ var require_common = __commonJS({
        * @see {@link GaxiosError[GAXIOS_ERROR_SYMBOL]}
        */
       static [Symbol.hasInstance](instance) {
-        if (instance && typeof instance === "object" && exports.GAXIOS_ERROR_SYMBOL in instance && instance[exports.GAXIOS_ERROR_SYMBOL] === pkg.version) {
+        if (instance && typeof instance === "object" && exports2.GAXIOS_ERROR_SYMBOL in instance && instance[exports2.GAXIOS_ERROR_SYMBOL] === pkg.version) {
           return true;
         }
         return Function.prototype[Symbol.hasInstance].call(_GaxiosError, instance);
@@ -718,7 +714,7 @@ var require_common = __commonJS({
         };
       }
     };
-    exports.GaxiosError = GaxiosError;
+    exports2.GaxiosError = GaxiosError;
     function translateData(responseType, data) {
       switch (responseType) {
         case "stream":
@@ -801,10 +797,10 @@ var require_common = __commonJS({
 
 // node_modules/gaxios/build/cjs/src/retry.js
 var require_retry3 = __commonJS({
-  "node_modules/gaxios/build/cjs/src/retry.js"(exports) {
+  "node_modules/gaxios/build/cjs/src/retry.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.getRetryConfig = getRetryConfig;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.getRetryConfig = getRetryConfig;
     async function getRetryConfig(err) {
       let config = getConfig(err);
       if (!err || !err.config || !config && !err.config.retry) {
@@ -906,26 +902,26 @@ var require_retry3 = __commonJS({
 
 // node_modules/gaxios/build/cjs/src/interceptor.js
 var require_interceptor = __commonJS({
-  "node_modules/gaxios/build/cjs/src/interceptor.js"(exports) {
+  "node_modules/gaxios/build/cjs/src/interceptor.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.GaxiosInterceptorManager = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.GaxiosInterceptorManager = void 0;
     var GaxiosInterceptorManager = class extends Set {
     };
-    exports.GaxiosInterceptorManager = GaxiosInterceptorManager;
+    exports2.GaxiosInterceptorManager = GaxiosInterceptorManager;
   }
 });
 
 // node_modules/ms/index.js
 var require_ms = __commonJS({
-  "node_modules/ms/index.js"(exports, module) {
+  "node_modules/ms/index.js"(exports2, module2) {
     var s2 = 1e3;
     var m2 = s2 * 60;
     var h2 = m2 * 60;
     var d = h2 * 24;
     var w = d * 7;
     var y = d * 365.25;
-    module.exports = function(val, options) {
+    module2.exports = function(val, options) {
       options = options || {};
       var type = typeof val;
       if (type === "string" && val.length > 0) {
@@ -1034,7 +1030,7 @@ var require_ms = __commonJS({
 
 // node_modules/debug/src/common.js
 var require_common2 = __commonJS({
-  "node_modules/debug/src/common.js"(exports, module) {
+  "node_modules/debug/src/common.js"(exports2, module2) {
     function setup(env) {
       createDebug.debug = createDebug;
       createDebug.default = createDebug;
@@ -1205,19 +1201,19 @@ var require_common2 = __commonJS({
       createDebug.enable(createDebug.load());
       return createDebug;
     }
-    module.exports = setup;
+    module2.exports = setup;
   }
 });
 
 // node_modules/debug/src/browser.js
 var require_browser = __commonJS({
-  "node_modules/debug/src/browser.js"(exports, module) {
-    exports.formatArgs = formatArgs;
-    exports.save = save;
-    exports.load = load;
-    exports.useColors = useColors;
-    exports.storage = localstorage();
-    exports.destroy = /* @__PURE__ */ (() => {
+  "node_modules/debug/src/browser.js"(exports2, module2) {
+    exports2.formatArgs = formatArgs;
+    exports2.save = save;
+    exports2.load = load;
+    exports2.useColors = useColors;
+    exports2.storage = localstorage();
+    exports2.destroy = /* @__PURE__ */ (() => {
       let warned = false;
       return () => {
         if (!warned) {
@@ -1226,7 +1222,7 @@ var require_browser = __commonJS({
         }
       };
     })();
-    exports.colors = [
+    exports2.colors = [
       "#0000CC",
       "#0000FF",
       "#0033CC",
@@ -1319,7 +1315,7 @@ var require_browser = __commonJS({
       typeof navigator !== "undefined" && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/);
     }
     function formatArgs(args) {
-      args[0] = (this.useColors ? "%c" : "") + this.namespace + (this.useColors ? " %c" : " ") + args[0] + (this.useColors ? "%c " : " ") + "+" + module.exports.humanize(this.diff);
+      args[0] = (this.useColors ? "%c" : "") + this.namespace + (this.useColors ? " %c" : " ") + args[0] + (this.useColors ? "%c " : " ") + "+" + module2.exports.humanize(this.diff);
       if (!this.useColors) {
         return;
       }
@@ -1338,14 +1334,14 @@ var require_browser = __commonJS({
       });
       args.splice(lastC, 0, c);
     }
-    exports.log = console.debug || console.log || (() => {
+    exports2.log = console.debug || console.log || (() => {
     });
     function save(namespaces) {
       try {
         if (namespaces) {
-          exports.storage.setItem("debug", namespaces);
+          exports2.storage.setItem("debug", namespaces);
         } else {
-          exports.storage.removeItem("debug");
+          exports2.storage.removeItem("debug");
         }
       } catch (error) {
       }
@@ -1353,7 +1349,7 @@ var require_browser = __commonJS({
     function load() {
       let r2;
       try {
-        r2 = exports.storage.getItem("debug") || exports.storage.getItem("DEBUG");
+        r2 = exports2.storage.getItem("debug") || exports2.storage.getItem("DEBUG");
       } catch (error) {
       }
       if (!r2 && typeof process !== "undefined" && "env" in process) {
@@ -1367,8 +1363,8 @@ var require_browser = __commonJS({
       } catch (error) {
       }
     }
-    module.exports = require_common2()(exports);
-    var { formatters } = module.exports;
+    module2.exports = require_common2()(exports2);
+    var { formatters } = module2.exports;
     formatters.j = function(v) {
       try {
         return JSON.stringify(v);
@@ -1381,9 +1377,9 @@ var require_browser = __commonJS({
 
 // node_modules/has-flag/index.js
 var require_has_flag = __commonJS({
-  "node_modules/has-flag/index.js"(exports, module) {
+  "node_modules/has-flag/index.js"(exports2, module2) {
     "use strict";
-    module.exports = (flag, argv = process.argv) => {
+    module2.exports = (flag, argv = process.argv) => {
       const prefix = flag.startsWith("-") ? "" : flag.length === 1 ? "-" : "--";
       const position = argv.indexOf(prefix + flag);
       const terminatorPosition = argv.indexOf("--");
@@ -1394,10 +1390,10 @@ var require_has_flag = __commonJS({
 
 // node_modules/supports-color/index.js
 var require_supports_color = __commonJS({
-  "node_modules/supports-color/index.js"(exports, module) {
+  "node_modules/supports-color/index.js"(exports2, module2) {
     "use strict";
-    var os = __require("os");
-    var tty = __require("tty");
+    var os = require("os");
+    var tty = require("tty");
     var hasFlag = require_has_flag();
     var { env } = process;
     var forceColor;
@@ -1486,7 +1482,7 @@ var require_supports_color = __commonJS({
       const level = supportsColor(stream4, stream4 && stream4.isTTY);
       return translateLevel(level);
     }
-    module.exports = {
+    module2.exports = {
       supportsColor: getSupportLevel,
       stdout: translateLevel(supportsColor(true, tty.isatty(1))),
       stderr: translateLevel(supportsColor(true, tty.isatty(2)))
@@ -1496,25 +1492,25 @@ var require_supports_color = __commonJS({
 
 // node_modules/debug/src/node.js
 var require_node = __commonJS({
-  "node_modules/debug/src/node.js"(exports, module) {
-    var tty = __require("tty");
-    var util3 = __require("util");
-    exports.init = init;
-    exports.log = log;
-    exports.formatArgs = formatArgs;
-    exports.save = save;
-    exports.load = load;
-    exports.useColors = useColors;
-    exports.destroy = util3.deprecate(
+  "node_modules/debug/src/node.js"(exports2, module2) {
+    var tty = require("tty");
+    var util3 = require("util");
+    exports2.init = init;
+    exports2.log = log;
+    exports2.formatArgs = formatArgs;
+    exports2.save = save;
+    exports2.load = load;
+    exports2.useColors = useColors;
+    exports2.destroy = util3.deprecate(
       () => {
       },
       "Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`."
     );
-    exports.colors = [6, 2, 3, 4, 5, 1];
+    exports2.colors = [6, 2, 3, 4, 5, 1];
     try {
       const supportsColor = require_supports_color();
       if (supportsColor && (supportsColor.stderr || supportsColor).level >= 2) {
-        exports.colors = [
+        exports2.colors = [
           20,
           21,
           26,
@@ -1595,7 +1591,7 @@ var require_node = __commonJS({
       }
     } catch (error) {
     }
-    exports.inspectOpts = Object.keys(process.env).filter((key) => {
+    exports2.inspectOpts = Object.keys(process.env).filter((key) => {
       return /^debug_/i.test(key);
     }).reduce((obj, key) => {
       const prop = key.substring(6).toLowerCase().replace(/_([a-z])/g, (_, k) => {
@@ -1615,7 +1611,7 @@ var require_node = __commonJS({
       return obj;
     }, {});
     function useColors() {
-      return "colors" in exports.inspectOpts ? Boolean(exports.inspectOpts.colors) : tty.isatty(process.stderr.fd);
+      return "colors" in exports2.inspectOpts ? Boolean(exports2.inspectOpts.colors) : tty.isatty(process.stderr.fd);
     }
     function formatArgs(args) {
       const { namespace: name, useColors: useColors2 } = this;
@@ -1624,19 +1620,19 @@ var require_node = __commonJS({
         const colorCode = "\x1B[3" + (c < 8 ? c : "8;5;" + c);
         const prefix = `  ${colorCode};1m${name} \x1B[0m`;
         args[0] = prefix + args[0].split("\n").join("\n" + prefix);
-        args.push(colorCode + "m+" + module.exports.humanize(this.diff) + "\x1B[0m");
+        args.push(colorCode + "m+" + module2.exports.humanize(this.diff) + "\x1B[0m");
       } else {
         args[0] = getDate() + name + " " + args[0];
       }
     }
     function getDate() {
-      if (exports.inspectOpts.hideDate) {
+      if (exports2.inspectOpts.hideDate) {
         return "";
       }
       return (/* @__PURE__ */ new Date()).toISOString() + " ";
     }
     function log(...args) {
-      return process.stderr.write(util3.formatWithOptions(exports.inspectOpts, ...args) + "\n");
+      return process.stderr.write(util3.formatWithOptions(exports2.inspectOpts, ...args) + "\n");
     }
     function save(namespaces) {
       if (namespaces) {
@@ -1650,13 +1646,13 @@ var require_node = __commonJS({
     }
     function init(debug) {
       debug.inspectOpts = {};
-      const keys = Object.keys(exports.inspectOpts);
+      const keys = Object.keys(exports2.inspectOpts);
       for (let i2 = 0; i2 < keys.length; i2++) {
-        debug.inspectOpts[keys[i2]] = exports.inspectOpts[keys[i2]];
+        debug.inspectOpts[keys[i2]] = exports2.inspectOpts[keys[i2]];
       }
     }
-    module.exports = require_common2()(exports);
-    var { formatters } = module.exports;
+    module2.exports = require_common2()(exports2);
+    var { formatters } = module2.exports;
     formatters.o = function(v) {
       this.inspectOpts.colors = this.useColors;
       return util3.inspect(v, this.inspectOpts).split("\n").map((str) => str.trim()).join(" ");
@@ -1670,20 +1666,20 @@ var require_node = __commonJS({
 
 // node_modules/debug/src/index.js
 var require_src = __commonJS({
-  "node_modules/debug/src/index.js"(exports, module) {
+  "node_modules/debug/src/index.js"(exports2, module2) {
     if (typeof process === "undefined" || process.type === "renderer" || process.browser === true || process.__nwjs) {
-      module.exports = require_browser();
+      module2.exports = require_browser();
     } else {
-      module.exports = require_node();
+      module2.exports = require_node();
     }
   }
 });
 
 // node_modules/gaxios/node_modules/agent-base/dist/helpers.js
 var require_helpers = __commonJS({
-  "node_modules/gaxios/node_modules/agent-base/dist/helpers.js"(exports) {
+  "node_modules/gaxios/node_modules/agent-base/dist/helpers.js"(exports2) {
     "use strict";
-    var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o, m2, k, k2) {
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m2, k, k2) {
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m2, k);
       if (!desc || ("get" in desc ? !m2.__esModule : desc.writable || desc.configurable)) {
@@ -1696,12 +1692,12 @@ var require_helpers = __commonJS({
       if (k2 === void 0) k2 = k;
       o[k2] = m2[k];
     }));
-    var __setModuleDefault = exports && exports.__setModuleDefault || (Object.create ? (function(o, v) {
+    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? (function(o, v) {
       Object.defineProperty(o, "default", { enumerable: true, value: v });
     }) : function(o, v) {
       o["default"] = v;
     });
-    var __importStar = exports && exports.__importStar || function(mod) {
+    var __importStar = exports2 && exports2.__importStar || function(mod) {
       if (mod && mod.__esModule) return mod;
       var result = {};
       if (mod != null) {
@@ -1710,10 +1706,10 @@ var require_helpers = __commonJS({
       __setModuleDefault(result, mod);
       return result;
     };
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.req = exports.json = exports.toBuffer = void 0;
-    var http4 = __importStar(__require("http"));
-    var https4 = __importStar(__require("https"));
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.req = exports2.json = exports2.toBuffer = void 0;
+    var http4 = __importStar(require("http"));
+    var https4 = __importStar(require("https"));
     async function toBuffer(stream4) {
       let length = 0;
       const chunks = [];
@@ -1723,7 +1719,7 @@ var require_helpers = __commonJS({
       }
       return Buffer.concat(chunks, length);
     }
-    exports.toBuffer = toBuffer;
+    exports2.toBuffer = toBuffer;
     async function json(stream4) {
       const buf = await toBuffer(stream4);
       const str = buf.toString("utf8");
@@ -1735,7 +1731,7 @@ var require_helpers = __commonJS({
         throw err;
       }
     }
-    exports.json = json;
+    exports2.json = json;
     function req(url2, opts = {}) {
       const href = typeof url2 === "string" ? url2 : url2.href;
       const req2 = (href.startsWith("https:") ? https4 : http4).request(url2, opts);
@@ -1745,15 +1741,15 @@ var require_helpers = __commonJS({
       req2.then = promise.then.bind(promise);
       return req2;
     }
-    exports.req = req;
+    exports2.req = req;
   }
 });
 
 // node_modules/gaxios/node_modules/agent-base/dist/index.js
 var require_dist = __commonJS({
-  "node_modules/gaxios/node_modules/agent-base/dist/index.js"(exports) {
+  "node_modules/gaxios/node_modules/agent-base/dist/index.js"(exports2) {
     "use strict";
-    var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o, m2, k, k2) {
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m2, k, k2) {
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m2, k);
       if (!desc || ("get" in desc ? !m2.__esModule : desc.writable || desc.configurable)) {
@@ -1766,12 +1762,12 @@ var require_dist = __commonJS({
       if (k2 === void 0) k2 = k;
       o[k2] = m2[k];
     }));
-    var __setModuleDefault = exports && exports.__setModuleDefault || (Object.create ? (function(o, v) {
+    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? (function(o, v) {
       Object.defineProperty(o, "default", { enumerable: true, value: v });
     }) : function(o, v) {
       o["default"] = v;
     });
-    var __importStar = exports && exports.__importStar || function(mod) {
+    var __importStar = exports2 && exports2.__importStar || function(mod) {
       if (mod && mod.__esModule) return mod;
       var result = {};
       if (mod != null) {
@@ -1780,15 +1776,15 @@ var require_dist = __commonJS({
       __setModuleDefault(result, mod);
       return result;
     };
-    var __exportStar = exports && exports.__exportStar || function(m2, exports2) {
-      for (var p in m2) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports2, p)) __createBinding(exports2, m2, p);
+    var __exportStar = exports2 && exports2.__exportStar || function(m2, exports3) {
+      for (var p in m2) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding(exports3, m2, p);
     };
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Agent = void 0;
-    var net = __importStar(__require("net"));
-    var http4 = __importStar(__require("http"));
-    var https_1 = __require("https");
-    __exportStar(require_helpers(), exports);
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.Agent = void 0;
+    var net = __importStar(require("net"));
+    var http4 = __importStar(require("http"));
+    var https_1 = require("https");
+    __exportStar(require_helpers(), exports2);
     var INTERNAL = /* @__PURE__ */ Symbol("AgentBaseInternalState");
     var Agent = class extends http4.Agent {
       constructor(opts) {
@@ -1901,19 +1897,19 @@ var require_dist = __commonJS({
         }
       }
     };
-    exports.Agent = Agent;
+    exports2.Agent = Agent;
   }
 });
 
 // node_modules/gaxios/node_modules/https-proxy-agent/dist/parse-proxy-response.js
 var require_parse_proxy_response = __commonJS({
-  "node_modules/gaxios/node_modules/https-proxy-agent/dist/parse-proxy-response.js"(exports) {
+  "node_modules/gaxios/node_modules/https-proxy-agent/dist/parse-proxy-response.js"(exports2) {
     "use strict";
-    var __importDefault = exports && exports.__importDefault || function(mod) {
+    var __importDefault = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.parseProxyResponse = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.parseProxyResponse = void 0;
     var debug_1 = __importDefault(require_src());
     var debug = (0, debug_1.default)("https-proxy-agent:parse-proxy-response");
     function parseProxyResponse(socket) {
@@ -1997,15 +1993,15 @@ var require_parse_proxy_response = __commonJS({
         read();
       });
     }
-    exports.parseProxyResponse = parseProxyResponse;
+    exports2.parseProxyResponse = parseProxyResponse;
   }
 });
 
 // node_modules/gaxios/node_modules/https-proxy-agent/dist/index.js
 var require_dist2 = __commonJS({
-  "node_modules/gaxios/node_modules/https-proxy-agent/dist/index.js"(exports) {
+  "node_modules/gaxios/node_modules/https-proxy-agent/dist/index.js"(exports2) {
     "use strict";
-    var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o, m2, k, k2) {
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m2, k, k2) {
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m2, k);
       if (!desc || ("get" in desc ? !m2.__esModule : desc.writable || desc.configurable)) {
@@ -2018,12 +2014,12 @@ var require_dist2 = __commonJS({
       if (k2 === void 0) k2 = k;
       o[k2] = m2[k];
     }));
-    var __setModuleDefault = exports && exports.__setModuleDefault || (Object.create ? (function(o, v) {
+    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? (function(o, v) {
       Object.defineProperty(o, "default", { enumerable: true, value: v });
     }) : function(o, v) {
       o["default"] = v;
     });
-    var __importStar = exports && exports.__importStar || function(mod) {
+    var __importStar = exports2 && exports2.__importStar || function(mod) {
       if (mod && mod.__esModule) return mod;
       var result = {};
       if (mod != null) {
@@ -2032,17 +2028,17 @@ var require_dist2 = __commonJS({
       __setModuleDefault(result, mod);
       return result;
     };
-    var __importDefault = exports && exports.__importDefault || function(mod) {
+    var __importDefault = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.HttpsProxyAgent = void 0;
-    var net = __importStar(__require("net"));
-    var tls = __importStar(__require("tls"));
-    var assert_1 = __importDefault(__require("assert"));
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.HttpsProxyAgent = void 0;
+    var net = __importStar(require("net"));
+    var tls = __importStar(require("tls"));
+    var assert_1 = __importDefault(require("assert"));
     var debug_1 = __importDefault(require_src());
     var agent_base_1 = require_dist();
-    var url_1 = __require("url");
+    var url_1 = require("url");
     var parse_proxy_response_1 = require_parse_proxy_response();
     var debug = (0, debug_1.default)("https-proxy-agent");
     var setServernameFromNonIpHost = (options) => {
@@ -2134,7 +2130,7 @@ var require_dist2 = __commonJS({
       }
     };
     HttpsProxyAgent2.protocols = ["http", "https"];
-    exports.HttpsProxyAgent = HttpsProxyAgent2;
+    exports2.HttpsProxyAgent = HttpsProxyAgent2;
     function resume(socket) {
       socket.resume();
     }
@@ -2197,10 +2193,10 @@ var init_dist = __esm({
 
 // node_modules/web-streams-polyfill/dist/ponyfill.es2018.js
 var require_ponyfill_es2018 = __commonJS({
-  "node_modules/web-streams-polyfill/dist/ponyfill.es2018.js"(exports, module) {
+  "node_modules/web-streams-polyfill/dist/ponyfill.es2018.js"(exports2, module2) {
     (function(global2, factory2) {
-      typeof exports === "object" && typeof module !== "undefined" ? factory2(exports) : typeof define === "function" && define.amd ? define(["exports"], factory2) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory2(global2.WebStreamsPolyfill = {}));
-    })(exports, (function(exports2) {
+      typeof exports2 === "object" && typeof module2 !== "undefined" ? factory2(exports2) : typeof define === "function" && define.amd ? define(["exports"], factory2) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory2(global2.WebStreamsPolyfill = {}));
+    })(exports2, (function(exports3) {
       "use strict";
       function noop4() {
         return void 0;
@@ -6453,19 +6449,19 @@ var require_ponyfill_es2018 = __commonJS({
       function streamBrandCheckException(name) {
         return new TypeError(`TransformStream.prototype.${name} can only be used on a TransformStream`);
       }
-      exports2.ByteLengthQueuingStrategy = ByteLengthQueuingStrategy;
-      exports2.CountQueuingStrategy = CountQueuingStrategy;
-      exports2.ReadableByteStreamController = ReadableByteStreamController;
-      exports2.ReadableStream = ReadableStream2;
-      exports2.ReadableStreamBYOBReader = ReadableStreamBYOBReader;
-      exports2.ReadableStreamBYOBRequest = ReadableStreamBYOBRequest;
-      exports2.ReadableStreamDefaultController = ReadableStreamDefaultController;
-      exports2.ReadableStreamDefaultReader = ReadableStreamDefaultReader;
-      exports2.TransformStream = TransformStream;
-      exports2.TransformStreamDefaultController = TransformStreamDefaultController;
-      exports2.WritableStream = WritableStream;
-      exports2.WritableStreamDefaultController = WritableStreamDefaultController;
-      exports2.WritableStreamDefaultWriter = WritableStreamDefaultWriter;
+      exports3.ByteLengthQueuingStrategy = ByteLengthQueuingStrategy;
+      exports3.CountQueuingStrategy = CountQueuingStrategy;
+      exports3.ReadableByteStreamController = ReadableByteStreamController;
+      exports3.ReadableStream = ReadableStream2;
+      exports3.ReadableStreamBYOBReader = ReadableStreamBYOBReader;
+      exports3.ReadableStreamBYOBRequest = ReadableStreamBYOBRequest;
+      exports3.ReadableStreamDefaultController = ReadableStreamDefaultController;
+      exports3.ReadableStreamDefaultReader = ReadableStreamDefaultReader;
+      exports3.TransformStream = TransformStream;
+      exports3.TransformStreamDefaultController = TransformStreamDefaultController;
+      exports3.WritableStream = WritableStream;
+      exports3.WritableStreamDefaultController = WritableStreamDefaultController;
+      exports3.WritableStreamDefaultWriter = WritableStreamDefaultWriter;
     }));
   }
 });
@@ -6476,12 +6472,12 @@ var require_streams = __commonJS({
     var POOL_SIZE2 = 65536;
     if (!globalThis.ReadableStream) {
       try {
-        const process2 = __require("node:process");
+        const process2 = require("node:process");
         const { emitWarning } = process2;
         try {
           process2.emitWarning = () => {
           };
-          Object.assign(globalThis, __require("node:stream/web"));
+          Object.assign(globalThis, require("node:stream/web"));
           process2.emitWarning = emitWarning;
         } catch (error) {
           process2.emitWarning = emitWarning;
@@ -6492,7 +6488,7 @@ var require_streams = __commonJS({
       }
     }
     try {
-      const { Blob: Blob4 } = __require("buffer");
+      const { Blob: Blob4 } = require("buffer");
       if (Blob4 && !Blob4.prototype.stream) {
         Blob4.prototype.stream = function name(params) {
           let position = 0;
@@ -6932,33 +6928,33 @@ var init_is = __esm({
 
 // node_modules/node-domexception/index.js
 var require_node_domexception = __commonJS({
-  "node_modules/node-domexception/index.js"(exports, module) {
+  "node_modules/node-domexception/index.js"(exports2, module2) {
     if (!globalThis.DOMException) {
       try {
-        const { MessageChannel } = __require("worker_threads"), port = new MessageChannel().port1, ab = new ArrayBuffer();
+        const { MessageChannel } = require("worker_threads"), port = new MessageChannel().port1, ab = new ArrayBuffer();
         port.postMessage(ab, [ab, ab]);
       } catch (err) {
         err.constructor.name === "DOMException" && (globalThis.DOMException = err.constructor);
       }
     }
-    module.exports = globalThis.DOMException;
+    module2.exports = globalThis.DOMException;
   }
 });
 
 // node_modules/fetch-blob/from.js
-import { statSync, createReadStream, promises as fs } from "node:fs";
-import { basename } from "node:path";
-var import_node_domexception, stat, blobFromSync, blobFrom, fileFrom, fileFromSync, fromBlob, fromFile, BlobDataItem;
+var import_node_fs, import_node_path, import_node_domexception, stat, blobFromSync, blobFrom, fileFrom, fileFromSync, fromBlob, fromFile, BlobDataItem;
 var init_from = __esm({
   "node_modules/fetch-blob/from.js"() {
+    import_node_fs = require("node:fs");
+    import_node_path = require("node:path");
     import_node_domexception = __toESM(require_node_domexception(), 1);
     init_file();
     init_fetch_blob();
-    ({ stat } = fs);
-    blobFromSync = (path4, type) => fromBlob(statSync(path4), path4, type);
+    ({ stat } = import_node_fs.promises);
+    blobFromSync = (path4, type) => fromBlob((0, import_node_fs.statSync)(path4), path4, type);
     blobFrom = (path4, type) => stat(path4).then((stat3) => fromBlob(stat3, path4, type));
     fileFrom = (path4, type) => stat(path4).then((stat3) => fromFile(stat3, path4, type));
-    fileFromSync = (path4, type) => fromFile(statSync(path4), path4, type);
+    fileFromSync = (path4, type) => fromFile((0, import_node_fs.statSync)(path4), path4, type);
     fromBlob = (stat3, path4, type = "") => new fetch_blob_default([new BlobDataItem({
       path: path4,
       size: stat3.size,
@@ -6970,7 +6966,7 @@ var init_from = __esm({
       size: stat3.size,
       lastModified: stat3.mtimeMs,
       start: 0
-    })], basename(path4), { type, lastModified: stat3.mtimeMs });
+    })], (0, import_node_path.basename)(path4), { type, lastModified: stat3.mtimeMs });
     BlobDataItem = class _BlobDataItem {
       #path;
       #start;
@@ -6997,7 +6993,7 @@ var init_from = __esm({
         if (mtimeMs > this.lastModified) {
           throw new import_node_domexception.default("The requested file could not be read, typically due to permission problems that have occurred after a reference to a file was acquired.", "NotReadableError");
         }
-        yield* createReadStream(this.#path, {
+        yield* (0, import_node_fs.createReadStream)(this.#path, {
           start: this.#start,
           end: this.#start + this.size - 1
         });
@@ -7372,9 +7368,6 @@ var init_multipart_parser = __esm({
 });
 
 // node_modules/node-fetch/src/body.js
-import Stream, { PassThrough } from "node:stream";
-import { types, deprecate, promisify } from "node:util";
-import { Buffer as Buffer2 } from "node:buffer";
 async function consumeBody(data) {
   if (data[INTERNALS].disturbed) {
     throw new TypeError(`body used already for: ${data.url}`);
@@ -7385,10 +7378,10 @@ async function consumeBody(data) {
   }
   const { body } = data;
   if (body === null) {
-    return Buffer2.alloc(0);
+    return import_node_buffer.Buffer.alloc(0);
   }
-  if (!(body instanceof Stream)) {
-    return Buffer2.alloc(0);
+  if (!(body instanceof import_node_stream.default)) {
+    return import_node_buffer.Buffer.alloc(0);
   }
   const accum = [];
   let accumBytes = 0;
@@ -7409,9 +7402,9 @@ async function consumeBody(data) {
   if (body.readableEnded === true || body._readableState.ended === true) {
     try {
       if (accum.every((c) => typeof c === "string")) {
-        return Buffer2.from(accum.join(""));
+        return import_node_buffer.Buffer.from(accum.join(""));
       }
-      return Buffer2.concat(accum, accumBytes);
+      return import_node_buffer.Buffer.concat(accum, accumBytes);
     } catch (error) {
       throw new FetchError(`Could not create Buffer from response body for ${data.url}: ${error.message}`, "system", error);
     }
@@ -7419,15 +7412,18 @@ async function consumeBody(data) {
     throw new FetchError(`Premature close of server response while trying to fetch ${data.url}`);
   }
 }
-var pipeline, INTERNALS, Body, clone, getNonSpecFormDataBoundary, extractContentType, getTotalBytes, writeToStream;
+var import_node_stream, import_node_util, import_node_buffer, pipeline, INTERNALS, Body, clone, getNonSpecFormDataBoundary, extractContentType, getTotalBytes, writeToStream;
 var init_body = __esm({
   "node_modules/node-fetch/src/body.js"() {
+    import_node_stream = __toESM(require("node:stream"), 1);
+    import_node_util = require("node:util");
+    import_node_buffer = require("node:buffer");
     init_fetch_blob();
     init_esm_min();
     init_fetch_error();
     init_base();
     init_is();
-    pipeline = promisify(Stream.pipeline);
+    pipeline = (0, import_node_util.promisify)(import_node_stream.default.pipeline);
     INTERNALS = /* @__PURE__ */ Symbol("Body internals");
     Body = class {
       constructor(body, {
@@ -7437,25 +7433,25 @@ var init_body = __esm({
         if (body === null) {
           body = null;
         } else if (isURLSearchParameters(body)) {
-          body = Buffer2.from(body.toString());
+          body = import_node_buffer.Buffer.from(body.toString());
         } else if (isBlob(body)) {
-        } else if (Buffer2.isBuffer(body)) {
-        } else if (types.isAnyArrayBuffer(body)) {
-          body = Buffer2.from(body);
+        } else if (import_node_buffer.Buffer.isBuffer(body)) {
+        } else if (import_node_util.types.isAnyArrayBuffer(body)) {
+          body = import_node_buffer.Buffer.from(body);
         } else if (ArrayBuffer.isView(body)) {
-          body = Buffer2.from(body.buffer, body.byteOffset, body.byteLength);
-        } else if (body instanceof Stream) {
+          body = import_node_buffer.Buffer.from(body.buffer, body.byteOffset, body.byteLength);
+        } else if (body instanceof import_node_stream.default) {
         } else if (body instanceof FormData2) {
           body = formDataToBlob(body);
           boundary = body.type.split("=")[1];
         } else {
-          body = Buffer2.from(String(body));
+          body = import_node_buffer.Buffer.from(String(body));
         }
         let stream4 = body;
-        if (Buffer2.isBuffer(body)) {
-          stream4 = Stream.Readable.from(body);
+        if (import_node_buffer.Buffer.isBuffer(body)) {
+          stream4 = import_node_stream.default.Readable.from(body);
         } else if (isBlob(body)) {
-          stream4 = Stream.Readable.from(body.stream());
+          stream4 = import_node_stream.default.Readable.from(body.stream());
         }
         this[INTERNALS] = {
           body,
@@ -7465,7 +7461,7 @@ var init_body = __esm({
           error: null
         };
         this.size = size;
-        if (body instanceof Stream) {
+        if (body instanceof import_node_stream.default) {
           body.on("error", (error_) => {
             const error = error_ instanceof FetchBaseError ? error_ : new FetchError(`Invalid response body while trying to fetch ${this.url}: ${error_.message}`, "system", error_);
             this[INTERNALS].error = error;
@@ -7539,7 +7535,7 @@ var init_body = __esm({
         return consumeBody(this);
       }
     };
-    Body.prototype.buffer = deprecate(Body.prototype.buffer, "Please use 'response.arrayBuffer()' instead of 'response.buffer()'", "node-fetch#buffer");
+    Body.prototype.buffer = (0, import_node_util.deprecate)(Body.prototype.buffer, "Please use 'response.arrayBuffer()' instead of 'response.buffer()'", "node-fetch#buffer");
     Object.defineProperties(Body.prototype, {
       body: { enumerable: true },
       bodyUsed: { enumerable: true },
@@ -7547,7 +7543,7 @@ var init_body = __esm({
       blob: { enumerable: true },
       json: { enumerable: true },
       text: { enumerable: true },
-      data: { get: deprecate(
+      data: { get: (0, import_node_util.deprecate)(
         () => {
         },
         "data doesn't exist, use json(), text(), arrayBuffer(), or body instead",
@@ -7561,9 +7557,9 @@ var init_body = __esm({
       if (instance.bodyUsed) {
         throw new Error("cannot clone body after it is used");
       }
-      if (body instanceof Stream && typeof body.getBoundary !== "function") {
-        p1 = new PassThrough({ highWaterMark });
-        p2 = new PassThrough({ highWaterMark });
+      if (body instanceof import_node_stream.default && typeof body.getBoundary !== "function") {
+        p1 = new import_node_stream.PassThrough({ highWaterMark });
+        p2 = new import_node_stream.PassThrough({ highWaterMark });
         body.pipe(p1);
         body.pipe(p2);
         instance[INTERNALS].stream = p1;
@@ -7571,7 +7567,7 @@ var init_body = __esm({
       }
       return body;
     };
-    getNonSpecFormDataBoundary = deprecate(
+    getNonSpecFormDataBoundary = (0, import_node_util.deprecate)(
       (body) => body.getBoundary(),
       "form-data doesn't follow the spec and requires special treatment. Use alternative package",
       "https://github.com/node-fetch/node-fetch/issues/1167"
@@ -7589,7 +7585,7 @@ var init_body = __esm({
       if (isBlob(body)) {
         return body.type || null;
       }
-      if (Buffer2.isBuffer(body) || types.isAnyArrayBuffer(body) || ArrayBuffer.isView(body)) {
+      if (import_node_buffer.Buffer.isBuffer(body) || import_node_util.types.isAnyArrayBuffer(body) || ArrayBuffer.isView(body)) {
         return null;
       }
       if (body instanceof FormData2) {
@@ -7598,7 +7594,7 @@ var init_body = __esm({
       if (body && typeof body.getBoundary === "function") {
         return `multipart/form-data;boundary=${getNonSpecFormDataBoundary(body)}`;
       }
-      if (body instanceof Stream) {
+      if (body instanceof import_node_stream.default) {
         return null;
       }
       return "text/plain;charset=UTF-8";
@@ -7611,7 +7607,7 @@ var init_body = __esm({
       if (isBlob(body)) {
         return body.size;
       }
-      if (Buffer2.isBuffer(body)) {
+      if (import_node_buffer.Buffer.isBuffer(body)) {
         return body.length;
       }
       if (body && typeof body.getLengthSync === "function") {
@@ -7630,8 +7626,6 @@ var init_body = __esm({
 });
 
 // node_modules/node-fetch/src/headers.js
-import { types as types2 } from "node:util";
-import http from "node:http";
 function fromRawHeaders(headers = []) {
   return new Headers2(
     headers.reduce((result, value, index, array) => {
@@ -7650,17 +7644,19 @@ function fromRawHeaders(headers = []) {
     })
   );
 }
-var validateHeaderName, validateHeaderValue, Headers2;
+var import_node_util2, import_node_http, validateHeaderName, validateHeaderValue, Headers2;
 var init_headers = __esm({
   "node_modules/node-fetch/src/headers.js"() {
-    validateHeaderName = typeof http.validateHeaderName === "function" ? http.validateHeaderName : (name) => {
+    import_node_util2 = require("node:util");
+    import_node_http = __toESM(require("node:http"), 1);
+    validateHeaderName = typeof import_node_http.default.validateHeaderName === "function" ? import_node_http.default.validateHeaderName : (name) => {
       if (!/^[\^`\-\w!#$%&'*+.|~]+$/.test(name)) {
         const error = new TypeError(`Header name must be a valid HTTP token [${name}]`);
         Object.defineProperty(error, "code", { value: "ERR_INVALID_HTTP_TOKEN" });
         throw error;
       }
     };
-    validateHeaderValue = typeof http.validateHeaderValue === "function" ? http.validateHeaderValue : (name, value) => {
+    validateHeaderValue = typeof import_node_http.default.validateHeaderValue === "function" ? import_node_http.default.validateHeaderValue : (name, value) => {
       if (/[^\t\u0020-\u007E\u0080-\u00FF]/.test(value)) {
         const error = new TypeError(`Invalid character in header content ["${name}"]`);
         Object.defineProperty(error, "code", { value: "ERR_INVALID_CHAR" });
@@ -7682,7 +7678,7 @@ var init_headers = __esm({
             result.push(...values.map((value) => [name, value]));
           }
         } else if (init == null) {
-        } else if (typeof init === "object" && !types2.isBoxedPrimitive(init)) {
+        } else if (typeof init === "object" && !import_node_util2.types.isBoxedPrimitive(init)) {
           const method = init[Symbol.iterator];
           if (method == null) {
             result.push(...Object.entries(init));
@@ -7691,7 +7687,7 @@ var init_headers = __esm({
               throw new TypeError("Header pairs must be iterable");
             }
             result = [...init].map((pair) => {
-              if (typeof pair !== "object" || types2.isBoxedPrimitive(pair)) {
+              if (typeof pair !== "object" || import_node_util2.types.isBoxedPrimitive(pair)) {
                 throw new TypeError("Each header pair must be an iterable object");
               }
               return [...pair];
@@ -7973,7 +7969,6 @@ var init_get_search = __esm({
 });
 
 // node_modules/node-fetch/src/utils/referrer.js
-import { isIP } from "node:net";
 function stripURLForUseAsAReferrer(url2, originOnly = false) {
   if (url2 == null) {
     return "no-referrer";
@@ -8002,7 +7997,7 @@ function isOriginPotentiallyTrustworthy(url2) {
     return true;
   }
   const hostIp = url2.host.replace(/(^\[)|(]$)/g, "");
-  const hostIPVersion = isIP(hostIp);
+  const hostIPVersion = (0, import_node_net.isIP)(hostIp);
   if (hostIPVersion === 4 && /^127\./.test(hostIp)) {
     return true;
   }
@@ -8099,9 +8094,10 @@ function parseReferrerPolicyFromHeader(headers) {
   }
   return policy;
 }
-var ReferrerPolicy, DEFAULT_REFERRER_POLICY;
+var import_node_net, ReferrerPolicy, DEFAULT_REFERRER_POLICY;
 var init_referrer = __esm({
   "node_modules/node-fetch/src/utils/referrer.js"() {
+    import_node_net = require("node:net");
     ReferrerPolicy = /* @__PURE__ */ new Set([
       "",
       "no-referrer",
@@ -8118,11 +8114,11 @@ var init_referrer = __esm({
 });
 
 // node_modules/node-fetch/src/request.js
-import { format as formatUrl } from "node:url";
-import { deprecate as deprecate2 } from "node:util";
-var INTERNALS3, isRequest, doBadDataWarn, Request, getNodeRequestOptions;
+var import_node_url, import_node_util3, INTERNALS3, isRequest, doBadDataWarn, Request, getNodeRequestOptions;
 var init_request = __esm({
   "node_modules/node-fetch/src/request.js"() {
+    import_node_url = require("node:url");
+    import_node_util3 = require("node:util");
     init_headers();
     init_body();
     init_is();
@@ -8132,7 +8128,7 @@ var init_request = __esm({
     isRequest = (object) => {
       return typeof object === "object" && typeof object[INTERNALS3] === "object";
     };
-    doBadDataWarn = deprecate2(
+    doBadDataWarn = (0, import_node_util3.deprecate)(
       () => {
       },
       ".data is not a valid RequestInit property, use .body instead",
@@ -8209,7 +8205,7 @@ var init_request = __esm({
       }
       /** @returns {string} */
       get url() {
-        return formatUrl(this[INTERNALS3].parsedURL);
+        return (0, import_node_url.format)(this[INTERNALS3].parsedURL);
       }
       /** @returns {Headers} */
       get headers() {
@@ -8353,11 +8349,6 @@ __export(src_exports, {
   fileFromSync: () => fileFromSync,
   isRedirect: () => isRedirect
 });
-import http2 from "node:http";
-import https from "node:https";
-import zlib from "node:zlib";
-import Stream2, { PassThrough as PassThrough2, pipeline as pump } from "node:stream";
-import { Buffer as Buffer3 } from "node:buffer";
 async function fetch2(url2, options_) {
   return new Promise((resolve2, reject) => {
     const request = new Request(url2, options_);
@@ -8371,13 +8362,13 @@ async function fetch2(url2, options_) {
       resolve2(response2);
       return;
     }
-    const send = (parsedURL.protocol === "https:" ? https : http2).request;
+    const send = (parsedURL.protocol === "https:" ? import_node_https.default : import_node_http2.default).request;
     const { signal } = request;
     let response = null;
     const abort = () => {
       const error = new AbortError("The operation was aborted.");
       reject(error);
-      if (request.body && request.body instanceof Stream2.Readable) {
+      if (request.body && request.body instanceof import_node_stream2.default.Readable) {
         request.body.destroy(error);
       }
       if (!response || !response.body) {
@@ -8476,7 +8467,7 @@ async function fetch2(url2, options_) {
                 requestOptions.headers.delete(name);
               }
             }
-            if (response_.statusCode !== 303 && request.body && options_.body instanceof Stream2.Readable) {
+            if (response_.statusCode !== 303 && request.body && options_.body instanceof import_node_stream2.default.Readable) {
               reject(new FetchError("Cannot follow redirect with body being a readable stream", "unsupported-redirect"));
               finalize();
               return;
@@ -8503,7 +8494,7 @@ async function fetch2(url2, options_) {
           signal.removeEventListener("abort", abortAndFinalize);
         });
       }
-      let body = pump(response_, new PassThrough2(), (error) => {
+      let body = (0, import_node_stream2.pipeline)(response_, new import_node_stream2.PassThrough(), (error) => {
         if (error) {
           reject(error);
         }
@@ -8527,11 +8518,11 @@ async function fetch2(url2, options_) {
         return;
       }
       const zlibOptions2 = {
-        flush: zlib.Z_SYNC_FLUSH,
-        finishFlush: zlib.Z_SYNC_FLUSH
+        flush: import_node_zlib.default.Z_SYNC_FLUSH,
+        finishFlush: import_node_zlib.default.Z_SYNC_FLUSH
       };
       if (codings === "gzip" || codings === "x-gzip") {
-        body = pump(body, zlib.createGunzip(zlibOptions2), (error) => {
+        body = (0, import_node_stream2.pipeline)(body, import_node_zlib.default.createGunzip(zlibOptions2), (error) => {
           if (error) {
             reject(error);
           }
@@ -8541,20 +8532,20 @@ async function fetch2(url2, options_) {
         return;
       }
       if (codings === "deflate" || codings === "x-deflate") {
-        const raw = pump(response_, new PassThrough2(), (error) => {
+        const raw = (0, import_node_stream2.pipeline)(response_, new import_node_stream2.PassThrough(), (error) => {
           if (error) {
             reject(error);
           }
         });
         raw.once("data", (chunk) => {
           if ((chunk[0] & 15) === 8) {
-            body = pump(body, zlib.createInflate(), (error) => {
+            body = (0, import_node_stream2.pipeline)(body, import_node_zlib.default.createInflate(), (error) => {
               if (error) {
                 reject(error);
               }
             });
           } else {
-            body = pump(body, zlib.createInflateRaw(), (error) => {
+            body = (0, import_node_stream2.pipeline)(body, import_node_zlib.default.createInflateRaw(), (error) => {
               if (error) {
                 reject(error);
               }
@@ -8572,7 +8563,7 @@ async function fetch2(url2, options_) {
         return;
       }
       if (codings === "br") {
-        body = pump(body, zlib.createBrotliDecompress(), (error) => {
+        body = (0, import_node_stream2.pipeline)(body, import_node_zlib.default.createBrotliDecompress(), (error) => {
           if (error) {
             reject(error);
           }
@@ -8588,7 +8579,7 @@ async function fetch2(url2, options_) {
   });
 }
 function fixResponseChunkedTransferBadEnding(request, errorCallback) {
-  const LAST_CHUNK = Buffer3.from("0\r\n\r\n");
+  const LAST_CHUNK = import_node_buffer2.Buffer.from("0\r\n\r\n");
   let isChunkedTransfer = false;
   let properLastChunkReceived = false;
   let previousChunk;
@@ -8605,9 +8596,9 @@ function fixResponseChunkedTransferBadEnding(request, errorCallback) {
       }
     };
     const onData = (buf) => {
-      properLastChunkReceived = Buffer3.compare(buf.slice(-5), LAST_CHUNK) === 0;
+      properLastChunkReceived = import_node_buffer2.Buffer.compare(buf.slice(-5), LAST_CHUNK) === 0;
       if (!properLastChunkReceived && previousChunk) {
-        properLastChunkReceived = Buffer3.compare(previousChunk.slice(-3), LAST_CHUNK.slice(0, 3)) === 0 && Buffer3.compare(buf.slice(-2), LAST_CHUNK.slice(3)) === 0;
+        properLastChunkReceived = import_node_buffer2.Buffer.compare(previousChunk.slice(-3), LAST_CHUNK.slice(0, 3)) === 0 && import_node_buffer2.Buffer.compare(buf.slice(-2), LAST_CHUNK.slice(3)) === 0;
       }
       previousChunk = buf;
     };
@@ -8619,9 +8610,14 @@ function fixResponseChunkedTransferBadEnding(request, errorCallback) {
     });
   });
 }
-var supportedSchemas;
+var import_node_http2, import_node_https, import_node_zlib, import_node_stream2, import_node_buffer2, supportedSchemas;
 var init_src = __esm({
   "node_modules/node-fetch/src/index.js"() {
+    import_node_http2 = __toESM(require("node:http"), 1);
+    import_node_https = __toESM(require("node:https"), 1);
+    import_node_zlib = __toESM(require("node:zlib"), 1);
+    import_node_stream2 = __toESM(require("node:stream"), 1);
+    import_node_buffer2 = require("node:buffer");
     init_dist();
     init_body();
     init_response();
@@ -8640,19 +8636,19 @@ var init_src = __esm({
 
 // node_modules/gaxios/build/cjs/src/gaxios.js
 var require_gaxios = __commonJS({
-  "node_modules/gaxios/build/cjs/src/gaxios.js"(exports) {
+  "node_modules/gaxios/build/cjs/src/gaxios.js"(exports2) {
     "use strict";
-    var __importDefault = exports && exports.__importDefault || function(mod) {
+    var __importDefault = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
     var _a2;
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Gaxios = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.Gaxios = void 0;
     var extend_1 = __importDefault(require_extend());
-    var https_1 = __require("https");
+    var https_1 = require("https");
     var common_js_1 = require_common();
     var retry_js_1 = require_retry3();
-    var stream_1 = __require("stream");
+    var stream_1 = require("stream");
     var interceptor_js_1 = require_interceptor();
     var randomUUID = async () => globalThis.crypto?.randomUUID() || (await import("crypto")).randomUUID();
     var HTTP_STATUS_NO_CONTENT = 204;
@@ -9107,16 +9103,16 @@ Content-Type: ${partContentType}\r
         return base;
       }
     };
-    exports.Gaxios = Gaxios;
+    exports2.Gaxios = Gaxios;
     _a2 = Gaxios;
   }
 });
 
 // node_modules/gaxios/build/cjs/src/index.js
 var require_src2 = __commonJS({
-  "node_modules/gaxios/build/cjs/src/index.js"(exports) {
+  "node_modules/gaxios/build/cjs/src/index.js"(exports2) {
     "use strict";
-    var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o, m2, k, k2) {
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m2, k, k2) {
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m2, k);
       if (!desc || ("get" in desc ? !m2.__esModule : desc.writable || desc.configurable)) {
@@ -9129,31 +9125,31 @@ var require_src2 = __commonJS({
       if (k2 === void 0) k2 = k;
       o[k2] = m2[k];
     }));
-    var __exportStar = exports && exports.__exportStar || function(m2, exports2) {
-      for (var p in m2) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports2, p)) __createBinding(exports2, m2, p);
+    var __exportStar = exports2 && exports2.__exportStar || function(m2, exports3) {
+      for (var p in m2) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding(exports3, m2, p);
     };
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.instance = exports.Gaxios = exports.GaxiosError = void 0;
-    exports.request = request;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.instance = exports2.Gaxios = exports2.GaxiosError = void 0;
+    exports2.request = request;
     var gaxios_js_1 = require_gaxios();
-    Object.defineProperty(exports, "Gaxios", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "Gaxios", { enumerable: true, get: function() {
       return gaxios_js_1.Gaxios;
     } });
     var common_js_1 = require_common();
-    Object.defineProperty(exports, "GaxiosError", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "GaxiosError", { enumerable: true, get: function() {
       return common_js_1.GaxiosError;
     } });
-    __exportStar(require_interceptor(), exports);
-    exports.instance = new gaxios_js_1.Gaxios();
+    __exportStar(require_interceptor(), exports2);
+    exports2.instance = new gaxios_js_1.Gaxios();
     async function request(opts) {
-      return exports.instance.request(opts);
+      return exports2.instance.request(opts);
     }
   }
 });
 
 // node_modules/bignumber.js/bignumber.js
 var require_bignumber = __commonJS({
-  "node_modules/bignumber.js/bignumber.js"(exports, module) {
+  "node_modules/bignumber.js/bignumber.js"(exports2, module2) {
     (function(globalObject) {
       "use strict";
       var BigNumber, isNumeric = /^-?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i, mathceil = Math.ceil, mathfloor = Math.floor, bignumberError = "[BigNumber Error] ", tooManyDigits = bignumberError + "Number primitive has more than 15 significant digits: ", BASE = 1e14, LOG_BASE = 14, MAX_SAFE_INTEGER = 9007199254740991, POWS_TEN = [1, 10, 100, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9, 1e10, 1e11, 1e12, 1e13], SQRT_BASE = 1e7, MAX = 1e9;
@@ -10490,23 +10486,23 @@ var require_bignumber = __commonJS({
         define(function() {
           return BigNumber;
         });
-      } else if (typeof module != "undefined" && module.exports) {
-        module.exports = BigNumber;
+      } else if (typeof module2 != "undefined" && module2.exports) {
+        module2.exports = BigNumber;
       } else {
         if (!globalObject) {
           globalObject = typeof self != "undefined" && self ? self : window;
         }
         globalObject.BigNumber = BigNumber;
       }
-    })(exports);
+    })(exports2);
   }
 });
 
 // node_modules/json-bigint/lib/stringify.js
 var require_stringify = __commonJS({
-  "node_modules/json-bigint/lib/stringify.js"(exports, module) {
+  "node_modules/json-bigint/lib/stringify.js"(exports2, module2) {
     var BigNumber = require_bignumber();
-    var JSON2 = module.exports;
+    var JSON2 = module2.exports;
     (function() {
       "use strict";
       function f3(n) {
@@ -10616,7 +10612,7 @@ var require_stringify = __commonJS({
 
 // node_modules/json-bigint/lib/parse.js
 var require_parse = __commonJS({
-  "node_modules/json-bigint/lib/parse.js"(exports, module) {
+  "node_modules/json-bigint/lib/parse.js"(exports2, module2) {
     var BigNumber = null;
     var suspectProtoRx = /(?:_|\\u005[Ff])(?:_|\\u005[Ff])(?:p|\\u0070)(?:r|\\u0072)(?:o|\\u006[Ff])(?:t|\\u0074)(?:o|\\u006[Ff])(?:_|\\u005[Ff])(?:_|\\u005[Ff])/;
     var suspectConstructorRx = /(?:c|\\u0063)(?:o|\\u006[Ff])(?:n|\\u006[Ee])(?:s|\\u0073)(?:t|\\u0074)(?:r|\\u0072)(?:u|\\u0075)(?:c|\\u0063)(?:t|\\u0074)(?:o|\\u006[Ff])(?:r|\\u0072)/;
@@ -10891,40 +10887,40 @@ var require_parse = __commonJS({
         })({ "": result }, "") : result;
       };
     };
-    module.exports = json_parse;
+    module2.exports = json_parse;
   }
 });
 
 // node_modules/json-bigint/index.js
 var require_json_bigint = __commonJS({
-  "node_modules/json-bigint/index.js"(exports, module) {
+  "node_modules/json-bigint/index.js"(exports2, module2) {
     var json_stringify = require_stringify().stringify;
     var json_parse = require_parse();
-    module.exports = function(options) {
+    module2.exports = function(options) {
       return {
         parse: json_parse(options),
         stringify: json_stringify
       };
     };
-    module.exports.parse = json_parse();
-    module.exports.stringify = json_stringify;
+    module2.exports.parse = json_parse();
+    module2.exports.stringify = json_stringify;
   }
 });
 
 // node_modules/gcp-metadata/build/src/gcp-residency.js
 var require_gcp_residency = __commonJS({
-  "node_modules/gcp-metadata/build/src/gcp-residency.js"(exports) {
+  "node_modules/gcp-metadata/build/src/gcp-residency.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.GCE_LINUX_BIOS_PATHS = void 0;
-    exports.isGoogleCloudServerless = isGoogleCloudServerless;
-    exports.isGoogleComputeEngineLinux = isGoogleComputeEngineLinux;
-    exports.isGoogleComputeEngineMACAddress = isGoogleComputeEngineMACAddress;
-    exports.isGoogleComputeEngine = isGoogleComputeEngine;
-    exports.detectGCPResidency = detectGCPResidency;
-    var fs_1 = __require("fs");
-    var os_1 = __require("os");
-    exports.GCE_LINUX_BIOS_PATHS = {
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.GCE_LINUX_BIOS_PATHS = void 0;
+    exports2.isGoogleCloudServerless = isGoogleCloudServerless;
+    exports2.isGoogleComputeEngineLinux = isGoogleComputeEngineLinux;
+    exports2.isGoogleComputeEngineMACAddress = isGoogleComputeEngineMACAddress;
+    exports2.isGoogleComputeEngine = isGoogleComputeEngine;
+    exports2.detectGCPResidency = detectGCPResidency;
+    var fs_1 = require("fs");
+    var os_1 = require("os");
+    exports2.GCE_LINUX_BIOS_PATHS = {
       BIOS_DATE: "/sys/class/dmi/id/bios_date",
       BIOS_VENDOR: "/sys/class/dmi/id/bios_vendor"
     };
@@ -10937,8 +10933,8 @@ var require_gcp_residency = __commonJS({
       if ((0, os_1.platform)() !== "linux")
         return false;
       try {
-        (0, fs_1.statSync)(exports.GCE_LINUX_BIOS_PATHS.BIOS_DATE);
-        const biosVendor = (0, fs_1.readFileSync)(exports.GCE_LINUX_BIOS_PATHS.BIOS_VENDOR, "utf8");
+        (0, fs_1.statSync)(exports2.GCE_LINUX_BIOS_PATHS.BIOS_DATE);
+        const biosVendor = (0, fs_1.readFileSync)(exports2.GCE_LINUX_BIOS_PATHS.BIOS_VENDOR, "utf8");
         return /Google/.test(biosVendor);
       } catch {
         return false;
@@ -10968,10 +10964,10 @@ var require_gcp_residency = __commonJS({
 
 // node_modules/google-logging-utils/build/src/colours.js
 var require_colours = __commonJS({
-  "node_modules/google-logging-utils/build/src/colours.js"(exports) {
+  "node_modules/google-logging-utils/build/src/colours.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Colours = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.Colours = void 0;
     var Colours = class _Colours {
       /**
        * @param stream The stream (e.g. process.stderr)
@@ -11010,7 +11006,7 @@ var require_colours = __commonJS({
         }
       }
     };
-    exports.Colours = Colours;
+    exports2.Colours = Colours;
     Colours.enabled = false;
     Colours.reset = "";
     Colours.bright = "";
@@ -11029,9 +11025,9 @@ var require_colours = __commonJS({
 
 // node_modules/google-logging-utils/build/src/logging-utils.js
 var require_logging_utils = __commonJS({
-  "node_modules/google-logging-utils/build/src/logging-utils.js"(exports) {
+  "node_modules/google-logging-utils/build/src/logging-utils.js"(exports2) {
     "use strict";
-    var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o, m2, k, k2) {
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m2, k, k2) {
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m2, k);
       if (!desc || ("get" in desc ? !m2.__esModule : desc.writable || desc.configurable)) {
@@ -11044,12 +11040,12 @@ var require_logging_utils = __commonJS({
       if (k2 === void 0) k2 = k;
       o[k2] = m2[k];
     }));
-    var __setModuleDefault = exports && exports.__setModuleDefault || (Object.create ? (function(o, v) {
+    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? (function(o, v) {
       Object.defineProperty(o, "default", { enumerable: true, value: v });
     }) : function(o, v) {
       o["default"] = v;
     });
-    var __importStar = exports && exports.__importStar || /* @__PURE__ */ (function() {
+    var __importStar = exports2 && exports2.__importStar || /* @__PURE__ */ (function() {
       var ownKeys = function(o) {
         ownKeys = Object.getOwnPropertyNames || function(o2) {
           var ar = [];
@@ -11068,16 +11064,16 @@ var require_logging_utils = __commonJS({
         return result;
       };
     })();
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.env = exports.DebugLogBackendBase = exports.placeholder = exports.AdhocDebugLogger = exports.LogSeverity = void 0;
-    exports.getNodeBackend = getNodeBackend;
-    exports.getDebugBackend = getDebugBackend;
-    exports.getStructuredBackend = getStructuredBackend;
-    exports.setBackend = setBackend;
-    exports.log = log;
-    var events_1 = __require("events");
-    var process2 = __importStar(__require("process"));
-    var util3 = __importStar(__require("util"));
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.env = exports2.DebugLogBackendBase = exports2.placeholder = exports2.AdhocDebugLogger = exports2.LogSeverity = void 0;
+    exports2.getNodeBackend = getNodeBackend;
+    exports2.getDebugBackend = getDebugBackend;
+    exports2.getStructuredBackend = getStructuredBackend;
+    exports2.setBackend = setBackend;
+    exports2.log = log;
+    var events_1 = require("events");
+    var process2 = __importStar(require("process"));
+    var util3 = __importStar(require("util"));
     var colours_1 = require_colours();
     var LogSeverity;
     (function(LogSeverity2) {
@@ -11086,7 +11082,7 @@ var require_logging_utils = __commonJS({
       LogSeverity2["INFO"] = "INFO";
       LogSeverity2["WARNING"] = "WARNING";
       LogSeverity2["ERROR"] = "ERROR";
-    })(LogSeverity || (exports.LogSeverity = LogSeverity = {}));
+    })(LogSeverity || (exports2.LogSeverity = LogSeverity = {}));
     var AdhocDebugLogger = class extends events_1.EventEmitter {
       /**
        * @param upstream The backend will pass a function that will be
@@ -11124,8 +11120,8 @@ var require_logging_utils = __commonJS({
         this.invoke({ severity }, ...args);
       }
     };
-    exports.AdhocDebugLogger = AdhocDebugLogger;
-    exports.placeholder = new AdhocDebugLogger("", () => {
+    exports2.AdhocDebugLogger = AdhocDebugLogger;
+    exports2.placeholder = new AdhocDebugLogger("", () => {
     }).func;
     var DebugLogBackendBase = class {
       constructor() {
@@ -11133,7 +11129,7 @@ var require_logging_utils = __commonJS({
         this.cached = /* @__PURE__ */ new Map();
         this.filters = [];
         this.filtersSet = false;
-        let nodeFlag = (_a2 = process2.env[exports.env.nodeEnables]) !== null && _a2 !== void 0 ? _a2 : "*";
+        let nodeFlag = (_a2 = process2.env[exports2.env.nodeEnables]) !== null && _a2 !== void 0 ? _a2 : "*";
         if (nodeFlag === "all") {
           nodeFlag = "*";
         }
@@ -11156,7 +11152,7 @@ var require_logging_utils = __commonJS({
         }
       }
     };
-    exports.DebugLogBackendBase = DebugLogBackendBase;
+    exports2.DebugLogBackendBase = DebugLogBackendBase;
     var NodeBackend = class extends DebugLogBackendBase {
       constructor() {
         super(...arguments);
@@ -11260,7 +11256,7 @@ var require_logging_utils = __commonJS({
     function getStructuredBackend(upstream) {
       return new StructuredBackend(upstream);
     }
-    exports.env = {
+    exports2.env = {
       /**
        * Filter wildcards specific to the Node syntax, and similar to the built-in
        * utils.debuglog() environment variable. If missing, disables logging.
@@ -11275,13 +11271,13 @@ var require_logging_utils = __commonJS({
     }
     function log(namespace, parent) {
       if (!cachedBackend) {
-        const enablesFlag = process2.env[exports.env.nodeEnables];
+        const enablesFlag = process2.env[exports2.env.nodeEnables];
         if (!enablesFlag) {
-          return exports.placeholder;
+          return exports2.placeholder;
         }
       }
       if (!namespace) {
-        return exports.placeholder;
+        return exports2.placeholder;
       }
       if (parent) {
         namespace = `${parent.instance.namespace}:${namespace}`;
@@ -11291,7 +11287,7 @@ var require_logging_utils = __commonJS({
         return existing.func;
       }
       if (cachedBackend === null) {
-        return exports.placeholder;
+        return exports2.placeholder;
       } else if (cachedBackend === void 0) {
         cachedBackend = getNodeBackend();
       }
@@ -11318,9 +11314,9 @@ var require_logging_utils = __commonJS({
 
 // node_modules/google-logging-utils/build/src/index.js
 var require_src3 = __commonJS({
-  "node_modules/google-logging-utils/build/src/index.js"(exports) {
+  "node_modules/google-logging-utils/build/src/index.js"(exports2) {
     "use strict";
-    var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o, m2, k, k2) {
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m2, k, k2) {
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m2, k);
       if (!desc || ("get" in desc ? !m2.__esModule : desc.writable || desc.configurable)) {
@@ -11333,19 +11329,19 @@ var require_src3 = __commonJS({
       if (k2 === void 0) k2 = k;
       o[k2] = m2[k];
     }));
-    var __exportStar = exports && exports.__exportStar || function(m2, exports2) {
-      for (var p in m2) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports2, p)) __createBinding(exports2, m2, p);
+    var __exportStar = exports2 && exports2.__exportStar || function(m2, exports3) {
+      for (var p in m2) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding(exports3, m2, p);
     };
-    Object.defineProperty(exports, "__esModule", { value: true });
-    __exportStar(require_logging_utils(), exports);
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    __exportStar(require_logging_utils(), exports2);
   }
 });
 
 // node_modules/gcp-metadata/build/src/index.js
 var require_src4 = __commonJS({
-  "node_modules/gcp-metadata/build/src/index.js"(exports) {
+  "node_modules/gcp-metadata/build/src/index.js"(exports2) {
     "use strict";
-    var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o, m2, k, k2) {
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m2, k, k2) {
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m2, k);
       if (!desc || ("get" in desc ? !m2.__esModule : desc.writable || desc.configurable)) {
@@ -11358,12 +11354,12 @@ var require_src4 = __commonJS({
       if (k2 === void 0) k2 = k;
       o[k2] = m2[k];
     }));
-    var __setModuleDefault = exports && exports.__setModuleDefault || (Object.create ? (function(o, v) {
+    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? (function(o, v) {
       Object.defineProperty(o, "default", { enumerable: true, value: v });
     }) : function(o, v) {
       o["default"] = v;
     });
-    var __importStar = exports && exports.__importStar || /* @__PURE__ */ (function() {
+    var __importStar = exports2 && exports2.__importStar || /* @__PURE__ */ (function() {
       var ownKeys = function(o) {
         ownKeys = Object.getOwnPropertyNames || function(o2) {
           var ar = [];
@@ -11382,32 +11378,32 @@ var require_src4 = __commonJS({
         return result;
       };
     })();
-    var __exportStar = exports && exports.__exportStar || function(m2, exports2) {
-      for (var p in m2) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports2, p)) __createBinding(exports2, m2, p);
+    var __exportStar = exports2 && exports2.__exportStar || function(m2, exports3) {
+      for (var p in m2) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding(exports3, m2, p);
     };
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.gcpResidencyCache = exports.METADATA_SERVER_DETECTION = exports.HEADERS = exports.HEADER_VALUE = exports.HEADER_NAME = exports.SECONDARY_HOST_ADDRESS = exports.HOST_ADDRESS = exports.BASE_PATH = void 0;
-    exports.instance = instance;
-    exports.project = project;
-    exports.universe = universe;
-    exports.bulk = bulk;
-    exports.isAvailable = isAvailable;
-    exports.resetIsAvailableCache = resetIsAvailableCache;
-    exports.getGCPResidency = getGCPResidency;
-    exports.setGCPResidency = setGCPResidency;
-    exports.requestTimeout = requestTimeout;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.gcpResidencyCache = exports2.METADATA_SERVER_DETECTION = exports2.HEADERS = exports2.HEADER_VALUE = exports2.HEADER_NAME = exports2.SECONDARY_HOST_ADDRESS = exports2.HOST_ADDRESS = exports2.BASE_PATH = void 0;
+    exports2.instance = instance;
+    exports2.project = project;
+    exports2.universe = universe;
+    exports2.bulk = bulk;
+    exports2.isAvailable = isAvailable;
+    exports2.resetIsAvailableCache = resetIsAvailableCache;
+    exports2.getGCPResidency = getGCPResidency;
+    exports2.setGCPResidency = setGCPResidency;
+    exports2.requestTimeout = requestTimeout;
     var gaxios_1 = require_src2();
     var jsonBigint = require_json_bigint();
     var gcp_residency_1 = require_gcp_residency();
     var logger = __importStar(require_src3());
-    exports.BASE_PATH = "/computeMetadata/v1";
-    exports.HOST_ADDRESS = "http://169.254.169.254";
-    exports.SECONDARY_HOST_ADDRESS = "http://metadata.google.internal.";
-    exports.HEADER_NAME = "Metadata-Flavor";
-    exports.HEADER_VALUE = "Google";
-    exports.HEADERS = Object.freeze({ [exports.HEADER_NAME]: exports.HEADER_VALUE });
+    exports2.BASE_PATH = "/computeMetadata/v1";
+    exports2.HOST_ADDRESS = "http://169.254.169.254";
+    exports2.SECONDARY_HOST_ADDRESS = "http://metadata.google.internal.";
+    exports2.HEADER_NAME = "Metadata-Flavor";
+    exports2.HEADER_VALUE = "Google";
+    exports2.HEADERS = Object.freeze({ [exports2.HEADER_NAME]: exports2.HEADER_VALUE });
     var log = logger.log("gcp-metadata");
-    exports.METADATA_SERVER_DETECTION = Object.freeze({
+    exports2.METADATA_SERVER_DETECTION = Object.freeze({
       "assume-present": "don't try to ping the metadata server, but assume it's present",
       none: "don't try to ping the metadata server, but don't try to use it either",
       "bios-only": "treat the result of a BIOS probe as canonical (don't fall back to pinging)",
@@ -11415,12 +11411,12 @@ var require_src4 = __commonJS({
     });
     function getBaseUrl2(baseUrl) {
       if (!baseUrl) {
-        baseUrl = process.env.GCE_METADATA_IP || process.env.GCE_METADATA_HOST || exports.HOST_ADDRESS;
+        baseUrl = process.env.GCE_METADATA_IP || process.env.GCE_METADATA_HOST || exports2.HOST_ADDRESS;
       }
       if (!/^https?:\/\//.test(baseUrl)) {
         baseUrl = `http://${baseUrl}`;
       }
-      return new URL(exports.BASE_PATH, baseUrl).href;
+      return new URL(exports2.BASE_PATH, baseUrl).href;
     }
     function validate(options) {
       Object.keys(options).forEach((key) => {
@@ -11437,7 +11433,7 @@ var require_src4 = __commonJS({
       });
     }
     async function metadataAccessor(type, options = {}, noResponseRetries = 3, fastFail = false) {
-      const headers = new Headers(exports.HEADERS);
+      const headers = new Headers(exports2.HEADERS);
       let metadataKey = "";
       let params = {};
       if (typeof type === "object") {
@@ -11472,9 +11468,9 @@ var require_src4 = __commonJS({
       log.info("instance request %j", req);
       const res = await requestMethod(req);
       log.info("instance metadata is %s", res.data);
-      const metadataFlavor = res.headers.get(exports.HEADER_NAME);
-      if (metadataFlavor !== exports.HEADER_VALUE) {
-        throw new RangeError(`Invalid response from metadata service: incorrect ${exports.HEADER_NAME} header. Expected '${exports.HEADER_VALUE}', got ${metadataFlavor ? `'${metadataFlavor}'` : "no header"}`);
+      const metadataFlavor = res.headers.get(exports2.HEADER_NAME);
+      if (metadataFlavor !== exports2.HEADER_VALUE) {
+        throw new RangeError(`Invalid response from metadata service: incorrect ${exports2.HEADER_NAME} header. Expected '${exports2.HEADER_VALUE}', got ${metadataFlavor ? `'${metadataFlavor}'` : "no header"}`);
       }
       if (typeof res.data === "string") {
         try {
@@ -11487,7 +11483,7 @@ var require_src4 = __commonJS({
     async function fastFailMetadataRequest(options) {
       const secondaryOptions = {
         ...options,
-        url: options.url?.toString().replace(getBaseUrl2(), getBaseUrl2(exports.SECONDARY_HOST_ADDRESS))
+        url: options.url?.toString().replace(getBaseUrl2(), getBaseUrl2(exports2.SECONDARY_HOST_ADDRESS))
       };
       const r1 = (0, gaxios_1.request)(options);
       const r2 = (0, gaxios_1.request)(secondaryOptions);
@@ -11520,8 +11516,8 @@ var require_src4 = __commonJS({
     async function isAvailable() {
       if (process.env.METADATA_SERVER_DETECTION) {
         const value = process.env.METADATA_SERVER_DETECTION.trim().toLocaleLowerCase();
-        if (!(value in exports.METADATA_SERVER_DETECTION)) {
-          throw new RangeError(`Unknown \`METADATA_SERVER_DETECTION\` env variable. Got \`${value}\`, but it should be \`${Object.keys(exports.METADATA_SERVER_DETECTION).join("`, `")}\`, or unset`);
+        if (!(value in exports2.METADATA_SERVER_DETECTION)) {
+          throw new RangeError(`Unknown \`METADATA_SERVER_DETECTION\` env variable. Got \`${value}\`, but it should be \`${Object.keys(exports2.METADATA_SERVER_DETECTION).join("`, `")}\`, or unset`);
         }
         switch (value) {
           case "assume-present":
@@ -11580,30 +11576,30 @@ var require_src4 = __commonJS({
     function resetIsAvailableCache() {
       cachedIsAvailableResponse = void 0;
     }
-    exports.gcpResidencyCache = null;
+    exports2.gcpResidencyCache = null;
     function getGCPResidency() {
-      if (exports.gcpResidencyCache === null) {
+      if (exports2.gcpResidencyCache === null) {
         setGCPResidency();
       }
-      return exports.gcpResidencyCache;
+      return exports2.gcpResidencyCache;
     }
     function setGCPResidency(value = null) {
-      exports.gcpResidencyCache = value !== null ? value : (0, gcp_residency_1.detectGCPResidency)();
+      exports2.gcpResidencyCache = value !== null ? value : (0, gcp_residency_1.detectGCPResidency)();
     }
     function requestTimeout() {
       return getGCPResidency() ? 0 : 3e3;
     }
-    __exportStar(require_gcp_residency(), exports);
+    __exportStar(require_gcp_residency(), exports2);
   }
 });
 
 // node_modules/base64-js/index.js
 var require_base64_js = __commonJS({
-  "node_modules/base64-js/index.js"(exports) {
+  "node_modules/base64-js/index.js"(exports2) {
     "use strict";
-    exports.byteLength = byteLength;
-    exports.toByteArray = toByteArray;
-    exports.fromByteArray = fromByteArray;
+    exports2.byteLength = byteLength;
+    exports2.toByteArray = toByteArray;
+    exports2.fromByteArray = fromByteArray;
     var lookup = [];
     var revLookup = [];
     var Arr = typeof Uint8Array !== "undefined" ? Uint8Array : Array;
@@ -11700,10 +11696,10 @@ var require_base64_js = __commonJS({
 
 // node_modules/google-auth-library/build/src/crypto/shared.js
 var require_shared = __commonJS({
-  "node_modules/google-auth-library/build/src/crypto/shared.js"(exports) {
+  "node_modules/google-auth-library/build/src/crypto/shared.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.fromArrayBufferToHex = fromArrayBufferToHex;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.fromArrayBufferToHex = fromArrayBufferToHex;
     function fromArrayBufferToHex(arrayBuffer) {
       const byteArray = Array.from(new Uint8Array(arrayBuffer));
       return byteArray.map((byte) => {
@@ -11715,10 +11711,10 @@ var require_shared = __commonJS({
 
 // node_modules/google-auth-library/build/src/crypto/browser/crypto.js
 var require_crypto = __commonJS({
-  "node_modules/google-auth-library/build/src/crypto/browser/crypto.js"(exports) {
+  "node_modules/google-auth-library/build/src/crypto/browser/crypto.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.BrowserCrypto = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.BrowserCrypto = void 0;
     var base64js = require_base64_js();
     var shared_1 = require_shared();
     var BrowserCrypto = class _BrowserCrypto {
@@ -11805,17 +11801,17 @@ var require_crypto = __commonJS({
         return window.crypto.subtle.sign("HMAC", cryptoKey, enc.encode(msg));
       }
     };
-    exports.BrowserCrypto = BrowserCrypto;
+    exports2.BrowserCrypto = BrowserCrypto;
   }
 });
 
 // node_modules/google-auth-library/build/src/crypto/node/crypto.js
 var require_crypto2 = __commonJS({
-  "node_modules/google-auth-library/build/src/crypto/node/crypto.js"(exports) {
+  "node_modules/google-auth-library/build/src/crypto/node/crypto.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.NodeCrypto = void 0;
-    var crypto3 = __require("crypto");
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.NodeCrypto = void 0;
+    var crypto3 = require("crypto");
     var NodeCrypto = class {
       async sha256DigestBase64(str) {
         return crypto3.createHash("sha256").update(str).digest("base64");
@@ -11863,7 +11859,7 @@ var require_crypto2 = __commonJS({
         return toArrayBuffer(crypto3.createHmac("sha256", cryptoKey).update(msg).digest());
       }
     };
-    exports.NodeCrypto = NodeCrypto;
+    exports2.NodeCrypto = NodeCrypto;
     function toArrayBuffer(buffer) {
       const ab = new ArrayBuffer(buffer.length);
       const view = new Uint8Array(ab);
@@ -11880,9 +11876,9 @@ var require_crypto2 = __commonJS({
 
 // node_modules/google-auth-library/build/src/crypto/crypto.js
 var require_crypto3 = __commonJS({
-  "node_modules/google-auth-library/build/src/crypto/crypto.js"(exports) {
+  "node_modules/google-auth-library/build/src/crypto/crypto.js"(exports2) {
     "use strict";
-    var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o, m2, k, k2) {
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m2, k, k2) {
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m2, k);
       if (!desc || ("get" in desc ? !m2.__esModule : desc.writable || desc.configurable)) {
@@ -11895,15 +11891,15 @@ var require_crypto3 = __commonJS({
       if (k2 === void 0) k2 = k;
       o[k2] = m2[k];
     }));
-    var __exportStar = exports && exports.__exportStar || function(m2, exports2) {
-      for (var p in m2) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports2, p)) __createBinding(exports2, m2, p);
+    var __exportStar = exports2 && exports2.__exportStar || function(m2, exports3) {
+      for (var p in m2) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding(exports3, m2, p);
     };
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.createCrypto = createCrypto;
-    exports.hasBrowserCrypto = hasBrowserCrypto;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.createCrypto = createCrypto;
+    exports2.hasBrowserCrypto = hasBrowserCrypto;
     var crypto_1 = require_crypto();
     var crypto_2 = require_crypto2();
-    __exportStar(require_shared(), exports);
+    __exportStar(require_shared(), exports2);
     function createCrypto() {
       if (hasBrowserCrypto()) {
         return new crypto_1.BrowserCrypto();
@@ -11918,8 +11914,8 @@ var require_crypto3 = __commonJS({
 
 // node_modules/safe-buffer/index.js
 var require_safe_buffer = __commonJS({
-  "node_modules/safe-buffer/index.js"(exports, module) {
-    var buffer = __require("buffer");
+  "node_modules/safe-buffer/index.js"(exports2, module2) {
+    var buffer = require("buffer");
     var Buffer4 = buffer.Buffer;
     function copyProps(src, dst) {
       for (var key in src) {
@@ -11927,10 +11923,10 @@ var require_safe_buffer = __commonJS({
       }
     }
     if (Buffer4.from && Buffer4.alloc && Buffer4.allocUnsafe && Buffer4.allocUnsafeSlow) {
-      module.exports = buffer;
+      module2.exports = buffer;
     } else {
-      copyProps(buffer, exports);
-      exports.Buffer = SafeBuffer;
+      copyProps(buffer, exports2);
+      exports2.Buffer = SafeBuffer;
     }
     function SafeBuffer(arg, encodingOrOffset, length) {
       return Buffer4(arg, encodingOrOffset, length);
@@ -11976,7 +11972,7 @@ var require_safe_buffer = __commonJS({
 
 // node_modules/ecdsa-sig-formatter/src/param-bytes-for-alg.js
 var require_param_bytes_for_alg = __commonJS({
-  "node_modules/ecdsa-sig-formatter/src/param-bytes-for-alg.js"(exports, module) {
+  "node_modules/ecdsa-sig-formatter/src/param-bytes-for-alg.js"(exports2, module2) {
     "use strict";
     function getParamSize(keySize) {
       var result = (keySize / 8 | 0) + (keySize % 8 === 0 ? 0 : 1);
@@ -11994,13 +11990,13 @@ var require_param_bytes_for_alg = __commonJS({
       }
       throw new Error('Unknown algorithm "' + alg + '"');
     }
-    module.exports = getParamBytesForAlg;
+    module2.exports = getParamBytesForAlg;
   }
 });
 
 // node_modules/ecdsa-sig-formatter/src/ecdsa-sig-formatter.js
 var require_ecdsa_sig_formatter = __commonJS({
-  "node_modules/ecdsa-sig-formatter/src/ecdsa-sig-formatter.js"(exports, module) {
+  "node_modules/ecdsa-sig-formatter/src/ecdsa-sig-formatter.js"(exports2, module2) {
     "use strict";
     var Buffer4 = require_safe_buffer().Buffer;
     var getParamBytesForAlg = require_param_bytes_for_alg();
@@ -12131,7 +12127,7 @@ var require_ecdsa_sig_formatter = __commonJS({
       }
       return dst;
     }
-    module.exports = {
+    module2.exports = {
       derToJose,
       joseToDer
     };
@@ -12140,18 +12136,18 @@ var require_ecdsa_sig_formatter = __commonJS({
 
 // node_modules/google-auth-library/build/src/util.js
 var require_util2 = __commonJS({
-  "node_modules/google-auth-library/build/src/util.js"(exports) {
+  "node_modules/google-auth-library/build/src/util.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.LRUCache = void 0;
-    exports.snakeToCamel = snakeToCamel;
-    exports.originalOrCamelOptions = originalOrCamelOptions;
-    exports.removeUndefinedValuesInObject = removeUndefinedValuesInObject;
-    exports.isValidFile = isValidFile;
-    exports.getWellKnownCertificateConfigFileLocation = getWellKnownCertificateConfigFileLocation;
-    var fs5 = __require("fs");
-    var os = __require("os");
-    var path4 = __require("path");
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.LRUCache = void 0;
+    exports2.snakeToCamel = snakeToCamel;
+    exports2.originalOrCamelOptions = originalOrCamelOptions;
+    exports2.removeUndefinedValuesInObject = removeUndefinedValuesInObject;
+    exports2.isValidFile = isValidFile;
+    exports2.getWellKnownCertificateConfigFileLocation = getWellKnownCertificateConfigFileLocation;
+    var fs5 = require("fs");
+    var os = require("os");
+    var path4 = require("path");
     var WELL_KNOWN_CERTIFICATE_CONFIG_FILE = "certificate_config.json";
     var CLOUDSDK_CONFIG_DIRECTORY = "gcloud";
     function snakeToCamel(str) {
@@ -12226,7 +12222,7 @@ var require_util2 = __commonJS({
         }
       }
     };
-    exports.LRUCache = LRUCache;
+    exports2.LRUCache = LRUCache;
     function removeUndefinedValuesInObject(object) {
       Object.entries(object).forEach(([key, value]) => {
         if (value === void 0 || value === "undefined") {
@@ -12255,8 +12251,8 @@ var require_util2 = __commonJS({
 
 // node_modules/google-auth-library/package.json
 var require_package2 = __commonJS({
-  "node_modules/google-auth-library/package.json"(exports, module) {
-    module.exports = {
+  "node_modules/google-auth-library/package.json"(exports2, module2) {
+    module2.exports = {
       name: "google-auth-library",
       version: "10.6.2",
       author: "Google Inc.",
@@ -12353,32 +12349,32 @@ var require_package2 = __commonJS({
 
 // node_modules/google-auth-library/build/src/shared.cjs
 var require_shared2 = __commonJS({
-  "node_modules/google-auth-library/build/src/shared.cjs"(exports) {
+  "node_modules/google-auth-library/build/src/shared.cjs"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.USER_AGENT = exports.PRODUCT_NAME = exports.pkg = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.USER_AGENT = exports2.PRODUCT_NAME = exports2.pkg = void 0;
     var pkg = require_package2();
-    exports.pkg = pkg;
+    exports2.pkg = pkg;
     var PRODUCT_NAME = "google-api-nodejs-client";
-    exports.PRODUCT_NAME = PRODUCT_NAME;
+    exports2.PRODUCT_NAME = PRODUCT_NAME;
     var USER_AGENT = `${PRODUCT_NAME}/${pkg.version}`;
-    exports.USER_AGENT = USER_AGENT;
+    exports2.USER_AGENT = USER_AGENT;
   }
 });
 
 // node_modules/google-auth-library/build/src/auth/authclient.js
 var require_authclient = __commonJS({
-  "node_modules/google-auth-library/build/src/auth/authclient.js"(exports) {
+  "node_modules/google-auth-library/build/src/auth/authclient.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.AuthClient = exports.DEFAULT_EAGER_REFRESH_THRESHOLD_MILLIS = exports.DEFAULT_UNIVERSE = void 0;
-    var events_1 = __require("events");
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.AuthClient = exports2.DEFAULT_EAGER_REFRESH_THRESHOLD_MILLIS = exports2.DEFAULT_UNIVERSE = void 0;
+    var events_1 = require("events");
     var gaxios_1 = require_src2();
     var util_1 = require_util2();
     var google_logging_utils_1 = require_src3();
     var shared_cjs_1 = require_shared2();
-    exports.DEFAULT_UNIVERSE = "googleapis.com";
-    exports.DEFAULT_EAGER_REFRESH_THRESHOLD_MILLIS = 5 * 60 * 1e3;
+    exports2.DEFAULT_UNIVERSE = "googleapis.com";
+    exports2.DEFAULT_EAGER_REFRESH_THRESHOLD_MILLIS = 5 * 60 * 1e3;
     var AuthClient = class _AuthClient extends events_1.EventEmitter {
       apiKey;
       projectId;
@@ -12392,9 +12388,9 @@ var require_authclient = __commonJS({
        */
       transporter;
       credentials = {};
-      eagerRefreshThresholdMillis = exports.DEFAULT_EAGER_REFRESH_THRESHOLD_MILLIS;
+      eagerRefreshThresholdMillis = exports2.DEFAULT_EAGER_REFRESH_THRESHOLD_MILLIS;
       forceRefreshOnFailure = false;
-      universeDomain = exports.DEFAULT_UNIVERSE;
+      universeDomain = exports2.DEFAULT_UNIVERSE;
       /**
        * Symbols that can be added to GaxiosOptions to specify the method name that is
        * making an RPC call, for logging purposes, as well as a string ID that can be
@@ -12409,7 +12405,7 @@ var require_authclient = __commonJS({
         this.projectId = options.get("project_id") ?? null;
         this.quotaProjectId = options.get("quota_project_id");
         this.credentials = options.get("credentials") ?? {};
-        this.universeDomain = options.get("universe_domain") ?? exports.DEFAULT_UNIVERSE;
+        this.universeDomain = options.get("universe_domain") ?? exports2.DEFAULT_UNIVERSE;
         this.transporter = opts.transporter ?? new gaxios_1.Gaxios(opts.transporterOptions);
         if (options.get("useAuthRequestParameters") !== false) {
           this.transporter.interceptors.request.add(_AuthClient.DEFAULT_REQUEST_INTERCEPTOR);
@@ -12597,16 +12593,16 @@ var require_authclient = __commonJS({
         };
       }
     };
-    exports.AuthClient = AuthClient;
+    exports2.AuthClient = AuthClient;
   }
 });
 
 // node_modules/google-auth-library/build/src/auth/loginticket.js
 var require_loginticket = __commonJS({
-  "node_modules/google-auth-library/build/src/auth/loginticket.js"(exports) {
+  "node_modules/google-auth-library/build/src/auth/loginticket.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.LoginTicket = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.LoginTicket = void 0;
     var LoginTicket = class {
       envelope;
       payload;
@@ -12649,19 +12645,19 @@ var require_loginticket = __commonJS({
         return { envelope: this.getEnvelope(), payload: this.getPayload() };
       }
     };
-    exports.LoginTicket = LoginTicket;
+    exports2.LoginTicket = LoginTicket;
   }
 });
 
 // node_modules/google-auth-library/build/src/auth/oauth2client.js
 var require_oauth2client = __commonJS({
-  "node_modules/google-auth-library/build/src/auth/oauth2client.js"(exports) {
+  "node_modules/google-auth-library/build/src/auth/oauth2client.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.OAuth2Client = exports.ClientAuthentication = exports.CertificateFormat = exports.CodeChallengeMethod = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.OAuth2Client = exports2.ClientAuthentication = exports2.CertificateFormat = exports2.CodeChallengeMethod = void 0;
     var gaxios_1 = require_src2();
-    var querystring = __require("querystring");
-    var stream4 = __require("stream");
+    var querystring = require("querystring");
+    var stream4 = require("stream");
     var formatEcdsa = require_ecdsa_sig_formatter();
     var util_1 = require_util2();
     var crypto_1 = require_crypto3();
@@ -12671,18 +12667,18 @@ var require_oauth2client = __commonJS({
     (function(CodeChallengeMethod2) {
       CodeChallengeMethod2["Plain"] = "plain";
       CodeChallengeMethod2["S256"] = "S256";
-    })(CodeChallengeMethod || (exports.CodeChallengeMethod = CodeChallengeMethod = {}));
+    })(CodeChallengeMethod || (exports2.CodeChallengeMethod = CodeChallengeMethod = {}));
     var CertificateFormat;
     (function(CertificateFormat2) {
       CertificateFormat2["PEM"] = "PEM";
       CertificateFormat2["JWK"] = "JWK";
-    })(CertificateFormat || (exports.CertificateFormat = CertificateFormat = {}));
+    })(CertificateFormat || (exports2.CertificateFormat = CertificateFormat = {}));
     var ClientAuthentication;
     (function(ClientAuthentication2) {
       ClientAuthentication2["ClientSecretPost"] = "ClientSecretPost";
       ClientAuthentication2["ClientSecretBasic"] = "ClientSecretBasic";
       ClientAuthentication2["None"] = "None";
-    })(ClientAuthentication || (exports.ClientAuthentication = ClientAuthentication = {}));
+    })(ClientAuthentication || (exports2.ClientAuthentication = ClientAuthentication = {}));
     var OAuth2Client = class _OAuth2Client extends authclient_1.AuthClient {
       redirectUri;
       certificateCache = {};
@@ -13330,16 +13326,16 @@ var require_oauth2client = __commonJS({
         return expiryDate ? expiryDate <= (/* @__PURE__ */ new Date()).getTime() + this.eagerRefreshThresholdMillis : false;
       }
     };
-    exports.OAuth2Client = OAuth2Client;
+    exports2.OAuth2Client = OAuth2Client;
   }
 });
 
 // node_modules/google-auth-library/build/src/auth/computeclient.js
 var require_computeclient = __commonJS({
-  "node_modules/google-auth-library/build/src/auth/computeclient.js"(exports) {
+  "node_modules/google-auth-library/build/src/auth/computeclient.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Compute = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.Compute = void 0;
     var gaxios_1 = require_src2();
     var gcpMetadata = require_src4();
     var oauth2client_1 = require_oauth2client();
@@ -13422,16 +13418,16 @@ var require_computeclient = __commonJS({
         }
       }
     };
-    exports.Compute = Compute;
+    exports2.Compute = Compute;
   }
 });
 
 // node_modules/google-auth-library/build/src/auth/idtokenclient.js
 var require_idtokenclient = __commonJS({
-  "node_modules/google-auth-library/build/src/auth/idtokenclient.js"(exports) {
+  "node_modules/google-auth-library/build/src/auth/idtokenclient.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.IdTokenClient = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.IdTokenClient = void 0;
     var oauth2client_1 = require_oauth2client();
     var IdTokenClient = class extends oauth2client_1.OAuth2Client {
       targetAudience;
@@ -13468,18 +13464,18 @@ var require_idtokenclient = __commonJS({
         }
       }
     };
-    exports.IdTokenClient = IdTokenClient;
+    exports2.IdTokenClient = IdTokenClient;
   }
 });
 
 // node_modules/google-auth-library/build/src/auth/envDetect.js
 var require_envDetect = __commonJS({
-  "node_modules/google-auth-library/build/src/auth/envDetect.js"(exports) {
+  "node_modules/google-auth-library/build/src/auth/envDetect.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.GCPEnv = void 0;
-    exports.clear = clear;
-    exports.getEnv = getEnv3;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.GCPEnv = void 0;
+    exports2.clear = clear;
+    exports2.getEnv = getEnv3;
     var gcpMetadata = require_src4();
     var GCPEnv;
     (function(GCPEnv2) {
@@ -13490,7 +13486,7 @@ var require_envDetect = __commonJS({
       GCPEnv2["CLOUD_RUN"] = "CLOUD_RUN";
       GCPEnv2["CLOUD_RUN_JOBS"] = "CLOUD_RUN_JOBS";
       GCPEnv2["NONE"] = "NONE";
-    })(GCPEnv || (exports.GCPEnv = GCPEnv = {}));
+    })(GCPEnv || (exports2.GCPEnv = GCPEnv = {}));
     var envPromise;
     function clear() {
       envPromise = void 0;
@@ -13551,10 +13547,10 @@ var require_envDetect = __commonJS({
 
 // node_modules/jws/lib/data-stream.js
 var require_data_stream = __commonJS({
-  "node_modules/jws/lib/data-stream.js"(exports, module) {
+  "node_modules/jws/lib/data-stream.js"(exports2, module2) {
     var Buffer4 = require_safe_buffer().Buffer;
-    var Stream4 = __require("stream");
-    var util3 = __require("util");
+    var Stream4 = require("stream");
+    var util3 = require("util");
     function DataStream(data) {
       this.buffer = null;
       this.writable = true;
@@ -13593,17 +13589,17 @@ var require_data_stream = __commonJS({
       this.writable = false;
       this.readable = false;
     };
-    module.exports = DataStream;
+    module2.exports = DataStream;
   }
 });
 
 // node_modules/buffer-equal-constant-time/index.js
 var require_buffer_equal_constant_time = __commonJS({
-  "node_modules/buffer-equal-constant-time/index.js"(exports, module) {
+  "node_modules/buffer-equal-constant-time/index.js"(exports2, module2) {
     "use strict";
-    var Buffer4 = __require("buffer").Buffer;
-    var SlowBuffer = __require("buffer").SlowBuffer;
-    module.exports = bufferEq;
+    var Buffer4 = require("buffer").Buffer;
+    var SlowBuffer = require("buffer").SlowBuffer;
+    module2.exports = bufferEq;
     function bufferEq(a, b) {
       if (!Buffer4.isBuffer(a) || !Buffer4.isBuffer(b)) {
         return false;
@@ -13633,11 +13629,11 @@ var require_buffer_equal_constant_time = __commonJS({
 
 // node_modules/jwa/index.js
 var require_jwa = __commonJS({
-  "node_modules/jwa/index.js"(exports, module) {
+  "node_modules/jwa/index.js"(exports2, module2) {
     var Buffer4 = require_safe_buffer().Buffer;
-    var crypto3 = __require("crypto");
+    var crypto3 = require("crypto");
     var formatEcdsa = require_ecdsa_sig_formatter();
-    var util3 = __require("util");
+    var util3 = require("util");
     var MSG_INVALID_ALGORITHM = '"%s" is not a valid algorithm.\n  Supported algorithms are:\n  "HS256", "HS384", "HS512", "RS256", "RS384", "RS512", "PS256", "PS384", "PS512", "ES256", "ES384", "ES512" and "none".';
     var MSG_INVALID_SECRET = "secret must be a string or buffer";
     var MSG_INVALID_VERIFIER_KEY = "key must be a string or a buffer";
@@ -13827,7 +13823,7 @@ var require_jwa = __commonJS({
         return signature === "";
       };
     }
-    module.exports = function jwa(algorithm) {
+    module2.exports = function jwa(algorithm) {
       var signerFactories = {
         hs: createHmacSigner,
         rs: createKeySigner,
@@ -13857,9 +13853,9 @@ var require_jwa = __commonJS({
 
 // node_modules/jws/lib/tostring.js
 var require_tostring = __commonJS({
-  "node_modules/jws/lib/tostring.js"(exports, module) {
-    var Buffer4 = __require("buffer").Buffer;
-    module.exports = function toString3(obj) {
+  "node_modules/jws/lib/tostring.js"(exports2, module2) {
+    var Buffer4 = require("buffer").Buffer;
+    module2.exports = function toString3(obj) {
       if (typeof obj === "string")
         return obj;
       if (typeof obj === "number" || Buffer4.isBuffer(obj))
@@ -13871,13 +13867,13 @@ var require_tostring = __commonJS({
 
 // node_modules/jws/lib/sign-stream.js
 var require_sign_stream = __commonJS({
-  "node_modules/jws/lib/sign-stream.js"(exports, module) {
+  "node_modules/jws/lib/sign-stream.js"(exports2, module2) {
     var Buffer4 = require_safe_buffer().Buffer;
     var DataStream = require_data_stream();
     var jwa = require_jwa();
-    var Stream4 = __require("stream");
+    var Stream4 = require("stream");
     var toString3 = require_tostring();
-    var util3 = __require("util");
+    var util3 = require("util");
     function base64url(string, encoding) {
       return Buffer4.from(string, encoding).toString("base64").replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
     }
@@ -13940,19 +13936,19 @@ var require_sign_stream = __commonJS({
       }
     };
     SignStream.sign = jwsSign;
-    module.exports = SignStream;
+    module2.exports = SignStream;
   }
 });
 
 // node_modules/jws/lib/verify-stream.js
 var require_verify_stream = __commonJS({
-  "node_modules/jws/lib/verify-stream.js"(exports, module) {
+  "node_modules/jws/lib/verify-stream.js"(exports2, module2) {
     var Buffer4 = require_safe_buffer().Buffer;
     var DataStream = require_data_stream();
     var jwa = require_jwa();
-    var Stream4 = __require("stream");
+    var Stream4 = require("stream");
     var toString3 = require_tostring();
-    var util3 = __require("util");
+    var util3 = require("util");
     var JWS_REGEX = /^[a-zA-Z0-9\-_]+?\.[a-zA-Z0-9\-_]+?\.([a-zA-Z0-9\-_]+)?$/;
     function isObject2(thing) {
       return Object.prototype.toString.call(thing) === "[object Object]";
@@ -14055,13 +14051,13 @@ var require_verify_stream = __commonJS({
     VerifyStream.decode = jwsDecode;
     VerifyStream.isValid = isValidJws;
     VerifyStream.verify = jwsVerify;
-    module.exports = VerifyStream;
+    module2.exports = VerifyStream;
   }
 });
 
 // node_modules/jws/index.js
 var require_jws = __commonJS({
-  "node_modules/jws/index.js"(exports) {
+  "node_modules/jws/index.js"(exports2) {
     var SignStream = require_sign_stream();
     var VerifyStream = require_verify_stream();
     var ALGORITHMS = [
@@ -14078,15 +14074,15 @@ var require_jws = __commonJS({
       "ES384",
       "ES512"
     ];
-    exports.ALGORITHMS = ALGORITHMS;
-    exports.sign = SignStream.sign;
-    exports.verify = VerifyStream.verify;
-    exports.decode = VerifyStream.decode;
-    exports.isValid = VerifyStream.isValid;
-    exports.createSign = function createSign(opts) {
+    exports2.ALGORITHMS = ALGORITHMS;
+    exports2.sign = SignStream.sign;
+    exports2.verify = VerifyStream.verify;
+    exports2.decode = VerifyStream.decode;
+    exports2.isValid = VerifyStream.isValid;
+    exports2.createSign = function createSign(opts) {
       return new SignStream(opts);
     };
-    exports.createVerify = function createVerify(opts) {
+    exports2.createVerify = function createVerify(opts) {
       return new VerifyStream(opts);
     };
   }
@@ -14094,11 +14090,11 @@ var require_jws = __commonJS({
 
 // node_modules/google-auth-library/build/src/gtoken/jwsSign.js
 var require_jwsSign = __commonJS({
-  "node_modules/google-auth-library/build/src/gtoken/jwsSign.js"(exports) {
+  "node_modules/google-auth-library/build/src/gtoken/jwsSign.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.buildPayloadForJwsSign = buildPayloadForJwsSign;
-    exports.getJwsSign = getJwsSign;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.buildPayloadForJwsSign = buildPayloadForJwsSign;
+    exports2.getJwsSign = getJwsSign;
     var jws_1 = require_jws();
     var ALG_RS256 = "RS256";
     var GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
@@ -14128,10 +14124,10 @@ var require_jwsSign = __commonJS({
 
 // node_modules/google-auth-library/build/src/gtoken/getToken.js
 var require_getToken = __commonJS({
-  "node_modules/google-auth-library/build/src/gtoken/getToken.js"(exports) {
+  "node_modules/google-auth-library/build/src/gtoken/getToken.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.getToken = getToken;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.getToken = getToken;
     var jwsSign_1 = require_jwsSign();
     var GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
     var GOOGLE_GRANT_TYPE = "urn:ietf:params:oauth:grant-type:jwt-bearer";
@@ -14172,10 +14168,10 @@ var require_getToken = __commonJS({
 
 // node_modules/google-auth-library/build/src/gtoken/errorWithCode.js
 var require_errorWithCode = __commonJS({
-  "node_modules/google-auth-library/build/src/gtoken/errorWithCode.js"(exports) {
+  "node_modules/google-auth-library/build/src/gtoken/errorWithCode.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.ErrorWithCode = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.ErrorWithCode = void 0;
     var ErrorWithCode = class extends Error {
       code;
       constructor(message, code) {
@@ -14183,19 +14179,19 @@ var require_errorWithCode = __commonJS({
         this.code = code;
       }
     };
-    exports.ErrorWithCode = ErrorWithCode;
+    exports2.ErrorWithCode = ErrorWithCode;
   }
 });
 
 // node_modules/google-auth-library/build/src/gtoken/getCredentials.js
 var require_getCredentials = __commonJS({
-  "node_modules/google-auth-library/build/src/gtoken/getCredentials.js"(exports) {
+  "node_modules/google-auth-library/build/src/gtoken/getCredentials.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.getCredentials = getCredentials;
-    var path4 = __require("path");
-    var fs5 = __require("fs");
-    var util_1 = __require("util");
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.getCredentials = getCredentials;
+    var path4 = require("path");
+    var fs5 = require("fs");
+    var util_1 = require("util");
     var errorWithCode_1 = require_errorWithCode();
     var readFile = fs5.readFile ? (0, util_1.promisify)(fs5.readFile) : async () => {
       throw new errorWithCode_1.ErrorWithCode("use key rather than keyFile.", "MISSING_CREDENTIALS");
@@ -14290,10 +14286,10 @@ var require_getCredentials = __commonJS({
 
 // node_modules/google-auth-library/build/src/gtoken/tokenHandler.js
 var require_tokenHandler = __commonJS({
-  "node_modules/google-auth-library/build/src/gtoken/tokenHandler.js"(exports) {
+  "node_modules/google-auth-library/build/src/gtoken/tokenHandler.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.TokenHandler = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.TokenHandler = void 0;
     var getToken_1 = require_getToken();
     var getCredentials_1 = require_getCredentials();
     var TokenHandler = class {
@@ -14375,16 +14371,16 @@ var require_tokenHandler = __commonJS({
         }
       }
     };
-    exports.TokenHandler = TokenHandler;
+    exports2.TokenHandler = TokenHandler;
   }
 });
 
 // node_modules/google-auth-library/build/src/gtoken/revokeToken.js
 var require_revokeToken = __commonJS({
-  "node_modules/google-auth-library/build/src/gtoken/revokeToken.js"(exports) {
+  "node_modules/google-auth-library/build/src/gtoken/revokeToken.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.revokeToken = revokeToken;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.revokeToken = revokeToken;
     var GOOGLE_REVOKE_TOKEN_URL = "https://oauth2.googleapis.com/revoke?token=";
     var DEFAULT_RETRY_VALUE = true;
     async function revokeToken(accessToken, transporter) {
@@ -14399,10 +14395,10 @@ var require_revokeToken = __commonJS({
 
 // node_modules/google-auth-library/build/src/gtoken/googleToken.js
 var require_googleToken = __commonJS({
-  "node_modules/google-auth-library/build/src/gtoken/googleToken.js"(exports) {
+  "node_modules/google-auth-library/build/src/gtoken/googleToken.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.GoogleToken = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.GoogleToken = void 0;
     var gaxios_1 = require_src2();
     var tokenHandler_1 = require_tokenHandler();
     var revokeToken_1 = require_revokeToken();
@@ -14499,16 +14495,16 @@ var require_googleToken = __commonJS({
         return this.tokenOptions;
       }
     };
-    exports.GoogleToken = GoogleToken;
+    exports2.GoogleToken = GoogleToken;
   }
 });
 
 // node_modules/google-auth-library/build/src/auth/jwtaccess.js
 var require_jwtaccess = __commonJS({
-  "node_modules/google-auth-library/build/src/auth/jwtaccess.js"(exports) {
+  "node_modules/google-auth-library/build/src/auth/jwtaccess.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.JWTAccess = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.JWTAccess = void 0;
     var jws = require_jws();
     var util_1 = require_util2();
     var DEFAULT_HEADER = {
@@ -14669,16 +14665,16 @@ var require_jwtaccess = __commonJS({
         });
       }
     };
-    exports.JWTAccess = JWTAccess;
+    exports2.JWTAccess = JWTAccess;
   }
 });
 
 // node_modules/google-auth-library/build/src/auth/jwtclient.js
 var require_jwtclient = __commonJS({
-  "node_modules/google-auth-library/build/src/auth/jwtclient.js"(exports) {
+  "node_modules/google-auth-library/build/src/auth/jwtclient.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.JWT = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.JWT = void 0;
     var googleToken_1 = require_googleToken();
     var getCredentials_1 = require_getCredentials();
     var jwtaccess_1 = require_jwtaccess();
@@ -14941,19 +14937,19 @@ var require_jwtclient = __commonJS({
         throw new Error("A key or a keyFile must be provided to getCredentials.");
       }
     };
-    exports.JWT = JWT;
+    exports2.JWT = JWT;
   }
 });
 
 // node_modules/google-auth-library/build/src/auth/refreshclient.js
 var require_refreshclient = __commonJS({
-  "node_modules/google-auth-library/build/src/auth/refreshclient.js"(exports) {
+  "node_modules/google-auth-library/build/src/auth/refreshclient.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.UserRefreshClient = exports.USER_REFRESH_ACCOUNT_TYPE = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.UserRefreshClient = exports2.USER_REFRESH_ACCOUNT_TYPE = void 0;
     var oauth2client_1 = require_oauth2client();
     var authclient_1 = require_authclient();
-    exports.USER_REFRESH_ACCOUNT_TYPE = "authorized_user";
+    exports2.USER_REFRESH_ACCOUNT_TYPE = "authorized_user";
     var UserRefreshClient = class _UserRefreshClient extends oauth2client_1.OAuth2Client {
       // TODO: refactor tests to make this private
       // In a future gts release, the _propertyName rule will be lifted.
@@ -15069,20 +15065,20 @@ var require_refreshclient = __commonJS({
         return client;
       }
     };
-    exports.UserRefreshClient = UserRefreshClient;
+    exports2.UserRefreshClient = UserRefreshClient;
   }
 });
 
 // node_modules/google-auth-library/build/src/auth/impersonated.js
 var require_impersonated = __commonJS({
-  "node_modules/google-auth-library/build/src/auth/impersonated.js"(exports) {
+  "node_modules/google-auth-library/build/src/auth/impersonated.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Impersonated = exports.IMPERSONATED_ACCOUNT_TYPE = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.Impersonated = exports2.IMPERSONATED_ACCOUNT_TYPE = void 0;
     var oauth2client_1 = require_oauth2client();
     var gaxios_1 = require_src2();
     var util_1 = require_util2();
-    exports.IMPERSONATED_ACCOUNT_TYPE = "impersonated_service_account";
+    exports2.IMPERSONATED_ACCOUNT_TYPE = "impersonated_service_account";
     var Impersonated = class _Impersonated extends oauth2client_1.OAuth2Client {
       sourceClient;
       targetPrincipal;
@@ -15248,17 +15244,17 @@ var require_impersonated = __commonJS({
         return res.data.token;
       }
     };
-    exports.Impersonated = Impersonated;
+    exports2.Impersonated = Impersonated;
   }
 });
 
 // node_modules/google-auth-library/build/src/auth/oauth2common.js
 var require_oauth2common = __commonJS({
-  "node_modules/google-auth-library/build/src/auth/oauth2common.js"(exports) {
+  "node_modules/google-auth-library/build/src/auth/oauth2common.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.OAuthClientAuthHandler = void 0;
-    exports.getErrorFromOAuthErrorResponse = getErrorFromOAuthErrorResponse;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.OAuthClientAuthHandler = void 0;
+    exports2.getErrorFromOAuthErrorResponse = getErrorFromOAuthErrorResponse;
     var gaxios_1 = require_src2();
     var crypto_1 = require_crypto3();
     var METHODS_SUPPORTING_REQUEST_BODY = ["PUT", "POST", "PATCH"];
@@ -15367,7 +15363,7 @@ var require_oauth2common = __commonJS({
         };
       }
     };
-    exports.OAuthClientAuthHandler = OAuthClientAuthHandler;
+    exports2.OAuthClientAuthHandler = OAuthClientAuthHandler;
     function getErrorFromOAuthErrorResponse(resp, err) {
       const errorCode = resp.error;
       const errorDescription = resp.error_description;
@@ -15402,10 +15398,10 @@ var require_oauth2common = __commonJS({
 
 // node_modules/google-auth-library/build/src/auth/stscredentials.js
 var require_stscredentials = __commonJS({
-  "node_modules/google-auth-library/build/src/auth/stscredentials.js"(exports) {
+  "node_modules/google-auth-library/build/src/auth/stscredentials.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.StsCredentials = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.StsCredentials = void 0;
     var gaxios_1 = require_src2();
     var authclient_1 = require_authclient();
     var oauth2common_1 = require_oauth2common();
@@ -15484,18 +15480,18 @@ var require_stscredentials = __commonJS({
         }
       }
     };
-    exports.StsCredentials = StsCredentials;
+    exports2.StsCredentials = StsCredentials;
   }
 });
 
 // node_modules/google-auth-library/build/src/auth/baseexternalclient.js
 var require_baseexternalclient = __commonJS({
-  "node_modules/google-auth-library/build/src/auth/baseexternalclient.js"(exports) {
+  "node_modules/google-auth-library/build/src/auth/baseexternalclient.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.BaseExternalAccountClient = exports.CLOUD_RESOURCE_MANAGER = exports.EXTERNAL_ACCOUNT_TYPE = exports.EXPIRATION_TIME_OFFSET = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.BaseExternalAccountClient = exports2.CLOUD_RESOURCE_MANAGER = exports2.EXTERNAL_ACCOUNT_TYPE = exports2.EXPIRATION_TIME_OFFSET = void 0;
     var gaxios_1 = require_src2();
-    var stream4 = __require("stream");
+    var stream4 = require("stream");
     var authclient_1 = require_authclient();
     var sts = require_stscredentials();
     var util_1 = require_util2();
@@ -15504,9 +15500,9 @@ var require_baseexternalclient = __commonJS({
     var STS_REQUEST_TOKEN_TYPE = "urn:ietf:params:oauth:token-type:access_token";
     var DEFAULT_OAUTH_SCOPE = "https://www.googleapis.com/auth/cloud-platform";
     var DEFAULT_TOKEN_LIFESPAN = 3600;
-    exports.EXPIRATION_TIME_OFFSET = 5 * 60 * 1e3;
-    exports.EXTERNAL_ACCOUNT_TYPE = "external_account";
-    exports.CLOUD_RESOURCE_MANAGER = "https://cloudresourcemanager.googleapis.com/v1/projects/";
+    exports2.EXPIRATION_TIME_OFFSET = 5 * 60 * 1e3;
+    exports2.EXTERNAL_ACCOUNT_TYPE = "external_account";
+    exports2.CLOUD_RESOURCE_MANAGER = "https://cloudresourcemanager.googleapis.com/v1/projects/";
     var WORKFORCE_AUDIENCE_PATTERN = "//iam\\.googleapis\\.com/locations/[^/]+/workforcePools/[^/]+/providers/.+";
     var DEFAULT_TOKEN_URL = "https://sts.{universeDomain}/v1/token";
     var BaseExternalAccountClient = class _BaseExternalAccountClient extends authclient_1.AuthClient {
@@ -15551,8 +15547,8 @@ var require_baseexternalclient = __commonJS({
         super(options);
         const opts = (0, util_1.originalOrCamelOptions)(options);
         const type = opts.get("type");
-        if (type && type !== exports.EXTERNAL_ACCOUNT_TYPE) {
-          throw new Error(`Expected "${exports.EXTERNAL_ACCOUNT_TYPE}" type but received "${options.type}"`);
+        if (type && type !== exports2.EXTERNAL_ACCOUNT_TYPE) {
+          throw new Error(`Expected "${exports2.EXTERNAL_ACCOUNT_TYPE}" type but received "${options.type}"`);
         }
         const clientId = opts.get("client_id");
         const clientSecret = opts.get("client_secret");
@@ -15863,18 +15859,18 @@ var require_baseexternalclient = __commonJS({
         return this.tokenUrl;
       }
     };
-    exports.BaseExternalAccountClient = BaseExternalAccountClient;
+    exports2.BaseExternalAccountClient = BaseExternalAccountClient;
   }
 });
 
 // node_modules/google-auth-library/build/src/auth/filesubjecttokensupplier.js
 var require_filesubjecttokensupplier = __commonJS({
-  "node_modules/google-auth-library/build/src/auth/filesubjecttokensupplier.js"(exports) {
+  "node_modules/google-auth-library/build/src/auth/filesubjecttokensupplier.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.FileSubjectTokenSupplier = void 0;
-    var util_1 = __require("util");
-    var fs5 = __require("fs");
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.FileSubjectTokenSupplier = void 0;
+    var util_1 = require("util");
+    var fs5 = require("fs");
     var readFile = (0, util_1.promisify)(fs5.readFile ?? (() => {
     }));
     var realpath = (0, util_1.promisify)(fs5.realpath ?? (() => {
@@ -15928,16 +15924,16 @@ var require_filesubjecttokensupplier = __commonJS({
         return subjectToken;
       }
     };
-    exports.FileSubjectTokenSupplier = FileSubjectTokenSupplier;
+    exports2.FileSubjectTokenSupplier = FileSubjectTokenSupplier;
   }
 });
 
 // node_modules/google-auth-library/build/src/auth/urlsubjecttokensupplier.js
 var require_urlsubjecttokensupplier = __commonJS({
-  "node_modules/google-auth-library/build/src/auth/urlsubjecttokensupplier.js"(exports) {
+  "node_modules/google-auth-library/build/src/auth/urlsubjecttokensupplier.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.UrlSubjectTokenSupplier = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.UrlSubjectTokenSupplier = void 0;
     var authclient_1 = require_authclient();
     var UrlSubjectTokenSupplier = class {
       url;
@@ -15986,35 +15982,35 @@ var require_urlsubjecttokensupplier = __commonJS({
         return subjectToken;
       }
     };
-    exports.UrlSubjectTokenSupplier = UrlSubjectTokenSupplier;
+    exports2.UrlSubjectTokenSupplier = UrlSubjectTokenSupplier;
   }
 });
 
 // node_modules/google-auth-library/build/src/auth/certificatesubjecttokensupplier.js
 var require_certificatesubjecttokensupplier = __commonJS({
-  "node_modules/google-auth-library/build/src/auth/certificatesubjecttokensupplier.js"(exports) {
+  "node_modules/google-auth-library/build/src/auth/certificatesubjecttokensupplier.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.CertificateSubjectTokenSupplier = exports.InvalidConfigurationError = exports.CertificateSourceUnavailableError = exports.CERTIFICATE_CONFIGURATION_ENV_VARIABLE = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.CertificateSubjectTokenSupplier = exports2.InvalidConfigurationError = exports2.CertificateSourceUnavailableError = exports2.CERTIFICATE_CONFIGURATION_ENV_VARIABLE = void 0;
     var util_1 = require_util2();
-    var fs5 = __require("fs");
-    var crypto_1 = __require("crypto");
-    var https4 = __require("https");
-    exports.CERTIFICATE_CONFIGURATION_ENV_VARIABLE = "GOOGLE_API_CERTIFICATE_CONFIG";
+    var fs5 = require("fs");
+    var crypto_1 = require("crypto");
+    var https4 = require("https");
+    exports2.CERTIFICATE_CONFIGURATION_ENV_VARIABLE = "GOOGLE_API_CERTIFICATE_CONFIG";
     var CertificateSourceUnavailableError = class extends Error {
       constructor(message) {
         super(message);
         this.name = "CertificateSourceUnavailableError";
       }
     };
-    exports.CertificateSourceUnavailableError = CertificateSourceUnavailableError;
+    exports2.CertificateSourceUnavailableError = CertificateSourceUnavailableError;
     var InvalidConfigurationError = class extends Error {
       constructor(message) {
         super(message);
         this.name = "InvalidConfigurationError";
       }
     };
-    exports.InvalidConfigurationError = InvalidConfigurationError;
+    exports2.InvalidConfigurationError = InvalidConfigurationError;
     var CertificateSubjectTokenSupplier = class {
       certificateConfigPath;
       trustChainPath;
@@ -16070,18 +16066,18 @@ var require_certificatesubjecttokensupplier = __commonJS({
           }
           throw new CertificateSourceUnavailableError(`Provided certificate config path is invalid: ${overridePath}`);
         }
-        const envPath = process.env[exports.CERTIFICATE_CONFIGURATION_ENV_VARIABLE];
+        const envPath = process.env[exports2.CERTIFICATE_CONFIGURATION_ENV_VARIABLE];
         if (envPath) {
           if (await (0, util_1.isValidFile)(envPath)) {
             return envPath;
           }
-          throw new CertificateSourceUnavailableError(`Path from environment variable "${exports.CERTIFICATE_CONFIGURATION_ENV_VARIABLE}" is invalid: ${envPath}`);
+          throw new CertificateSourceUnavailableError(`Path from environment variable "${exports2.CERTIFICATE_CONFIGURATION_ENV_VARIABLE}" is invalid: ${envPath}`);
         }
         const wellKnownPath = (0, util_1.getWellKnownCertificateConfigFileLocation)();
         if (await (0, util_1.isValidFile)(wellKnownPath)) {
           return wellKnownPath;
         }
-        throw new CertificateSourceUnavailableError(`Could not find certificate configuration file. Searched override path, the "${exports.CERTIFICATE_CONFIGURATION_ENV_VARIABLE}" env var, and the gcloud path (${wellKnownPath}).`);
+        throw new CertificateSourceUnavailableError(`Could not find certificate configuration file. Searched override path, the "${exports2.CERTIFICATE_CONFIGURATION_ENV_VARIABLE}" env var, and the gcloud path (${wellKnownPath}).`);
       }
       /**
        * Reads and parses the certificate config JSON file to extract the certificate and key paths.
@@ -16170,16 +16166,16 @@ var require_certificatesubjecttokensupplier = __commonJS({
         }
       }
     };
-    exports.CertificateSubjectTokenSupplier = CertificateSubjectTokenSupplier;
+    exports2.CertificateSubjectTokenSupplier = CertificateSubjectTokenSupplier;
   }
 });
 
 // node_modules/google-auth-library/build/src/auth/identitypoolclient.js
 var require_identitypoolclient = __commonJS({
-  "node_modules/google-auth-library/build/src/auth/identitypoolclient.js"(exports) {
+  "node_modules/google-auth-library/build/src/auth/identitypoolclient.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.IdentityPoolClient = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.IdentityPoolClient = void 0;
     var baseexternalclient_1 = require_baseexternalclient();
     var util_1 = require_util2();
     var filesubjecttokensupplier_1 = require_filesubjecttokensupplier();
@@ -16282,16 +16278,16 @@ var require_identitypoolclient = __commonJS({
         return subjectToken;
       }
     };
-    exports.IdentityPoolClient = IdentityPoolClient;
+    exports2.IdentityPoolClient = IdentityPoolClient;
   }
 });
 
 // node_modules/google-auth-library/build/src/auth/awsrequestsigner.js
 var require_awsrequestsigner = __commonJS({
-  "node_modules/google-auth-library/build/src/auth/awsrequestsigner.js"(exports) {
+  "node_modules/google-auth-library/build/src/auth/awsrequestsigner.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.AwsRequestSigner = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.AwsRequestSigner = void 0;
     var gaxios_1 = require_src2();
     var crypto_1 = require_crypto3();
     var AWS_ALGORITHM = "AWS4-HMAC-SHA256";
@@ -16372,7 +16368,7 @@ var require_awsrequestsigner = __commonJS({
         return awsSignedReq;
       }
     };
-    exports.AwsRequestSigner = AwsRequestSigner;
+    exports2.AwsRequestSigner = AwsRequestSigner;
     async function sign(crypto3, key, msg) {
       return await crypto3.signWithHmacSha256(key, msg);
     }
@@ -16438,10 +16434,10 @@ ${credentialScope}
 
 // node_modules/google-auth-library/build/src/auth/defaultawssecuritycredentialssupplier.js
 var require_defaultawssecuritycredentialssupplier = __commonJS({
-  "node_modules/google-auth-library/build/src/auth/defaultawssecuritycredentialssupplier.js"(exports) {
+  "node_modules/google-auth-library/build/src/auth/defaultawssecuritycredentialssupplier.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.DefaultAwsSecurityCredentialsSupplier = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.DefaultAwsSecurityCredentialsSupplier = void 0;
     var authclient_1 = require_authclient();
     var DefaultAwsSecurityCredentialsSupplier = class {
       regionUrl;
@@ -16587,16 +16583,16 @@ var require_defaultawssecuritycredentialssupplier = __commonJS({
         return null;
       }
     };
-    exports.DefaultAwsSecurityCredentialsSupplier = DefaultAwsSecurityCredentialsSupplier;
+    exports2.DefaultAwsSecurityCredentialsSupplier = DefaultAwsSecurityCredentialsSupplier;
   }
 });
 
 // node_modules/google-auth-library/build/src/auth/awsclient.js
 var require_awsclient = __commonJS({
-  "node_modules/google-auth-library/build/src/auth/awsclient.js"(exports) {
+  "node_modules/google-auth-library/build/src/auth/awsclient.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.AwsClient = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.AwsClient = void 0;
     var awsrequestsigner_1 = require_awsrequestsigner();
     var baseexternalclient_1 = require_baseexternalclient();
     var defaultawssecuritycredentialssupplier_1 = require_defaultawssecuritycredentialssupplier();
@@ -16701,16 +16697,16 @@ var require_awsclient = __commonJS({
         }));
       }
     };
-    exports.AwsClient = AwsClient;
+    exports2.AwsClient = AwsClient;
   }
 });
 
 // node_modules/google-auth-library/build/src/auth/executable-response.js
 var require_executable_response = __commonJS({
-  "node_modules/google-auth-library/build/src/auth/executable-response.js"(exports) {
+  "node_modules/google-auth-library/build/src/auth/executable-response.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.InvalidSubjectTokenError = exports.InvalidMessageFieldError = exports.InvalidCodeFieldError = exports.InvalidTokenTypeFieldError = exports.InvalidExpirationTimeFieldError = exports.InvalidSuccessFieldError = exports.InvalidVersionFieldError = exports.ExecutableResponseError = exports.ExecutableResponse = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.InvalidSubjectTokenError = exports2.InvalidMessageFieldError = exports2.InvalidCodeFieldError = exports2.InvalidTokenTypeFieldError = exports2.InvalidExpirationTimeFieldError = exports2.InvalidSuccessFieldError = exports2.InvalidVersionFieldError = exports2.ExecutableResponseError = exports2.ExecutableResponse = void 0;
     var SAML_SUBJECT_TOKEN_TYPE = "urn:ietf:params:oauth:token-type:saml2";
     var OIDC_SUBJECT_TOKEN_TYPE1 = "urn:ietf:params:oauth:token-type:id_token";
     var OIDC_SUBJECT_TOKEN_TYPE2 = "urn:ietf:params:oauth:token-type:jwt";
@@ -16804,47 +16800,47 @@ var require_executable_response = __commonJS({
         return this.expirationTime !== void 0 && this.expirationTime < Math.round(Date.now() / 1e3);
       }
     };
-    exports.ExecutableResponse = ExecutableResponse;
+    exports2.ExecutableResponse = ExecutableResponse;
     var ExecutableResponseError = class extends Error {
       constructor(message) {
         super(message);
         Object.setPrototypeOf(this, new.target.prototype);
       }
     };
-    exports.ExecutableResponseError = ExecutableResponseError;
+    exports2.ExecutableResponseError = ExecutableResponseError;
     var InvalidVersionFieldError = class extends ExecutableResponseError {
     };
-    exports.InvalidVersionFieldError = InvalidVersionFieldError;
+    exports2.InvalidVersionFieldError = InvalidVersionFieldError;
     var InvalidSuccessFieldError = class extends ExecutableResponseError {
     };
-    exports.InvalidSuccessFieldError = InvalidSuccessFieldError;
+    exports2.InvalidSuccessFieldError = InvalidSuccessFieldError;
     var InvalidExpirationTimeFieldError = class extends ExecutableResponseError {
     };
-    exports.InvalidExpirationTimeFieldError = InvalidExpirationTimeFieldError;
+    exports2.InvalidExpirationTimeFieldError = InvalidExpirationTimeFieldError;
     var InvalidTokenTypeFieldError = class extends ExecutableResponseError {
     };
-    exports.InvalidTokenTypeFieldError = InvalidTokenTypeFieldError;
+    exports2.InvalidTokenTypeFieldError = InvalidTokenTypeFieldError;
     var InvalidCodeFieldError = class extends ExecutableResponseError {
     };
-    exports.InvalidCodeFieldError = InvalidCodeFieldError;
+    exports2.InvalidCodeFieldError = InvalidCodeFieldError;
     var InvalidMessageFieldError = class extends ExecutableResponseError {
     };
-    exports.InvalidMessageFieldError = InvalidMessageFieldError;
+    exports2.InvalidMessageFieldError = InvalidMessageFieldError;
     var InvalidSubjectTokenError = class extends ExecutableResponseError {
     };
-    exports.InvalidSubjectTokenError = InvalidSubjectTokenError;
+    exports2.InvalidSubjectTokenError = InvalidSubjectTokenError;
   }
 });
 
 // node_modules/google-auth-library/build/src/auth/pluggable-auth-handler.js
 var require_pluggable_auth_handler = __commonJS({
-  "node_modules/google-auth-library/build/src/auth/pluggable-auth-handler.js"(exports) {
+  "node_modules/google-auth-library/build/src/auth/pluggable-auth-handler.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.PluggableAuthHandler = exports.ExecutableError = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.PluggableAuthHandler = exports2.ExecutableError = void 0;
     var executable_response_1 = require_executable_response();
-    var childProcess = __require("child_process");
-    var fs5 = __require("fs");
+    var childProcess = require("child_process");
+    var fs5 = require("fs");
     var ExecutableError = class extends Error {
       /**
        * The exit code returned by the executable.
@@ -16856,7 +16852,7 @@ var require_pluggable_auth_handler = __commonJS({
         Object.setPrototypeOf(this, new.target.prototype);
       }
     };
-    exports.ExecutableError = ExecutableError;
+    exports2.ExecutableError = ExecutableError;
     var PluggableAuthHandler = class _PluggableAuthHandler {
       commandComponents;
       timeoutMillis;
@@ -16973,21 +16969,21 @@ var require_pluggable_auth_handler = __commonJS({
         return components;
       }
     };
-    exports.PluggableAuthHandler = PluggableAuthHandler;
+    exports2.PluggableAuthHandler = PluggableAuthHandler;
   }
 });
 
 // node_modules/google-auth-library/build/src/auth/pluggable-auth-client.js
 var require_pluggable_auth_client = __commonJS({
-  "node_modules/google-auth-library/build/src/auth/pluggable-auth-client.js"(exports) {
+  "node_modules/google-auth-library/build/src/auth/pluggable-auth-client.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.PluggableAuthClient = exports.ExecutableError = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.PluggableAuthClient = exports2.ExecutableError = void 0;
     var baseexternalclient_1 = require_baseexternalclient();
     var executable_response_1 = require_executable_response();
     var pluggable_auth_handler_1 = require_pluggable_auth_handler();
     var pluggable_auth_handler_2 = require_pluggable_auth_handler();
-    Object.defineProperty(exports, "ExecutableError", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "ExecutableError", { enumerable: true, get: function() {
       return pluggable_auth_handler_2.ExecutableError;
     } });
     var DEFAULT_EXECUTABLE_TIMEOUT_MILLIS = 30 * 1e3;
@@ -17100,16 +17096,16 @@ var require_pluggable_auth_client = __commonJS({
         return executableResponse.subjectToken;
       }
     };
-    exports.PluggableAuthClient = PluggableAuthClient;
+    exports2.PluggableAuthClient = PluggableAuthClient;
   }
 });
 
 // node_modules/google-auth-library/build/src/auth/externalclient.js
 var require_externalclient = __commonJS({
-  "node_modules/google-auth-library/build/src/auth/externalclient.js"(exports) {
+  "node_modules/google-auth-library/build/src/auth/externalclient.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.ExternalAccountClient = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.ExternalAccountClient = void 0;
     var baseexternalclient_1 = require_baseexternalclient();
     var identitypoolclient_1 = require_identitypoolclient();
     var awsclient_1 = require_awsclient();
@@ -17149,22 +17145,22 @@ var require_externalclient = __commonJS({
         }
       }
     };
-    exports.ExternalAccountClient = ExternalAccountClient;
+    exports2.ExternalAccountClient = ExternalAccountClient;
   }
 });
 
 // node_modules/google-auth-library/build/src/auth/externalAccountAuthorizedUserClient.js
 var require_externalAccountAuthorizedUserClient = __commonJS({
-  "node_modules/google-auth-library/build/src/auth/externalAccountAuthorizedUserClient.js"(exports) {
+  "node_modules/google-auth-library/build/src/auth/externalAccountAuthorizedUserClient.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.ExternalAccountAuthorizedUserClient = exports.EXTERNAL_ACCOUNT_AUTHORIZED_USER_TYPE = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.ExternalAccountAuthorizedUserClient = exports2.EXTERNAL_ACCOUNT_AUTHORIZED_USER_TYPE = void 0;
     var authclient_1 = require_authclient();
     var oauth2common_1 = require_oauth2common();
     var gaxios_1 = require_src2();
-    var stream4 = __require("stream");
+    var stream4 = require("stream");
     var baseexternalclient_1 = require_baseexternalclient();
-    exports.EXTERNAL_ACCOUNT_AUTHORIZED_USER_TYPE = "external_account_authorized_user";
+    exports2.EXTERNAL_ACCOUNT_AUTHORIZED_USER_TYPE = "external_account_authorized_user";
     var DEFAULT_TOKEN_URL = "https://sts.{universeDomain}/v1/oauthtoken";
     var ExternalAccountAuthorizedUserHandler = class _ExternalAccountAuthorizedUserHandler extends oauth2common_1.OAuthClientAuthHandler {
       #tokenRefreshEndpoint;
@@ -17336,22 +17332,22 @@ var require_externalAccountAuthorizedUserClient = __commonJS({
         return credentials.expiry_date ? now >= credentials.expiry_date - this.eagerRefreshThresholdMillis : false;
       }
     };
-    exports.ExternalAccountAuthorizedUserClient = ExternalAccountAuthorizedUserClient;
+    exports2.ExternalAccountAuthorizedUserClient = ExternalAccountAuthorizedUserClient;
   }
 });
 
 // node_modules/google-auth-library/build/src/auth/googleauth.js
 var require_googleauth = __commonJS({
-  "node_modules/google-auth-library/build/src/auth/googleauth.js"(exports) {
+  "node_modules/google-auth-library/build/src/auth/googleauth.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.GoogleAuth = exports.GoogleAuthExceptionMessages = void 0;
-    var child_process_1 = __require("child_process");
-    var fs5 = __require("fs");
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.GoogleAuth = exports2.GoogleAuthExceptionMessages = void 0;
+    var child_process_1 = require("child_process");
+    var fs5 = require("fs");
     var gaxios_1 = require_src2();
     var gcpMetadata = require_src4();
-    var os = __require("os");
-    var path4 = __require("path");
+    var os = require("os");
+    var path4 = require("path");
     var crypto_1 = require_crypto3();
     var computeclient_1 = require_computeclient();
     var idtokenclient_1 = require_idtokenclient();
@@ -17364,7 +17360,7 @@ var require_googleauth = __commonJS({
     var authclient_1 = require_authclient();
     var externalAccountAuthorizedUserClient_1 = require_externalAccountAuthorizedUserClient();
     var util_1 = require_util2();
-    exports.GoogleAuthExceptionMessages = {
+    exports2.GoogleAuthExceptionMessages = {
       API_KEY_WITH_CREDENTIALS: "API Keys and Credentials are mutually exclusive authentication methods and cannot be used together.",
       NO_PROJECT_ID_FOUND: "Unable to detect a Project Id in the current environment. \nTo learn more about authentication and Google APIs, visit: \nhttps://cloud.google.com/docs/authentication/getting-started",
       NO_CREDENTIALS_FOUND: "Unable to find credentials in current environment. \nTo learn more about authentication and Google APIs, visit: \nhttps://cloud.google.com/docs/authentication/getting-started",
@@ -17423,7 +17419,7 @@ var require_googleauth = __commonJS({
         this.jsonContent = opts.credentials || null;
         this.apiKey = opts.apiKey || this.clientOptions.apiKey || null;
         if (this.apiKey && (this.jsonContent || this.clientOptions.credentials)) {
-          throw new RangeError(exports.GoogleAuthExceptionMessages.API_KEY_WITH_CREDENTIALS);
+          throw new RangeError(exports2.GoogleAuthExceptionMessages.API_KEY_WITH_CREDENTIALS);
         }
         if (opts.universeDomain) {
           this.clientOptions.universeDomain = opts.universeDomain;
@@ -17456,7 +17452,7 @@ var require_googleauth = __commonJS({
         try {
           return await this.getProjectId();
         } catch (e2) {
-          if (e2 instanceof Error && e2.message === exports.GoogleAuthExceptionMessages.NO_PROJECT_ID_FOUND) {
+          if (e2 instanceof Error && e2.message === exports2.GoogleAuthExceptionMessages.NO_PROJECT_ID_FOUND) {
             return null;
           } else {
             throw e2;
@@ -17485,7 +17481,7 @@ var require_googleauth = __commonJS({
           this._cachedProjectId = projectId;
           return projectId;
         } else {
-          throw new Error(exports.GoogleAuthExceptionMessages.NO_PROJECT_ID_FOUND);
+          throw new Error(exports2.GoogleAuthExceptionMessages.NO_PROJECT_ID_FOUND);
         }
       }
       async getProjectIdAsync() {
@@ -17582,7 +17578,7 @@ var require_googleauth = __commonJS({
           options.scopes = this.getAnyScopes();
           return await this.#prepareAndCacheClient(new computeclient_1.Compute(options));
         }
-        throw new Error(exports.GoogleAuthExceptionMessages.NO_ADC_FOUND);
+        throw new Error(exports2.GoogleAuthExceptionMessages.NO_ADC_FOUND);
       }
       async #prepareAndCacheClient(credential, quotaProjectIdOverride = process.env["GOOGLE_CLOUD_QUOTA_PROJECT"] || null) {
         const projectId = await this.getProjectIdOptional();
@@ -17963,7 +17959,7 @@ var require_googleauth = __commonJS({
           ]);
           return { client_email, universe_domain };
         }
-        throw new Error(exports.GoogleAuthExceptionMessages.NO_CREDENTIALS_FOUND);
+        throw new Error(exports2.GoogleAuthExceptionMessages.NO_CREDENTIALS_FOUND);
       }
       /**
        * Automatically obtain an {@link AuthClient `AuthClient`} based on the
@@ -18126,16 +18122,16 @@ var require_googleauth = __commonJS({
         return res.data.signedBlob;
       }
     };
-    exports.GoogleAuth = GoogleAuth2;
+    exports2.GoogleAuth = GoogleAuth2;
   }
 });
 
 // node_modules/google-auth-library/build/src/auth/iam.js
 var require_iam = __commonJS({
-  "node_modules/google-auth-library/build/src/auth/iam.js"(exports) {
+  "node_modules/google-auth-library/build/src/auth/iam.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.IAMAuth = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.IAMAuth = void 0;
     var IAMAuth = class {
       selector;
       token;
@@ -18162,25 +18158,25 @@ var require_iam = __commonJS({
         };
       }
     };
-    exports.IAMAuth = IAMAuth;
+    exports2.IAMAuth = IAMAuth;
   }
 });
 
 // node_modules/google-auth-library/build/src/auth/downscopedclient.js
 var require_downscopedclient = __commonJS({
-  "node_modules/google-auth-library/build/src/auth/downscopedclient.js"(exports) {
+  "node_modules/google-auth-library/build/src/auth/downscopedclient.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.DownscopedClient = exports.EXPIRATION_TIME_OFFSET = exports.MAX_ACCESS_BOUNDARY_RULES_COUNT = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.DownscopedClient = exports2.EXPIRATION_TIME_OFFSET = exports2.MAX_ACCESS_BOUNDARY_RULES_COUNT = void 0;
     var gaxios_1 = require_src2();
-    var stream4 = __require("stream");
+    var stream4 = require("stream");
     var authclient_1 = require_authclient();
     var sts = require_stscredentials();
     var STS_GRANT_TYPE = "urn:ietf:params:oauth:grant-type:token-exchange";
     var STS_REQUEST_TOKEN_TYPE = "urn:ietf:params:oauth:token-type:access_token";
     var STS_SUBJECT_TOKEN_TYPE = "urn:ietf:params:oauth:token-type:access_token";
-    exports.MAX_ACCESS_BOUNDARY_RULES_COUNT = 10;
-    exports.EXPIRATION_TIME_OFFSET = 5 * 60 * 1e3;
+    exports2.MAX_ACCESS_BOUNDARY_RULES_COUNT = 10;
+    exports2.EXPIRATION_TIME_OFFSET = 5 * 60 * 1e3;
     var DownscopedClient = class extends authclient_1.AuthClient {
       authClient;
       credentialAccessBoundary;
@@ -18212,8 +18208,8 @@ var require_downscopedclient = __commonJS({
         }
         if (this.credentialAccessBoundary.accessBoundary.accessBoundaryRules.length === 0) {
           throw new Error("At least one access boundary rule needs to be defined.");
-        } else if (this.credentialAccessBoundary.accessBoundary.accessBoundaryRules.length > exports.MAX_ACCESS_BOUNDARY_RULES_COUNT) {
-          throw new Error(`The provided access boundary has more than ${exports.MAX_ACCESS_BOUNDARY_RULES_COUNT} access boundary rules.`);
+        } else if (this.credentialAccessBoundary.accessBoundary.accessBoundaryRules.length > exports2.MAX_ACCESS_BOUNDARY_RULES_COUNT) {
+          throw new Error(`The provided access boundary has more than ${exports2.MAX_ACCESS_BOUNDARY_RULES_COUNT} access boundary rules.`);
         }
         for (const rule of this.credentialAccessBoundary.accessBoundary.accessBoundaryRules) {
           if (rule.availablePermissions.length === 0) {
@@ -18347,16 +18343,16 @@ var require_downscopedclient = __commonJS({
         return downscopedAccessToken.expiry_date ? now >= downscopedAccessToken.expiry_date - this.eagerRefreshThresholdMillis : false;
       }
     };
-    exports.DownscopedClient = DownscopedClient;
+    exports2.DownscopedClient = DownscopedClient;
   }
 });
 
 // node_modules/google-auth-library/build/src/auth/passthrough.js
 var require_passthrough = __commonJS({
-  "node_modules/google-auth-library/build/src/auth/passthrough.js"(exports) {
+  "node_modules/google-auth-library/build/src/auth/passthrough.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.PassThroughClient = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.PassThroughClient = void 0;
     var authclient_1 = require_authclient();
     var PassThroughClient = class extends authclient_1.AuthClient {
       /**
@@ -18392,15 +18388,15 @@ var require_passthrough = __commonJS({
         return new Headers();
       }
     };
-    exports.PassThroughClient = PassThroughClient;
+    exports2.PassThroughClient = PassThroughClient;
   }
 });
 
 // node_modules/google-auth-library/build/src/index.js
 var require_src5 = __commonJS({
-  "node_modules/google-auth-library/build/src/index.js"(exports) {
+  "node_modules/google-auth-library/build/src/index.js"(exports2) {
     "use strict";
-    var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o, m2, k, k2) {
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m2, k, k2) {
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m2, k);
       if (!desc || ("get" in desc ? !m2.__esModule : desc.writable || desc.configurable)) {
@@ -18413,126 +18409,126 @@ var require_src5 = __commonJS({
       if (k2 === void 0) k2 = k;
       o[k2] = m2[k];
     }));
-    var __exportStar = exports && exports.__exportStar || function(m2, exports2) {
-      for (var p in m2) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports2, p)) __createBinding(exports2, m2, p);
+    var __exportStar = exports2 && exports2.__exportStar || function(m2, exports3) {
+      for (var p in m2) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding(exports3, m2, p);
     };
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.GoogleAuth = exports.auth = exports.PassThroughClient = exports.ExternalAccountAuthorizedUserClient = exports.EXTERNAL_ACCOUNT_AUTHORIZED_USER_TYPE = exports.ExecutableError = exports.PluggableAuthClient = exports.DownscopedClient = exports.BaseExternalAccountClient = exports.ExternalAccountClient = exports.IdentityPoolClient = exports.AwsRequestSigner = exports.AwsClient = exports.UserRefreshClient = exports.LoginTicket = exports.ClientAuthentication = exports.OAuth2Client = exports.CodeChallengeMethod = exports.Impersonated = exports.JWT = exports.JWTAccess = exports.IdTokenClient = exports.IAMAuth = exports.GCPEnv = exports.Compute = exports.DEFAULT_UNIVERSE = exports.AuthClient = exports.gaxios = exports.gcpMetadata = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.GoogleAuth = exports2.auth = exports2.PassThroughClient = exports2.ExternalAccountAuthorizedUserClient = exports2.EXTERNAL_ACCOUNT_AUTHORIZED_USER_TYPE = exports2.ExecutableError = exports2.PluggableAuthClient = exports2.DownscopedClient = exports2.BaseExternalAccountClient = exports2.ExternalAccountClient = exports2.IdentityPoolClient = exports2.AwsRequestSigner = exports2.AwsClient = exports2.UserRefreshClient = exports2.LoginTicket = exports2.ClientAuthentication = exports2.OAuth2Client = exports2.CodeChallengeMethod = exports2.Impersonated = exports2.JWT = exports2.JWTAccess = exports2.IdTokenClient = exports2.IAMAuth = exports2.GCPEnv = exports2.Compute = exports2.DEFAULT_UNIVERSE = exports2.AuthClient = exports2.gaxios = exports2.gcpMetadata = void 0;
     var googleauth_1 = require_googleauth();
-    Object.defineProperty(exports, "GoogleAuth", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "GoogleAuth", { enumerable: true, get: function() {
       return googleauth_1.GoogleAuth;
     } });
-    exports.gcpMetadata = require_src4();
-    exports.gaxios = require_src2();
+    exports2.gcpMetadata = require_src4();
+    exports2.gaxios = require_src2();
     var authclient_1 = require_authclient();
-    Object.defineProperty(exports, "AuthClient", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "AuthClient", { enumerable: true, get: function() {
       return authclient_1.AuthClient;
     } });
-    Object.defineProperty(exports, "DEFAULT_UNIVERSE", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "DEFAULT_UNIVERSE", { enumerable: true, get: function() {
       return authclient_1.DEFAULT_UNIVERSE;
     } });
     var computeclient_1 = require_computeclient();
-    Object.defineProperty(exports, "Compute", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "Compute", { enumerable: true, get: function() {
       return computeclient_1.Compute;
     } });
     var envDetect_1 = require_envDetect();
-    Object.defineProperty(exports, "GCPEnv", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "GCPEnv", { enumerable: true, get: function() {
       return envDetect_1.GCPEnv;
     } });
     var iam_1 = require_iam();
-    Object.defineProperty(exports, "IAMAuth", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "IAMAuth", { enumerable: true, get: function() {
       return iam_1.IAMAuth;
     } });
     var idtokenclient_1 = require_idtokenclient();
-    Object.defineProperty(exports, "IdTokenClient", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "IdTokenClient", { enumerable: true, get: function() {
       return idtokenclient_1.IdTokenClient;
     } });
     var jwtaccess_1 = require_jwtaccess();
-    Object.defineProperty(exports, "JWTAccess", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "JWTAccess", { enumerable: true, get: function() {
       return jwtaccess_1.JWTAccess;
     } });
     var jwtclient_1 = require_jwtclient();
-    Object.defineProperty(exports, "JWT", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "JWT", { enumerable: true, get: function() {
       return jwtclient_1.JWT;
     } });
     var impersonated_1 = require_impersonated();
-    Object.defineProperty(exports, "Impersonated", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "Impersonated", { enumerable: true, get: function() {
       return impersonated_1.Impersonated;
     } });
     var oauth2client_1 = require_oauth2client();
-    Object.defineProperty(exports, "CodeChallengeMethod", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "CodeChallengeMethod", { enumerable: true, get: function() {
       return oauth2client_1.CodeChallengeMethod;
     } });
-    Object.defineProperty(exports, "OAuth2Client", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "OAuth2Client", { enumerable: true, get: function() {
       return oauth2client_1.OAuth2Client;
     } });
-    Object.defineProperty(exports, "ClientAuthentication", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "ClientAuthentication", { enumerable: true, get: function() {
       return oauth2client_1.ClientAuthentication;
     } });
     var loginticket_1 = require_loginticket();
-    Object.defineProperty(exports, "LoginTicket", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "LoginTicket", { enumerable: true, get: function() {
       return loginticket_1.LoginTicket;
     } });
     var refreshclient_1 = require_refreshclient();
-    Object.defineProperty(exports, "UserRefreshClient", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "UserRefreshClient", { enumerable: true, get: function() {
       return refreshclient_1.UserRefreshClient;
     } });
     var awsclient_1 = require_awsclient();
-    Object.defineProperty(exports, "AwsClient", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "AwsClient", { enumerable: true, get: function() {
       return awsclient_1.AwsClient;
     } });
     var awsrequestsigner_1 = require_awsrequestsigner();
-    Object.defineProperty(exports, "AwsRequestSigner", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "AwsRequestSigner", { enumerable: true, get: function() {
       return awsrequestsigner_1.AwsRequestSigner;
     } });
     var identitypoolclient_1 = require_identitypoolclient();
-    Object.defineProperty(exports, "IdentityPoolClient", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "IdentityPoolClient", { enumerable: true, get: function() {
       return identitypoolclient_1.IdentityPoolClient;
     } });
     var externalclient_1 = require_externalclient();
-    Object.defineProperty(exports, "ExternalAccountClient", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "ExternalAccountClient", { enumerable: true, get: function() {
       return externalclient_1.ExternalAccountClient;
     } });
     var baseexternalclient_1 = require_baseexternalclient();
-    Object.defineProperty(exports, "BaseExternalAccountClient", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "BaseExternalAccountClient", { enumerable: true, get: function() {
       return baseexternalclient_1.BaseExternalAccountClient;
     } });
     var downscopedclient_1 = require_downscopedclient();
-    Object.defineProperty(exports, "DownscopedClient", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "DownscopedClient", { enumerable: true, get: function() {
       return downscopedclient_1.DownscopedClient;
     } });
     var pluggable_auth_client_1 = require_pluggable_auth_client();
-    Object.defineProperty(exports, "PluggableAuthClient", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "PluggableAuthClient", { enumerable: true, get: function() {
       return pluggable_auth_client_1.PluggableAuthClient;
     } });
-    Object.defineProperty(exports, "ExecutableError", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "ExecutableError", { enumerable: true, get: function() {
       return pluggable_auth_client_1.ExecutableError;
     } });
     var externalAccountAuthorizedUserClient_1 = require_externalAccountAuthorizedUserClient();
-    Object.defineProperty(exports, "EXTERNAL_ACCOUNT_AUTHORIZED_USER_TYPE", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "EXTERNAL_ACCOUNT_AUTHORIZED_USER_TYPE", { enumerable: true, get: function() {
       return externalAccountAuthorizedUserClient_1.EXTERNAL_ACCOUNT_AUTHORIZED_USER_TYPE;
     } });
-    Object.defineProperty(exports, "ExternalAccountAuthorizedUserClient", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "ExternalAccountAuthorizedUserClient", { enumerable: true, get: function() {
       return externalAccountAuthorizedUserClient_1.ExternalAccountAuthorizedUserClient;
     } });
     var passthrough_1 = require_passthrough();
-    Object.defineProperty(exports, "PassThroughClient", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "PassThroughClient", { enumerable: true, get: function() {
       return passthrough_1.PassThroughClient;
     } });
-    __exportStar(require_googleToken(), exports);
+    __exportStar(require_googleToken(), exports2);
     var auth = new googleauth_1.GoogleAuth();
-    exports.auth = auth;
+    exports2.auth = auth;
   }
 });
 
 // node_modules/ws/lib/constants.js
 var require_constants = __commonJS({
-  "node_modules/ws/lib/constants.js"(exports, module) {
+  "node_modules/ws/lib/constants.js"(exports2, module2) {
     "use strict";
     var BINARY_TYPES = ["nodebuffer", "arraybuffer", "fragments"];
     var hasBlob = typeof Blob !== "undefined";
     if (hasBlob) BINARY_TYPES.push("blob");
-    module.exports = {
+    module2.exports = {
       BINARY_TYPES,
       CLOSE_TIMEOUT: 3e4,
       EMPTY_BUFFER: Buffer.alloc(0),
@@ -18550,7 +18546,7 @@ var require_constants = __commonJS({
 
 // node_modules/ws/lib/buffer-util.js
 var require_buffer_util = __commonJS({
-  "node_modules/ws/lib/buffer-util.js"(exports, module) {
+  "node_modules/ws/lib/buffer-util.js"(exports2, module2) {
     "use strict";
     var { EMPTY_BUFFER } = require_constants();
     var FastBuffer = Buffer[Symbol.species];
@@ -18599,7 +18595,7 @@ var require_buffer_util = __commonJS({
       }
       return buf;
     }
-    module.exports = {
+    module2.exports = {
       concat,
       mask: _mask,
       toArrayBuffer,
@@ -18608,12 +18604,12 @@ var require_buffer_util = __commonJS({
     };
     if (!process.env.WS_NO_BUFFER_UTIL) {
       try {
-        const bufferUtil = __require("bufferutil");
-        module.exports.mask = function(source, mask, output, offset, length) {
+        const bufferUtil = require("bufferutil");
+        module2.exports.mask = function(source, mask, output, offset, length) {
           if (length < 48) _mask(source, mask, output, offset, length);
           else bufferUtil.mask(source, mask, output, offset, length);
         };
-        module.exports.unmask = function(buffer, mask) {
+        module2.exports.unmask = function(buffer, mask) {
           if (buffer.length < 32) _unmask(buffer, mask);
           else bufferUtil.unmask(buffer, mask);
         };
@@ -18625,7 +18621,7 @@ var require_buffer_util = __commonJS({
 
 // node_modules/ws/lib/limiter.js
 var require_limiter = __commonJS({
-  "node_modules/ws/lib/limiter.js"(exports, module) {
+  "node_modules/ws/lib/limiter.js"(exports2, module2) {
     "use strict";
     var kDone = /* @__PURE__ */ Symbol("kDone");
     var kRun = /* @__PURE__ */ Symbol("kRun");
@@ -18669,15 +18665,15 @@ var require_limiter = __commonJS({
         }
       }
     };
-    module.exports = Limiter;
+    module2.exports = Limiter;
   }
 });
 
 // node_modules/ws/lib/permessage-deflate.js
 var require_permessage_deflate = __commonJS({
-  "node_modules/ws/lib/permessage-deflate.js"(exports, module) {
+  "node_modules/ws/lib/permessage-deflate.js"(exports2, module2) {
     "use strict";
-    var zlib3 = __require("zlib");
+    var zlib3 = require("zlib");
     var bufferUtil = require_buffer_util();
     var Limiter = require_limiter();
     var { kStatusCode } = require_constants();
@@ -19027,7 +19023,7 @@ var require_permessage_deflate = __commonJS({
         });
       }
     };
-    module.exports = PerMessageDeflate2;
+    module2.exports = PerMessageDeflate2;
     function deflateOnData(chunk) {
       this[kBuffers].push(chunk);
       this[kTotalLength] += chunk.length;
@@ -19058,9 +19054,9 @@ var require_permessage_deflate = __commonJS({
 
 // node_modules/ws/lib/validation.js
 var require_validation = __commonJS({
-  "node_modules/ws/lib/validation.js"(exports, module) {
+  "node_modules/ws/lib/validation.js"(exports2, module2) {
     "use strict";
-    var { isUtf8 } = __require("buffer");
+    var { isUtf8 } = require("buffer");
     var { hasBlob } = require_constants();
     var tokenChars = [
       0,
@@ -19235,20 +19231,20 @@ var require_validation = __commonJS({
     function isBlob3(value) {
       return hasBlob && typeof value === "object" && typeof value.arrayBuffer === "function" && typeof value.type === "string" && typeof value.stream === "function" && (value[Symbol.toStringTag] === "Blob" || value[Symbol.toStringTag] === "File");
     }
-    module.exports = {
+    module2.exports = {
       isBlob: isBlob3,
       isValidStatusCode,
       isValidUTF8: _isValidUTF8,
       tokenChars
     };
     if (isUtf8) {
-      module.exports.isValidUTF8 = function(buf) {
+      module2.exports.isValidUTF8 = function(buf) {
         return buf.length < 24 ? _isValidUTF8(buf) : isUtf8(buf);
       };
     } else if (!process.env.WS_NO_UTF_8_VALIDATE) {
       try {
-        const isValidUTF8 = __require("utf-8-validate");
-        module.exports.isValidUTF8 = function(buf) {
+        const isValidUTF8 = require("utf-8-validate");
+        module2.exports.isValidUTF8 = function(buf) {
           return buf.length < 32 ? _isValidUTF8(buf) : isValidUTF8(buf);
         };
       } catch (e2) {
@@ -19259,9 +19255,9 @@ var require_validation = __commonJS({
 
 // node_modules/ws/lib/receiver.js
 var require_receiver = __commonJS({
-  "node_modules/ws/lib/receiver.js"(exports, module) {
+  "node_modules/ws/lib/receiver.js"(exports2, module2) {
     "use strict";
-    var { Writable } = __require("stream");
+    var { Writable } = require("stream");
     var PerMessageDeflate2 = require_permessage_deflate();
     var {
       BINARY_TYPES,
@@ -19845,19 +19841,19 @@ var require_receiver = __commonJS({
         return err;
       }
     };
-    module.exports = Receiver2;
+    module2.exports = Receiver2;
   }
 });
 
 // node_modules/ws/lib/sender.js
 var require_sender = __commonJS({
-  "node_modules/ws/lib/sender.js"(exports, module) {
+  "node_modules/ws/lib/sender.js"(exports2, module2) {
     "use strict";
-    var { Duplex } = __require("stream");
-    var { randomFillSync } = __require("crypto");
+    var { Duplex } = require("stream");
+    var { randomFillSync } = require("crypto");
     var {
       types: { isUint8Array }
-    } = __require("util");
+    } = require("util");
     var PerMessageDeflate2 = require_permessage_deflate();
     var { EMPTY_BUFFER, kWebSocket, NOOP } = require_constants();
     var { isBlob: isBlob3, isValidStatusCode } = require_validation();
@@ -20326,7 +20322,7 @@ var require_sender = __commonJS({
         }
       }
     };
-    module.exports = Sender2;
+    module2.exports = Sender2;
     function callCallbacks(sender, err, cb) {
       if (typeof cb === "function") cb(err);
       for (let i2 = 0; i2 < sender._queue.length; i2++) {
@@ -20344,7 +20340,7 @@ var require_sender = __commonJS({
 
 // node_modules/ws/lib/event-target.js
 var require_event_target = __commonJS({
-  "node_modules/ws/lib/event-target.js"(exports, module) {
+  "node_modules/ws/lib/event-target.js"(exports2, module2) {
     "use strict";
     var { kForOnEventAttribute, kListener } = require_constants();
     var kCode = /* @__PURE__ */ Symbol("kCode");
@@ -20554,7 +20550,7 @@ var require_event_target = __commonJS({
         }
       }
     };
-    module.exports = {
+    module2.exports = {
       CloseEvent,
       ErrorEvent,
       Event,
@@ -20573,7 +20569,7 @@ var require_event_target = __commonJS({
 
 // node_modules/ws/lib/extension.js
 var require_extension = __commonJS({
-  "node_modules/ws/lib/extension.js"(exports, module) {
+  "node_modules/ws/lib/extension.js"(exports2, module2) {
     "use strict";
     var { tokenChars } = require_validation();
     function push(dest, name, elem) {
@@ -20720,22 +20716,22 @@ var require_extension = __commonJS({
         }).join(", ");
       }).join(", ");
     }
-    module.exports = { format, parse };
+    module2.exports = { format, parse };
   }
 });
 
 // node_modules/ws/lib/websocket.js
 var require_websocket = __commonJS({
-  "node_modules/ws/lib/websocket.js"(exports, module) {
+  "node_modules/ws/lib/websocket.js"(exports2, module2) {
     "use strict";
-    var EventEmitter2 = __require("events");
-    var https4 = __require("https");
-    var http4 = __require("http");
-    var net = __require("net");
-    var tls = __require("tls");
-    var { randomBytes, createHash } = __require("crypto");
-    var { Duplex, Readable: Readable3 } = __require("stream");
-    var { URL: URL2 } = __require("url");
+    var EventEmitter2 = require("events");
+    var https4 = require("https");
+    var http4 = require("http");
+    var net = require("net");
+    var tls = require("tls");
+    var { randomBytes, createHash } = require("crypto");
+    var { Duplex, Readable: Readable3 } = require("stream");
+    var { URL: URL2 } = require("url");
     var PerMessageDeflate2 = require_permessage_deflate();
     var Receiver2 = require_receiver();
     var Sender2 = require_sender();
@@ -21198,7 +21194,7 @@ var require_websocket = __commonJS({
     });
     WebSocket2.prototype.addEventListener = addEventListener;
     WebSocket2.prototype.removeEventListener = removeEventListener;
-    module.exports = WebSocket2;
+    module2.exports = WebSocket2;
     function initAsClient(websocket, address, protocols, options) {
       const opts = {
         allowSynchronousEvents: true,
@@ -21612,10 +21608,10 @@ var require_websocket = __commonJS({
 
 // node_modules/ws/lib/stream.js
 var require_stream = __commonJS({
-  "node_modules/ws/lib/stream.js"(exports, module) {
+  "node_modules/ws/lib/stream.js"(exports2, module2) {
     "use strict";
     var WebSocket2 = require_websocket();
-    var { Duplex } = __require("stream");
+    var { Duplex } = require("stream");
     function emitClose(stream4) {
       stream4.emit("close");
     }
@@ -21704,13 +21700,13 @@ var require_stream = __commonJS({
       duplex.on("error", duplexOnError);
       return duplex;
     }
-    module.exports = createWebSocketStream2;
+    module2.exports = createWebSocketStream2;
   }
 });
 
 // node_modules/ws/lib/subprotocol.js
 var require_subprotocol = __commonJS({
-  "node_modules/ws/lib/subprotocol.js"(exports, module) {
+  "node_modules/ws/lib/subprotocol.js"(exports2, module2) {
     "use strict";
     var { tokenChars } = require_validation();
     function parse(header) {
@@ -21749,18 +21745,18 @@ var require_subprotocol = __commonJS({
       protocols.add(protocol);
       return protocols;
     }
-    module.exports = { parse };
+    module2.exports = { parse };
   }
 });
 
 // node_modules/ws/lib/websocket-server.js
 var require_websocket_server = __commonJS({
-  "node_modules/ws/lib/websocket-server.js"(exports, module) {
+  "node_modules/ws/lib/websocket-server.js"(exports2, module2) {
     "use strict";
-    var EventEmitter2 = __require("events");
-    var http4 = __require("http");
-    var { Duplex } = __require("stream");
-    var { createHash } = __require("crypto");
+    var EventEmitter2 = require("events");
+    var http4 = require("http");
+    var { Duplex } = require("stream");
+    var { createHash } = require("crypto");
     var extension2 = require_extension();
     var PerMessageDeflate2 = require_permessage_deflate();
     var subprotocol2 = require_subprotocol();
@@ -22104,7 +22100,7 @@ var require_websocket_server = __commonJS({
         cb(ws, req);
       }
     };
-    module.exports = WebSocketServer2;
+    module2.exports = WebSocketServer2;
     function addListeners(server, map) {
       for (const event of Object.keys(map)) server.on(event, map[event]);
       return function removeListeners() {
@@ -22148,10 +22144,10 @@ var require_websocket_server = __commonJS({
 
 // node_modules/delayed-stream/lib/delayed_stream.js
 var require_delayed_stream = __commonJS({
-  "node_modules/delayed-stream/lib/delayed_stream.js"(exports, module) {
-    var Stream4 = __require("stream").Stream;
-    var util3 = __require("util");
-    module.exports = DelayedStream;
+  "node_modules/delayed-stream/lib/delayed_stream.js"(exports2, module2) {
+    var Stream4 = require("stream").Stream;
+    var util3 = require("util");
+    module2.exports = DelayedStream;
     function DelayedStream() {
       this.source = null;
       this.dataSize = 0;
@@ -22239,11 +22235,11 @@ var require_delayed_stream = __commonJS({
 
 // node_modules/combined-stream/lib/combined_stream.js
 var require_combined_stream = __commonJS({
-  "node_modules/combined-stream/lib/combined_stream.js"(exports, module) {
-    var util3 = __require("util");
-    var Stream4 = __require("stream").Stream;
+  "node_modules/combined-stream/lib/combined_stream.js"(exports2, module2) {
+    var util3 = require("util");
+    var Stream4 = require("stream").Stream;
     var DelayedStream = require_delayed_stream();
-    module.exports = CombinedStream;
+    module2.exports = CombinedStream;
     function CombinedStream() {
       this.writable = false;
       this.readable = true;
@@ -22408,8 +22404,8 @@ var require_combined_stream = __commonJS({
 
 // node_modules/mime-db/db.json
 var require_db = __commonJS({
-  "node_modules/mime-db/db.json"(exports, module) {
-    module.exports = {
+  "node_modules/mime-db/db.json"(exports2, module2) {
+    module2.exports = {
       "application/1d-interleaved-parityfec": {
         source: "iana"
       },
@@ -30933,27 +30929,27 @@ var require_db = __commonJS({
 
 // node_modules/mime-db/index.js
 var require_mime_db = __commonJS({
-  "node_modules/mime-db/index.js"(exports, module) {
-    module.exports = require_db();
+  "node_modules/mime-db/index.js"(exports2, module2) {
+    module2.exports = require_db();
   }
 });
 
 // node_modules/mime-types/index.js
 var require_mime_types = __commonJS({
-  "node_modules/mime-types/index.js"(exports) {
+  "node_modules/mime-types/index.js"(exports2) {
     "use strict";
     var db = require_mime_db();
-    var extname = __require("path").extname;
+    var extname = require("path").extname;
     var EXTRACT_TYPE_REGEXP = /^\s*([^;\s]*)(?:;|\s|$)/;
     var TEXT_TYPE_REGEXP = /^text\//i;
-    exports.charset = charset;
-    exports.charsets = { lookup: charset };
-    exports.contentType = contentType;
-    exports.extension = extension2;
-    exports.extensions = /* @__PURE__ */ Object.create(null);
-    exports.lookup = lookup;
-    exports.types = /* @__PURE__ */ Object.create(null);
-    populateMaps(exports.extensions, exports.types);
+    exports2.charset = charset;
+    exports2.charsets = { lookup: charset };
+    exports2.contentType = contentType;
+    exports2.extension = extension2;
+    exports2.extensions = /* @__PURE__ */ Object.create(null);
+    exports2.lookup = lookup;
+    exports2.types = /* @__PURE__ */ Object.create(null);
+    populateMaps(exports2.extensions, exports2.types);
     function charset(type) {
       if (!type || typeof type !== "string") {
         return false;
@@ -30972,12 +30968,12 @@ var require_mime_types = __commonJS({
       if (!str || typeof str !== "string") {
         return false;
       }
-      var mime = str.indexOf("/") === -1 ? exports.lookup(str) : str;
+      var mime = str.indexOf("/") === -1 ? exports2.lookup(str) : str;
       if (!mime) {
         return false;
       }
       if (mime.indexOf("charset") === -1) {
-        var charset2 = exports.charset(mime);
+        var charset2 = exports2.charset(mime);
         if (charset2) mime += "; charset=" + charset2.toLowerCase();
       }
       return mime;
@@ -30987,7 +30983,7 @@ var require_mime_types = __commonJS({
         return false;
       }
       var match = EXTRACT_TYPE_REGEXP.exec(type);
-      var exts = match && exports.extensions[match[1].toLowerCase()];
+      var exts = match && exports2.extensions[match[1].toLowerCase()];
       if (!exts || !exts.length) {
         return false;
       }
@@ -31001,7 +30997,7 @@ var require_mime_types = __commonJS({
       if (!extension3) {
         return false;
       }
-      return exports.types[extension3] || false;
+      return exports2.types[extension3] || false;
     }
     function populateMaps(extensions, types3) {
       var preference = ["nginx", "apache", void 0, "iana"];
@@ -31030,8 +31026,8 @@ var require_mime_types = __commonJS({
 
 // node_modules/asynckit/lib/defer.js
 var require_defer = __commonJS({
-  "node_modules/asynckit/lib/defer.js"(exports, module) {
-    module.exports = defer;
+  "node_modules/asynckit/lib/defer.js"(exports2, module2) {
+    module2.exports = defer;
     function defer(fn) {
       var nextTick = typeof setImmediate == "function" ? setImmediate : typeof process == "object" && typeof process.nextTick == "function" ? process.nextTick : null;
       if (nextTick) {
@@ -31045,9 +31041,9 @@ var require_defer = __commonJS({
 
 // node_modules/asynckit/lib/async.js
 var require_async = __commonJS({
-  "node_modules/asynckit/lib/async.js"(exports, module) {
+  "node_modules/asynckit/lib/async.js"(exports2, module2) {
     var defer = require_defer();
-    module.exports = async;
+    module2.exports = async;
     function async(callback) {
       var isAsync = false;
       defer(function() {
@@ -31068,8 +31064,8 @@ var require_async = __commonJS({
 
 // node_modules/asynckit/lib/abort.js
 var require_abort = __commonJS({
-  "node_modules/asynckit/lib/abort.js"(exports, module) {
-    module.exports = abort;
+  "node_modules/asynckit/lib/abort.js"(exports2, module2) {
+    module2.exports = abort;
     function abort(state) {
       Object.keys(state.jobs).forEach(clean.bind(state));
       state.jobs = {};
@@ -31084,10 +31080,10 @@ var require_abort = __commonJS({
 
 // node_modules/asynckit/lib/iterate.js
 var require_iterate = __commonJS({
-  "node_modules/asynckit/lib/iterate.js"(exports, module) {
+  "node_modules/asynckit/lib/iterate.js"(exports2, module2) {
     var async = require_async();
     var abort = require_abort();
-    module.exports = iterate;
+    module2.exports = iterate;
     function iterate(list, iterator2, state, callback) {
       var key = state["keyedList"] ? state["keyedList"][state.index] : state.index;
       state.jobs[key] = runJob(iterator2, key, list[key], function(error, output) {
@@ -31117,8 +31113,8 @@ var require_iterate = __commonJS({
 
 // node_modules/asynckit/lib/state.js
 var require_state = __commonJS({
-  "node_modules/asynckit/lib/state.js"(exports, module) {
-    module.exports = state;
+  "node_modules/asynckit/lib/state.js"(exports2, module2) {
+    module2.exports = state;
     function state(list, sortMethod) {
       var isNamedList = !Array.isArray(list), initState = {
         index: 0,
@@ -31139,10 +31135,10 @@ var require_state = __commonJS({
 
 // node_modules/asynckit/lib/terminator.js
 var require_terminator = __commonJS({
-  "node_modules/asynckit/lib/terminator.js"(exports, module) {
+  "node_modules/asynckit/lib/terminator.js"(exports2, module2) {
     var abort = require_abort();
     var async = require_async();
-    module.exports = terminator;
+    module2.exports = terminator;
     function terminator(callback) {
       if (!Object.keys(this.jobs).length) {
         return;
@@ -31156,11 +31152,11 @@ var require_terminator = __commonJS({
 
 // node_modules/asynckit/parallel.js
 var require_parallel = __commonJS({
-  "node_modules/asynckit/parallel.js"(exports, module) {
+  "node_modules/asynckit/parallel.js"(exports2, module2) {
     var iterate = require_iterate();
     var initState = require_state();
     var terminator = require_terminator();
-    module.exports = parallel;
+    module2.exports = parallel;
     function parallel(list, iterator2, callback) {
       var state = initState(list);
       while (state.index < (state["keyedList"] || list).length) {
@@ -31183,13 +31179,13 @@ var require_parallel = __commonJS({
 
 // node_modules/asynckit/serialOrdered.js
 var require_serialOrdered = __commonJS({
-  "node_modules/asynckit/serialOrdered.js"(exports, module) {
+  "node_modules/asynckit/serialOrdered.js"(exports2, module2) {
     var iterate = require_iterate();
     var initState = require_state();
     var terminator = require_terminator();
-    module.exports = serialOrdered;
-    module.exports.ascending = ascending;
-    module.exports.descending = descending;
+    module2.exports = serialOrdered;
+    module2.exports.ascending = ascending;
+    module2.exports.descending = descending;
     function serialOrdered(list, iterator2, sortMethod, callback) {
       var state = initState(list, sortMethod);
       iterate(list, iterator2, state, function iteratorHandler(error, result) {
@@ -31217,9 +31213,9 @@ var require_serialOrdered = __commonJS({
 
 // node_modules/asynckit/serial.js
 var require_serial = __commonJS({
-  "node_modules/asynckit/serial.js"(exports, module) {
+  "node_modules/asynckit/serial.js"(exports2, module2) {
     var serialOrdered = require_serialOrdered();
-    module.exports = serial;
+    module2.exports = serial;
     function serial(list, iterator2, callback) {
       return serialOrdered(list, iterator2, null, callback);
     }
@@ -31228,8 +31224,8 @@ var require_serial = __commonJS({
 
 // node_modules/asynckit/index.js
 var require_asynckit = __commonJS({
-  "node_modules/asynckit/index.js"(exports, module) {
-    module.exports = {
+  "node_modules/asynckit/index.js"(exports2, module2) {
+    module2.exports = {
       parallel: require_parallel(),
       serial: require_serial(),
       serialOrdered: require_serialOrdered()
@@ -31239,121 +31235,121 @@ var require_asynckit = __commonJS({
 
 // node_modules/es-object-atoms/index.js
 var require_es_object_atoms = __commonJS({
-  "node_modules/es-object-atoms/index.js"(exports, module) {
+  "node_modules/es-object-atoms/index.js"(exports2, module2) {
     "use strict";
-    module.exports = Object;
+    module2.exports = Object;
   }
 });
 
 // node_modules/es-errors/index.js
 var require_es_errors = __commonJS({
-  "node_modules/es-errors/index.js"(exports, module) {
+  "node_modules/es-errors/index.js"(exports2, module2) {
     "use strict";
-    module.exports = Error;
+    module2.exports = Error;
   }
 });
 
 // node_modules/es-errors/eval.js
 var require_eval = __commonJS({
-  "node_modules/es-errors/eval.js"(exports, module) {
+  "node_modules/es-errors/eval.js"(exports2, module2) {
     "use strict";
-    module.exports = EvalError;
+    module2.exports = EvalError;
   }
 });
 
 // node_modules/es-errors/range.js
 var require_range = __commonJS({
-  "node_modules/es-errors/range.js"(exports, module) {
+  "node_modules/es-errors/range.js"(exports2, module2) {
     "use strict";
-    module.exports = RangeError;
+    module2.exports = RangeError;
   }
 });
 
 // node_modules/es-errors/ref.js
 var require_ref = __commonJS({
-  "node_modules/es-errors/ref.js"(exports, module) {
+  "node_modules/es-errors/ref.js"(exports2, module2) {
     "use strict";
-    module.exports = ReferenceError;
+    module2.exports = ReferenceError;
   }
 });
 
 // node_modules/es-errors/syntax.js
 var require_syntax = __commonJS({
-  "node_modules/es-errors/syntax.js"(exports, module) {
+  "node_modules/es-errors/syntax.js"(exports2, module2) {
     "use strict";
-    module.exports = SyntaxError;
+    module2.exports = SyntaxError;
   }
 });
 
 // node_modules/es-errors/type.js
 var require_type = __commonJS({
-  "node_modules/es-errors/type.js"(exports, module) {
+  "node_modules/es-errors/type.js"(exports2, module2) {
     "use strict";
-    module.exports = TypeError;
+    module2.exports = TypeError;
   }
 });
 
 // node_modules/es-errors/uri.js
 var require_uri = __commonJS({
-  "node_modules/es-errors/uri.js"(exports, module) {
+  "node_modules/es-errors/uri.js"(exports2, module2) {
     "use strict";
-    module.exports = URIError;
+    module2.exports = URIError;
   }
 });
 
 // node_modules/math-intrinsics/abs.js
 var require_abs = __commonJS({
-  "node_modules/math-intrinsics/abs.js"(exports, module) {
+  "node_modules/math-intrinsics/abs.js"(exports2, module2) {
     "use strict";
-    module.exports = Math.abs;
+    module2.exports = Math.abs;
   }
 });
 
 // node_modules/math-intrinsics/floor.js
 var require_floor = __commonJS({
-  "node_modules/math-intrinsics/floor.js"(exports, module) {
+  "node_modules/math-intrinsics/floor.js"(exports2, module2) {
     "use strict";
-    module.exports = Math.floor;
+    module2.exports = Math.floor;
   }
 });
 
 // node_modules/math-intrinsics/max.js
 var require_max = __commonJS({
-  "node_modules/math-intrinsics/max.js"(exports, module) {
+  "node_modules/math-intrinsics/max.js"(exports2, module2) {
     "use strict";
-    module.exports = Math.max;
+    module2.exports = Math.max;
   }
 });
 
 // node_modules/math-intrinsics/min.js
 var require_min = __commonJS({
-  "node_modules/math-intrinsics/min.js"(exports, module) {
+  "node_modules/math-intrinsics/min.js"(exports2, module2) {
     "use strict";
-    module.exports = Math.min;
+    module2.exports = Math.min;
   }
 });
 
 // node_modules/math-intrinsics/pow.js
 var require_pow = __commonJS({
-  "node_modules/math-intrinsics/pow.js"(exports, module) {
+  "node_modules/math-intrinsics/pow.js"(exports2, module2) {
     "use strict";
-    module.exports = Math.pow;
+    module2.exports = Math.pow;
   }
 });
 
 // node_modules/math-intrinsics/round.js
 var require_round = __commonJS({
-  "node_modules/math-intrinsics/round.js"(exports, module) {
+  "node_modules/math-intrinsics/round.js"(exports2, module2) {
     "use strict";
-    module.exports = Math.round;
+    module2.exports = Math.round;
   }
 });
 
 // node_modules/math-intrinsics/isNaN.js
 var require_isNaN = __commonJS({
-  "node_modules/math-intrinsics/isNaN.js"(exports, module) {
+  "node_modules/math-intrinsics/isNaN.js"(exports2, module2) {
     "use strict";
-    module.exports = Number.isNaN || function isNaN2(a) {
+    module2.exports = Number.isNaN || function isNaN2(a) {
       return a !== a;
     };
   }
@@ -31361,10 +31357,10 @@ var require_isNaN = __commonJS({
 
 // node_modules/math-intrinsics/sign.js
 var require_sign = __commonJS({
-  "node_modules/math-intrinsics/sign.js"(exports, module) {
+  "node_modules/math-intrinsics/sign.js"(exports2, module2) {
     "use strict";
     var $isNaN = require_isNaN();
-    module.exports = function sign(number) {
+    module2.exports = function sign(number) {
       if ($isNaN(number) || number === 0) {
         return number;
       }
@@ -31375,15 +31371,15 @@ var require_sign = __commonJS({
 
 // node_modules/gopd/gOPD.js
 var require_gOPD = __commonJS({
-  "node_modules/gopd/gOPD.js"(exports, module) {
+  "node_modules/gopd/gOPD.js"(exports2, module2) {
     "use strict";
-    module.exports = Object.getOwnPropertyDescriptor;
+    module2.exports = Object.getOwnPropertyDescriptor;
   }
 });
 
 // node_modules/gopd/index.js
 var require_gopd = __commonJS({
-  "node_modules/gopd/index.js"(exports, module) {
+  "node_modules/gopd/index.js"(exports2, module2) {
     "use strict";
     var $gOPD = require_gOPD();
     if ($gOPD) {
@@ -31393,13 +31389,13 @@ var require_gopd = __commonJS({
         $gOPD = null;
       }
     }
-    module.exports = $gOPD;
+    module2.exports = $gOPD;
   }
 });
 
 // node_modules/es-define-property/index.js
 var require_es_define_property = __commonJS({
-  "node_modules/es-define-property/index.js"(exports, module) {
+  "node_modules/es-define-property/index.js"(exports2, module2) {
     "use strict";
     var $defineProperty = Object.defineProperty || false;
     if ($defineProperty) {
@@ -31409,15 +31405,15 @@ var require_es_define_property = __commonJS({
         $defineProperty = false;
       }
     }
-    module.exports = $defineProperty;
+    module2.exports = $defineProperty;
   }
 });
 
 // node_modules/has-symbols/shams.js
 var require_shams = __commonJS({
-  "node_modules/has-symbols/shams.js"(exports, module) {
+  "node_modules/has-symbols/shams.js"(exports2, module2) {
     "use strict";
-    module.exports = function hasSymbols() {
+    module2.exports = function hasSymbols() {
       if (typeof Symbol !== "function" || typeof Object.getOwnPropertySymbols !== "function") {
         return false;
       }
@@ -31470,11 +31466,11 @@ var require_shams = __commonJS({
 
 // node_modules/has-symbols/index.js
 var require_has_symbols = __commonJS({
-  "node_modules/has-symbols/index.js"(exports, module) {
+  "node_modules/has-symbols/index.js"(exports2, module2) {
     "use strict";
     var origSymbol = typeof Symbol !== "undefined" && Symbol;
     var hasSymbolSham = require_shams();
-    module.exports = function hasNativeSymbols() {
+    module2.exports = function hasNativeSymbols() {
       if (typeof origSymbol !== "function") {
         return false;
       }
@@ -31494,24 +31490,24 @@ var require_has_symbols = __commonJS({
 
 // node_modules/get-proto/Reflect.getPrototypeOf.js
 var require_Reflect_getPrototypeOf = __commonJS({
-  "node_modules/get-proto/Reflect.getPrototypeOf.js"(exports, module) {
+  "node_modules/get-proto/Reflect.getPrototypeOf.js"(exports2, module2) {
     "use strict";
-    module.exports = typeof Reflect !== "undefined" && Reflect.getPrototypeOf || null;
+    module2.exports = typeof Reflect !== "undefined" && Reflect.getPrototypeOf || null;
   }
 });
 
 // node_modules/get-proto/Object.getPrototypeOf.js
 var require_Object_getPrototypeOf = __commonJS({
-  "node_modules/get-proto/Object.getPrototypeOf.js"(exports, module) {
+  "node_modules/get-proto/Object.getPrototypeOf.js"(exports2, module2) {
     "use strict";
     var $Object = require_es_object_atoms();
-    module.exports = $Object.getPrototypeOf || null;
+    module2.exports = $Object.getPrototypeOf || null;
   }
 });
 
 // node_modules/function-bind/implementation.js
 var require_implementation = __commonJS({
-  "node_modules/function-bind/implementation.js"(exports, module) {
+  "node_modules/function-bind/implementation.js"(exports2, module2) {
     "use strict";
     var ERROR_MESSAGE = "Function.prototype.bind called on incompatible ";
     var toStr = Object.prototype.toString;
@@ -31544,7 +31540,7 @@ var require_implementation = __commonJS({
       }
       return str;
     };
-    module.exports = function bind2(that) {
+    module2.exports = function bind2(that) {
       var target = this;
       if (typeof target !== "function" || toStr.apply(target) !== funcType) {
         throw new TypeError(ERROR_MESSAGE + target);
@@ -31587,58 +31583,58 @@ var require_implementation = __commonJS({
 
 // node_modules/function-bind/index.js
 var require_function_bind = __commonJS({
-  "node_modules/function-bind/index.js"(exports, module) {
+  "node_modules/function-bind/index.js"(exports2, module2) {
     "use strict";
     var implementation = require_implementation();
-    module.exports = Function.prototype.bind || implementation;
+    module2.exports = Function.prototype.bind || implementation;
   }
 });
 
 // node_modules/call-bind-apply-helpers/functionCall.js
 var require_functionCall = __commonJS({
-  "node_modules/call-bind-apply-helpers/functionCall.js"(exports, module) {
+  "node_modules/call-bind-apply-helpers/functionCall.js"(exports2, module2) {
     "use strict";
-    module.exports = Function.prototype.call;
+    module2.exports = Function.prototype.call;
   }
 });
 
 // node_modules/call-bind-apply-helpers/functionApply.js
 var require_functionApply = __commonJS({
-  "node_modules/call-bind-apply-helpers/functionApply.js"(exports, module) {
+  "node_modules/call-bind-apply-helpers/functionApply.js"(exports2, module2) {
     "use strict";
-    module.exports = Function.prototype.apply;
+    module2.exports = Function.prototype.apply;
   }
 });
 
 // node_modules/call-bind-apply-helpers/reflectApply.js
 var require_reflectApply = __commonJS({
-  "node_modules/call-bind-apply-helpers/reflectApply.js"(exports, module) {
+  "node_modules/call-bind-apply-helpers/reflectApply.js"(exports2, module2) {
     "use strict";
-    module.exports = typeof Reflect !== "undefined" && Reflect && Reflect.apply;
+    module2.exports = typeof Reflect !== "undefined" && Reflect && Reflect.apply;
   }
 });
 
 // node_modules/call-bind-apply-helpers/actualApply.js
 var require_actualApply = __commonJS({
-  "node_modules/call-bind-apply-helpers/actualApply.js"(exports, module) {
+  "node_modules/call-bind-apply-helpers/actualApply.js"(exports2, module2) {
     "use strict";
     var bind2 = require_function_bind();
     var $apply = require_functionApply();
     var $call = require_functionCall();
     var $reflectApply = require_reflectApply();
-    module.exports = $reflectApply || bind2.call($call, $apply);
+    module2.exports = $reflectApply || bind2.call($call, $apply);
   }
 });
 
 // node_modules/call-bind-apply-helpers/index.js
 var require_call_bind_apply_helpers = __commonJS({
-  "node_modules/call-bind-apply-helpers/index.js"(exports, module) {
+  "node_modules/call-bind-apply-helpers/index.js"(exports2, module2) {
     "use strict";
     var bind2 = require_function_bind();
     var $TypeError = require_type();
     var $call = require_functionCall();
     var $actualApply = require_actualApply();
-    module.exports = function callBindBasic(args) {
+    module2.exports = function callBindBasic(args) {
       if (args.length < 1 || typeof args[0] !== "function") {
         throw new $TypeError("a function is required");
       }
@@ -31649,7 +31645,7 @@ var require_call_bind_apply_helpers = __commonJS({
 
 // node_modules/dunder-proto/get.js
 var require_get = __commonJS({
-  "node_modules/dunder-proto/get.js"(exports, module) {
+  "node_modules/dunder-proto/get.js"(exports2, module2) {
     "use strict";
     var callBind = require_call_bind_apply_helpers();
     var gOPD = require_gopd();
@@ -31669,7 +31665,7 @@ var require_get = __commonJS({
     );
     var $Object = Object;
     var $getPrototypeOf = $Object.getPrototypeOf;
-    module.exports = desc && typeof desc.get === "function" ? callBind([desc.get]) : typeof $getPrototypeOf === "function" ? (
+    module2.exports = desc && typeof desc.get === "function" ? callBind([desc.get]) : typeof $getPrototypeOf === "function" ? (
       /** @type {import('./get')} */
       function getDunder(value) {
         return $getPrototypeOf(value == null ? value : $Object(value));
@@ -31680,12 +31676,12 @@ var require_get = __commonJS({
 
 // node_modules/get-proto/index.js
 var require_get_proto = __commonJS({
-  "node_modules/get-proto/index.js"(exports, module) {
+  "node_modules/get-proto/index.js"(exports2, module2) {
     "use strict";
     var reflectGetProto = require_Reflect_getPrototypeOf();
     var originalGetProto = require_Object_getPrototypeOf();
     var getDunderProto = require_get();
-    module.exports = reflectGetProto ? function getProto(O) {
+    module2.exports = reflectGetProto ? function getProto(O) {
       return reflectGetProto(O);
     } : originalGetProto ? function getProto(O) {
       if (!O || typeof O !== "object" && typeof O !== "function") {
@@ -31700,18 +31696,18 @@ var require_get_proto = __commonJS({
 
 // node_modules/hasown/index.js
 var require_hasown = __commonJS({
-  "node_modules/hasown/index.js"(exports, module) {
+  "node_modules/hasown/index.js"(exports2, module2) {
     "use strict";
     var call = Function.prototype.call;
     var $hasOwn = Object.prototype.hasOwnProperty;
     var bind2 = require_function_bind();
-    module.exports = bind2.call(call, $hasOwn);
+    module2.exports = bind2.call(call, $hasOwn);
   }
 });
 
 // node_modules/get-intrinsic/index.js
 var require_get_intrinsic = __commonJS({
-  "node_modules/get-intrinsic/index.js"(exports, module) {
+  "node_modules/get-intrinsic/index.js"(exports2, module2) {
     "use strict";
     var undefined2;
     var $Object = require_es_object_atoms();
@@ -31976,7 +31972,7 @@ var require_get_intrinsic = __commonJS({
       }
       throw new $SyntaxError("intrinsic " + name + " does not exist!");
     };
-    module.exports = function GetIntrinsic(name, allowMissing) {
+    module2.exports = function GetIntrinsic(name, allowMissing) {
       if (typeof name !== "string" || name.length === 0) {
         throw new $TypeError("intrinsic name must be a non-empty string");
       }
@@ -32042,10 +32038,10 @@ var require_get_intrinsic = __commonJS({
 
 // node_modules/has-tostringtag/shams.js
 var require_shams2 = __commonJS({
-  "node_modules/has-tostringtag/shams.js"(exports, module) {
+  "node_modules/has-tostringtag/shams.js"(exports2, module2) {
     "use strict";
     var hasSymbols = require_shams();
-    module.exports = function hasToStringTagShams() {
+    module2.exports = function hasToStringTagShams() {
       return hasSymbols() && !!Symbol.toStringTag;
     };
   }
@@ -32053,7 +32049,7 @@ var require_shams2 = __commonJS({
 
 // node_modules/es-set-tostringtag/index.js
 var require_es_set_tostringtag = __commonJS({
-  "node_modules/es-set-tostringtag/index.js"(exports, module) {
+  "node_modules/es-set-tostringtag/index.js"(exports2, module2) {
     "use strict";
     var GetIntrinsic = require_get_intrinsic();
     var $defineProperty = GetIntrinsic("%Object.defineProperty%", true);
@@ -32061,7 +32057,7 @@ var require_es_set_tostringtag = __commonJS({
     var hasOwn2 = require_hasown();
     var $TypeError = require_type();
     var toStringTag2 = hasToStringTag ? Symbol.toStringTag : null;
-    module.exports = function setToStringTag(object, value) {
+    module2.exports = function setToStringTag(object, value) {
       var overrideIfSet = arguments.length > 2 && !!arguments[2] && arguments[2].force;
       var nonConfigurable = arguments.length > 2 && !!arguments[2] && arguments[2].nonConfigurable;
       if (typeof overrideIfSet !== "undefined" && typeof overrideIfSet !== "boolean" || typeof nonConfigurable !== "undefined" && typeof nonConfigurable !== "boolean") {
@@ -32085,9 +32081,9 @@ var require_es_set_tostringtag = __commonJS({
 
 // node_modules/form-data/lib/populate.js
 var require_populate = __commonJS({
-  "node_modules/form-data/lib/populate.js"(exports, module) {
+  "node_modules/form-data/lib/populate.js"(exports2, module2) {
     "use strict";
-    module.exports = function(dst, src) {
+    module2.exports = function(dst, src) {
       Object.keys(src).forEach(function(prop) {
         dst[prop] = dst[prop] || src[prop];
       });
@@ -32098,17 +32094,17 @@ var require_populate = __commonJS({
 
 // node_modules/form-data/lib/form_data.js
 var require_form_data = __commonJS({
-  "node_modules/form-data/lib/form_data.js"(exports, module) {
+  "node_modules/form-data/lib/form_data.js"(exports2, module2) {
     "use strict";
     var CombinedStream = require_combined_stream();
-    var util3 = __require("util");
-    var path4 = __require("path");
-    var http4 = __require("http");
-    var https4 = __require("https");
-    var parseUrl2 = __require("url").parse;
-    var fs5 = __require("fs");
-    var Stream4 = __require("stream").Stream;
-    var crypto3 = __require("crypto");
+    var util3 = require("util");
+    var path4 = require("path");
+    var http4 = require("http");
+    var https4 = require("https");
+    var parseUrl2 = require("url").parse;
+    var fs5 = require("fs");
+    var Stream4 = require("stream").Stream;
+    var crypto3 = require("crypto");
     var mime = require_mime_types();
     var asynckit = require_asynckit();
     var setToStringTag = require_es_set_tostringtag();
@@ -32411,15 +32407,15 @@ var require_form_data = __commonJS({
       return "[object FormData]";
     };
     setToStringTag(FormData5.prototype, "FormData");
-    module.exports = FormData5;
+    module2.exports = FormData5;
   }
 });
 
 // node_modules/agent-base/dist/src/promisify.js
 var require_promisify = __commonJS({
-  "node_modules/agent-base/dist/src/promisify.js"(exports) {
+  "node_modules/agent-base/dist/src/promisify.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
+    Object.defineProperty(exports2, "__esModule", { value: true });
     function promisify2(fn) {
       return function(req, opts) {
         return new Promise((resolve2, reject) => {
@@ -32433,18 +32429,18 @@ var require_promisify = __commonJS({
         });
       };
     }
-    exports.default = promisify2;
+    exports2.default = promisify2;
   }
 });
 
 // node_modules/agent-base/dist/src/index.js
 var require_src6 = __commonJS({
-  "node_modules/agent-base/dist/src/index.js"(exports, module) {
+  "node_modules/agent-base/dist/src/index.js"(exports2, module2) {
     "use strict";
-    var __importDefault = exports && exports.__importDefault || function(mod) {
+    var __importDefault = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
-    var events_1 = __require("events");
+    var events_1 = require("events");
     var debug_1 = __importDefault(require_src());
     var promisify_1 = __importDefault(require_promisify());
     var debug = debug_1.default("agent-base");
@@ -32616,18 +32612,18 @@ var require_src6 = __commonJS({
       createAgent2.Agent = Agent;
       createAgent2.prototype = createAgent2.Agent.prototype;
     })(createAgent || (createAgent = {}));
-    module.exports = createAgent;
+    module2.exports = createAgent;
   }
 });
 
 // node_modules/https-proxy-agent/dist/parse-proxy-response.js
 var require_parse_proxy_response2 = __commonJS({
-  "node_modules/https-proxy-agent/dist/parse-proxy-response.js"(exports) {
+  "node_modules/https-proxy-agent/dist/parse-proxy-response.js"(exports2) {
     "use strict";
-    var __importDefault = exports && exports.__importDefault || function(mod) {
+    var __importDefault = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
-    Object.defineProperty(exports, "__esModule", { value: true });
+    Object.defineProperty(exports2, "__esModule", { value: true });
     var debug_1 = __importDefault(require_src());
     var debug = debug_1.default("https-proxy-agent:parse-proxy-response");
     function parseProxyResponse(socket) {
@@ -32682,15 +32678,15 @@ var require_parse_proxy_response2 = __commonJS({
         read();
       });
     }
-    exports.default = parseProxyResponse;
+    exports2.default = parseProxyResponse;
   }
 });
 
 // node_modules/https-proxy-agent/dist/agent.js
 var require_agent = __commonJS({
-  "node_modules/https-proxy-agent/dist/agent.js"(exports) {
+  "node_modules/https-proxy-agent/dist/agent.js"(exports2) {
     "use strict";
-    var __awaiter = exports && exports.__awaiter || function(thisArg, _arguments, P, generator) {
+    var __awaiter = exports2 && exports2.__awaiter || function(thisArg, _arguments, P, generator) {
       function adopt(value) {
         return value instanceof P ? value : new P(function(resolve2) {
           resolve2(value);
@@ -32717,14 +32713,14 @@ var require_agent = __commonJS({
         step((generator = generator.apply(thisArg, _arguments || [])).next());
       });
     };
-    var __importDefault = exports && exports.__importDefault || function(mod) {
+    var __importDefault = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
-    Object.defineProperty(exports, "__esModule", { value: true });
-    var net_1 = __importDefault(__require("net"));
-    var tls_1 = __importDefault(__require("tls"));
-    var url_1 = __importDefault(__require("url"));
-    var assert_1 = __importDefault(__require("assert"));
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var net_1 = __importDefault(require("net"));
+    var tls_1 = __importDefault(require("tls"));
+    var url_1 = __importDefault(require("url"));
+    var assert_1 = __importDefault(require("assert"));
     var debug_1 = __importDefault(require_src());
     var agent_base_1 = require_src6();
     var parse_proxy_response_1 = __importDefault(require_parse_proxy_response2());
@@ -32823,7 +32819,7 @@ var require_agent = __commonJS({
         });
       }
     };
-    exports.default = HttpsProxyAgent2;
+    exports2.default = HttpsProxyAgent2;
     function resume(socket) {
       socket.resume();
     }
@@ -32848,9 +32844,9 @@ var require_agent = __commonJS({
 
 // node_modules/https-proxy-agent/dist/index.js
 var require_dist3 = __commonJS({
-  "node_modules/https-proxy-agent/dist/index.js"(exports, module) {
+  "node_modules/https-proxy-agent/dist/index.js"(exports2, module2) {
     "use strict";
-    var __importDefault = exports && exports.__importDefault || function(mod) {
+    var __importDefault = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
     var agent_1 = __importDefault(require_agent());
@@ -32861,15 +32857,15 @@ var require_dist3 = __commonJS({
       createHttpsProxyAgent2.HttpsProxyAgent = agent_1.default;
       createHttpsProxyAgent2.prototype = agent_1.default.prototype;
     })(createHttpsProxyAgent || (createHttpsProxyAgent = {}));
-    module.exports = createHttpsProxyAgent;
+    module2.exports = createHttpsProxyAgent;
   }
 });
 
 // node_modules/follow-redirects/debug.js
 var require_debug = __commonJS({
-  "node_modules/follow-redirects/debug.js"(exports, module) {
+  "node_modules/follow-redirects/debug.js"(exports2, module2) {
     var debug;
-    module.exports = function() {
+    module2.exports = function() {
       if (!debug) {
         try {
           debug = require_src()("follow-redirects");
@@ -32887,13 +32883,13 @@ var require_debug = __commonJS({
 
 // node_modules/follow-redirects/index.js
 var require_follow_redirects = __commonJS({
-  "node_modules/follow-redirects/index.js"(exports, module) {
-    var url2 = __require("url");
+  "node_modules/follow-redirects/index.js"(exports2, module2) {
+    var url2 = require("url");
     var URL2 = url2.URL;
-    var http4 = __require("http");
-    var https4 = __require("https");
-    var Writable = __require("stream").Writable;
-    var assert = __require("assert");
+    var http4 = require("http");
+    var https4 = require("https");
+    var Writable = require("stream").Writable;
+    var assert = require("assert");
     var debug = require_debug();
     (function detectUnsupportedEnvironment() {
       var looksLikeNode = typeof process !== "undefined";
@@ -33242,7 +33238,7 @@ var require_follow_redirects = __commonJS({
       this._performRequest();
     };
     function wrap(protocols) {
-      var exports2 = {
+      var exports3 = {
         maxRedirects: 21,
         maxBodyLength: 10 * 1024 * 1024
       };
@@ -33250,7 +33246,7 @@ var require_follow_redirects = __commonJS({
       Object.keys(protocols).forEach(function(scheme) {
         var protocol = scheme + ":";
         var nativeProtocol = nativeProtocols[protocol] = protocols[scheme];
-        var wrappedProtocol = exports2[scheme] = Object.create(nativeProtocol);
+        var wrappedProtocol = exports3[scheme] = Object.create(nativeProtocol);
         function request(input, options, callback) {
           if (isURL(input)) {
             input = spreadUrlObject(input);
@@ -33266,8 +33262,8 @@ var require_follow_redirects = __commonJS({
             options = null;
           }
           options = Object.assign({
-            maxRedirects: exports2.maxRedirects,
-            maxBodyLength: exports2.maxBodyLength
+            maxRedirects: exports3.maxRedirects,
+            maxBodyLength: exports3.maxBodyLength
           }, input, options);
           options.nativeProtocols = nativeProtocols;
           if (!isString2(options.host) && !isString2(options.hostname)) {
@@ -33287,7 +33283,7 @@ var require_follow_redirects = __commonJS({
           get: { value: get, configurable: true, enumerable: true, writable: true }
         });
       });
-      return exports2;
+      return exports3;
     }
     function noop4() {
     }
@@ -33391,28 +33387,36 @@ var require_follow_redirects = __commonJS({
     function escapeRegex(regex) {
       return regex.replace(/[\]\\/()*+?.$]/g, "\\$&");
     }
-    module.exports = wrap({ http: http4, https: https4 });
-    module.exports.wrap = wrap;
+    module2.exports = wrap({ http: http4, https: https4 });
+    module2.exports.wrap = wrap;
   }
 });
 
 // server/server.ts
-import express from "express";
-import { createServer } from "http";
-import { Server } from "socket.io";
-import cors from "cors";
-import dotenv from "dotenv";
-import fs4 from "fs";
-import path3 from "path";
+var server_exports = {};
+__export(server_exports, {
+  app: () => app,
+  default: () => server_default,
+  httpServer: () => httpServer,
+  io: () => io
+});
+module.exports = __toCommonJS(server_exports);
+var import_express = __toESM(require("express"), 1);
+var import_http4 = require("http");
+var import_socket = require("socket.io");
+var import_cors = __toESM(require("cors"), 1);
+var import_dotenv = __toESM(require("dotenv"), 1);
+var import_fs2 = __toESM(require("fs"), 1);
+var import_path2 = __toESM(require("path"), 1);
 
 // node_modules/@google/genai/dist/node/index.mjs
 var import_p_retry = __toESM(require_p_retry(), 1);
 var import_google_auth_library = __toESM(require_src5(), 1);
-import { createWriteStream } from "fs";
-import * as fs2 from "fs/promises";
-import { writeFile } from "fs/promises";
-import { Readable } from "node:stream";
-import { finished } from "node:stream/promises";
+var import_fs = require("fs");
+var fs2 = __toESM(require("fs/promises"), 1);
+var import_promises = require("fs/promises");
+var import_node_stream3 = require("node:stream");
+var import_promises2 = require("node:stream/promises");
 
 // node_modules/ws/wrapper.mjs
 var import_stream = __toESM(require_stream(), 1);
@@ -33425,7 +33429,7 @@ var import_websocket = __toESM(require_websocket(), 1);
 var import_websocket_server = __toESM(require_websocket_server(), 1);
 
 // node_modules/@google/genai/dist/node/index.mjs
-import * as path$1 from "path";
+var path$1 = __toESM(require("path"), 1);
 var _defaultBaseGeminiUrl = void 0;
 var _defaultBaseVertexUrl = void 0;
 function getDefaultBaseUrls() {
@@ -49868,13 +49872,13 @@ var NodeDownloader = class {
     if (params.downloadPath) {
       const response = await downloadFile(params, apiClient);
       if (response instanceof HttpResponse) {
-        const writer = createWriteStream(params.downloadPath);
-        const body = Readable.fromWeb(response.responseInternal.body);
+        const writer = (0, import_fs.createWriteStream)(params.downloadPath);
+        const body = import_node_stream3.Readable.fromWeb(response.responseInternal.body);
         body.pipe(writer);
-        await finished(writer);
+        await (0, import_promises2.finished)(writer);
       } else {
         try {
-          await writeFile(params.downloadPath, response, {
+          await (0, import_promises.writeFile)(params.downloadPath, response, {
             encoding: "base64"
           });
         } catch (error) {
@@ -51517,7 +51521,7 @@ function getApiKeyFromEnv() {
 }
 
 // server/mqtt/MqttManager.ts
-import mqtt from "mqtt";
+var import_mqtt = __toESM(require("mqtt"), 1);
 var BackendMqttManager = class _BackendMqttManager {
   static instance;
   client = null;
@@ -51545,7 +51549,7 @@ var BackendMqttManager = class _BackendMqttManager {
     const brokerUrl = process.env.MQTT_URL || "wss://broker.emqx.io:8084/mqtt";
     console.log(`[BACKEND_MQTT] Connecting to ${brokerUrl}...`);
     try {
-      this.client = mqtt.connect(brokerUrl, {
+      this.client = import_mqtt.default.connect(brokerUrl, {
         clientId: `orion_backend_${Math.random().toString(16).slice(2, 8)}`,
         clean: true,
         connectTimeout: 15e3,
@@ -51654,8 +51658,8 @@ var BackendMqttManager = class _BackendMqttManager {
 var backendMqttManager = BackendMqttManager.getInstance();
 
 // server/services/TriggerCMDService.ts
-import * as fs3 from "fs";
-import * as path2 from "path";
+var fs3 = __toESM(require("fs"), 1);
+var path2 = __toESM(require("path"), 1);
 var TRIGGER_REFRESH_INTERVAL_MS = 3 * 60 * 1e3;
 var TRIGGER_FALLBACK_DEVICES = [
   { id: "1", name: "PC Sleep", cmd: "powercfg /h off", server: "OFFICE-DESKTOP", status: "ONLINE" },
@@ -54029,11 +54033,11 @@ var transitional_default = {
 };
 
 // node_modules/axios/lib/platform/node/index.js
-import crypto2 from "crypto";
+var import_crypto = __toESM(require("crypto"), 1);
 
 // node_modules/axios/lib/platform/node/classes/URLSearchParams.js
-import url from "url";
-var URLSearchParams_default = url.URLSearchParams;
+var import_url = __toESM(require("url"), 1);
+var URLSearchParams_default = import_url.default.URLSearchParams;
 
 // node_modules/axios/lib/platform/node/index.js
 var ALPHA = "abcdefghijklmnopqrstuvwxyz";
@@ -54047,7 +54051,7 @@ var generateString = (size = 16, alphabet = ALPHABET.ALPHA_DIGIT) => {
   let str = "";
   const { length } = alphabet;
   const randomValues = new Uint32Array(size);
-  crypto2.randomFillSync(randomValues);
+  import_crypto.default.randomFillSync(randomValues);
   for (let i2 = 0; i2 < size; i2++) {
     str += alphabet[randomValues[i2] % length];
   }
@@ -54417,13 +54421,13 @@ function getEnv2(key) {
 
 // node_modules/axios/lib/adapters/http.js
 var import_https_proxy_agent = __toESM(require_dist3(), 1);
+var import_http = __toESM(require("http"), 1);
+var import_https = __toESM(require("https"), 1);
+var import_http2 = __toESM(require("http2"), 1);
+var import_util2 = __toESM(require("util"), 1);
+var import_path = require("path");
 var import_follow_redirects = __toESM(require_follow_redirects(), 1);
-import http3 from "http";
-import https2 from "https";
-import http22 from "http2";
-import util2 from "util";
-import { resolve as resolvePath } from "path";
-import zlib2 from "zlib";
+var import_zlib = __toESM(require("zlib"), 1);
 
 // node_modules/axios/lib/env/data.js
 var VERSION2 = "1.16.1";
@@ -54471,12 +54475,12 @@ function fromDataURI(uri, asBlob, options) {
 }
 
 // node_modules/axios/lib/adapters/http.js
-import stream3 from "stream";
+var import_stream5 = __toESM(require("stream"), 1);
 
 // node_modules/axios/lib/helpers/AxiosTransformStream.js
-import stream from "stream";
+var import_stream2 = __toESM(require("stream"), 1);
 var kInternals = /* @__PURE__ */ Symbol("internals");
-var AxiosTransformStream = class extends stream.Transform {
+var AxiosTransformStream = class extends import_stream2.default.Transform {
   constructor(options) {
     options = utils_default.toFlatObject(
       options,
@@ -54597,11 +54601,11 @@ var AxiosTransformStream = class extends stream.Transform {
 var AxiosTransformStream_default = AxiosTransformStream;
 
 // node_modules/axios/lib/adapters/http.js
-import { EventEmitter } from "events";
+var import_events = require("events");
 
 // node_modules/axios/lib/helpers/formDataToStream.js
-import util from "util";
-import { Readable as Readable2 } from "stream";
+var import_util = __toESM(require("util"), 1);
+var import_stream3 = require("stream");
 
 // node_modules/axios/lib/helpers/readBlob.js
 var { asyncIterator } = Symbol;
@@ -54620,7 +54624,7 @@ var readBlob_default = readBlob;
 
 // node_modules/axios/lib/helpers/formDataToStream.js
 var BOUNDARY_ALPHABET = platform_default.ALPHABET.ALPHA_DIGIT + "-_";
-var textEncoder = typeof TextEncoder === "function" ? new TextEncoder() : new util.TextEncoder();
+var textEncoder = typeof TextEncoder === "function" ? new TextEncoder() : new import_util.default.TextEncoder();
 var CRLF = "\r\n";
 var CRLF_BYTES = textEncoder.encode(CRLF);
 var CRLF_BYTES_COUNT = 2;
@@ -54691,7 +54695,7 @@ var formDataToStream = (form, headersHandler, options) => {
     computedHeaders["Content-Length"] = contentLength;
   }
   headersHandler && headersHandler(computedHeaders);
-  return Readable2.from(
+  return import_stream3.Readable.from(
     (async function* () {
       for (const part of parts) {
         yield boundaryBytes;
@@ -54704,8 +54708,8 @@ var formDataToStream = (form, headersHandler, options) => {
 var formDataToStream_default = formDataToStream;
 
 // node_modules/axios/lib/helpers/ZlibHeaderTransformStream.js
-import stream2 from "stream";
-var ZlibHeaderTransformStream = class extends stream2.Transform {
+var import_stream4 = __toESM(require("stream"), 1);
+var ZlibHeaderTransformStream = class extends import_stream4.default.Transform {
   __transform(chunk, encoding, callback) {
     this.push(chunk);
     callback();
@@ -55049,14 +55053,14 @@ function estimateDataURLDecodedBytes(url2) {
 
 // node_modules/axios/lib/adapters/http.js
 var zlibOptions = {
-  flush: zlib2.constants.Z_SYNC_FLUSH,
-  finishFlush: zlib2.constants.Z_SYNC_FLUSH
+  flush: import_zlib.default.constants.Z_SYNC_FLUSH,
+  finishFlush: import_zlib.default.constants.Z_SYNC_FLUSH
 };
 var brotliOptions = {
-  flush: zlib2.constants.BROTLI_OPERATION_FLUSH,
-  finishFlush: zlib2.constants.BROTLI_OPERATION_FLUSH
+  flush: import_zlib.default.constants.BROTLI_OPERATION_FLUSH,
+  finishFlush: import_zlib.default.constants.BROTLI_OPERATION_FLUSH
 };
-var isBrotliSupported = utils_default.isFunction(zlib2.createBrotliDecompress);
+var isBrotliSupported = utils_default.isFunction(import_zlib.default.createBrotliDecompress);
 var { http: httpFollow, https: httpsFollow } = import_follow_redirects.default;
 var isHttps = /https:?/;
 var FORM_DATA_CONTENT_HEADERS = ["content-type", "content-length"];
@@ -55120,12 +55124,12 @@ var Http2Sessions = class {
       let len = authoritySessions.length;
       for (let i2 = 0; i2 < len; i2++) {
         const [sessionHandle, sessionOptions] = authoritySessions[i2];
-        if (!sessionHandle.destroyed && !sessionHandle.closed && util2.isDeepStrictEqual(sessionOptions, options)) {
+        if (!sessionHandle.destroyed && !sessionHandle.closed && import_util2.default.isDeepStrictEqual(sessionOptions, options)) {
           return sessionHandle;
         }
       }
     }
-    const session = http22.connect(authority, options);
+    const session = import_http2.default.connect(authority, options);
     let removed;
     const removeSession = () => {
       if (removed) {
@@ -55317,7 +55321,7 @@ var http2Transport = {
     const authority = options.protocol + "//" + options.hostname + ":" + (options.port || (options.protocol === "https:" ? 443 : 80));
     const { http2Options, headers } = options;
     const session = http2Sessions.getSession(authority, http2Options);
-    const { HTTP2_HEADER_SCHEME, HTTP2_HEADER_METHOD, HTTP2_HEADER_PATH, HTTP2_HEADER_STATUS } = http22.constants;
+    const { HTTP2_HEADER_SCHEME, HTTP2_HEADER_METHOD, HTTP2_HEADER_PATH, HTTP2_HEADER_STATUS } = import_http2.default.constants;
     const http2Headers = {
       [HTTP2_HEADER_SCHEME]: options.protocol.replace(":", ""),
       [HTTP2_HEADER_METHOD]: options.method,
@@ -55375,7 +55379,7 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config) {
         });
       };
     }
-    const abortEmitter = new EventEmitter();
+    const abortEmitter = new import_events.EventEmitter();
     function abort(reason) {
       try {
         abortEmitter.emit(
@@ -55431,8 +55435,8 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config) {
         return;
       }
       const { data: data2 } = response;
-      if (data2 instanceof stream3.Readable || data2 instanceof stream3.Duplex) {
-        const offListeners = stream3.finished(data2, () => {
+      if (data2 instanceof import_stream5.default.Readable || data2 instanceof import_stream5.default.Duplex) {
+        const offListeners = import_stream5.default.finished(data2, () => {
           offListeners();
           onFinished();
         });
@@ -55479,7 +55483,7 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config) {
           convertedData = utils_default.stripBOM(convertedData);
         }
       } else if (responseType === "stream") {
-        convertedData = stream3.Readable.from(convertedData);
+        convertedData = import_stream5.default.Readable.from(convertedData);
       }
       return settle(resolve2, reject, {
         data: convertedData,
@@ -55516,7 +55520,7 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config) {
       setFormDataHeaders(headers, data.getHeaders(), own2("formDataHeaderPolicy"));
       if (!headers.hasContentLength()) {
         try {
-          const knownLength = await util2.promisify(data.getLength).call(data);
+          const knownLength = await import_util2.default.promisify(data.getLength).call(data);
           Number.isFinite(knownLength) && knownLength >= 0 && headers.setContentLength(knownLength);
         } catch (e2) {
         }
@@ -55524,7 +55528,7 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config) {
     } else if (utils_default.isBlob(data) || utils_default.isFile(data)) {
       data.size && headers.setContentType(data.type || "application/octet-stream");
       headers.setContentLength(data.size || 0);
-      data = stream3.Readable.from(readBlob_default(data));
+      data = import_stream5.default.Readable.from(readBlob_default(data));
     } else if (data && !utils_default.isStream(data)) {
       if (Buffer.isBuffer(data)) {
       } else if (utils_default.isArrayBuffer(data)) {
@@ -55560,9 +55564,9 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config) {
     }
     if (data && (onUploadProgress || maxUploadRate)) {
       if (!utils_default.isStream(data)) {
-        data = stream3.Readable.from(data, { objectMode: false });
+        data = import_stream5.default.Readable.from(data, { objectMode: false });
       }
-      data = stream3.pipeline(
+      data = import_stream5.default.pipeline(
         [
           data,
           new AxiosTransformStream_default({
@@ -55635,9 +55639,9 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config) {
       }
       if (config.allowedSocketPaths != null) {
         const allowed = Array.isArray(config.allowedSocketPaths) ? config.allowedSocketPaths : [config.allowedSocketPaths];
-        const resolvedSocket = resolvePath(config.socketPath);
+        const resolvedSocket = (0, import_path.resolve)(config.socketPath);
         const isAllowed = allowed.some(
-          (entry) => typeof entry === "string" && resolvePath(entry) === resolvedSocket
+          (entry) => typeof entry === "string" && (0, import_path.resolve)(entry) === resolvedSocket
         );
         if (!isAllowed) {
           return reject(
@@ -55674,7 +55678,7 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config) {
       if (configTransport) {
         transport = configTransport;
       } else if (config.maxRedirects === 0) {
-        transport = isHttpsRequest ? https2 : http3;
+        transport = isHttpsRequest ? import_https.default : import_http.default;
         isNativeTransport = true;
       } else {
         if (config.maxRedirects) {
@@ -55726,22 +55730,22 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config) {
           case "x-gzip":
           case "compress":
           case "x-compress":
-            streams.push(zlib2.createUnzip(zlibOptions));
+            streams.push(import_zlib.default.createUnzip(zlibOptions));
             delete res.headers["content-encoding"];
             break;
           case "deflate":
             streams.push(new ZlibHeaderTransformStream_default());
-            streams.push(zlib2.createUnzip(zlibOptions));
+            streams.push(import_zlib.default.createUnzip(zlibOptions));
             delete res.headers["content-encoding"];
             break;
           case "br":
             if (isBrotliSupported) {
-              streams.push(zlib2.createBrotliDecompress(brotliOptions));
+              streams.push(import_zlib.default.createBrotliDecompress(brotliOptions));
               delete res.headers["content-encoding"];
             }
         }
       }
-      responseStream = streams.length > 1 ? stream3.pipeline(streams, utils_default.noop) : streams[0];
+      responseStream = streams.length > 1 ? import_stream5.default.pipeline(streams, utils_default.noop) : streams[0];
       const response = {
         status: res.statusCode,
         statusText: res.statusMessage,
@@ -55768,7 +55772,7 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config) {
               yield chunk;
             }
           }
-          responseStream = stream3.Readable.from(enforceMaxContentLength(), {
+          responseStream = import_stream5.default.Readable.from(enforceMaxContentLength(), {
             objectMode: false
           });
         }
@@ -55911,10 +55915,10 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config) {
       if (config.maxBodyLength > -1 && config.maxRedirects === 0) {
         const limit = config.maxBodyLength;
         let bytesSent = 0;
-        uploadStream = stream3.pipeline(
+        uploadStream = import_stream5.default.pipeline(
           [
             data,
-            new stream3.Transform({
+            new import_stream5.default.Transform({
               transform(chunk, _enc, cb) {
                 bytesSent += chunk.length;
                 if (bytesSent > limit) {
@@ -57368,7 +57372,7 @@ var {
 } = axios_default;
 
 // server/services/ElevenLabsVoiceService.ts
-import https3 from "https";
+var import_https2 = __toESM(require("https"), 1);
 var ElevenLabsServiceError = class extends Error {
   statusCode;
   responseBody;
@@ -57394,7 +57398,7 @@ var ElevenLabsVoiceService = class {
   pacingProfile = "conversational_soft";
   warmupIntervalMs = 4 * 60 * 1e3;
   http = axios_default.create({
-    httpsAgent: new https3.Agent({
+    httpsAgent: new import_https2.default.Agent({
       keepAlive: true,
       keepAliveMsecs: 1e4,
       maxSockets: 10
@@ -57660,13 +57664,13 @@ var ElevenLabsVoiceService = class {
 var elevenLabsVoiceService = new ElevenLabsVoiceService();
 
 // server/server.ts
-dotenv.config();
+import_dotenv.default.config();
 var genAI = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY || ""
 });
-var app = express();
-var httpServer = createServer(app);
-var io = new Server(httpServer, {
+var app = (0, import_express.default)();
+var httpServer = (0, import_http4.createServer)(app);
+var io = new import_socket.Server(httpServer, {
   cors: { origin: "*" },
   pingInterval: 1e4,
   pingTimeout: 5e3,
@@ -57685,14 +57689,14 @@ async function setupApp() {
   triggerCmdService.init(io);
   googleHomeService.init(io);
   elevenLabsVoiceService.startWarmupLoop();
-  app.use(cors());
-  app.use(express.json());
+  app.use((0, import_cors.default)());
+  app.use(import_express.default.json());
   try {
-    const distDir = path3.resolve(process.cwd(), "dist");
-    const indexPath = path3.join(distDir, "index.html");
-    if (fs4.existsSync(distDir) && fs4.existsSync(indexPath)) {
+    const distDir = import_path2.default.resolve(process.cwd(), "dist");
+    const indexPath = import_path2.default.join(distDir, "index.html");
+    if (import_fs2.default.existsSync(distDir) && import_fs2.default.existsSync(indexPath)) {
       console.log("[SERVER] Serving static assets from", distDir);
-      app.use(express.static(distDir));
+      app.use(import_express.default.static(distDir));
       app.get(/^\/(?!api\/).*/, (req, res) => {
         res.sendFile(indexPath);
       });
@@ -57840,12 +57844,12 @@ if (!process.env.VERCEL) {
   });
 }
 var server_default = app;
-export {
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
   app,
-  server_default as default,
   httpServer,
   io
-};
+});
 /*! Bundled license information:
 
 web-streams-polyfill/dist/ponyfill.es2018.js:

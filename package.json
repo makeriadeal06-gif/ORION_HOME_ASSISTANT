@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "tsx server/server.ts",
-    "build": "vite build && esbuild server/server.ts --bundle --platform=node --format=esm --external:express --external:cors --external:dotenv --external:socket.io --external:mqtt --external:firebase-admin --outfile=dist/server.js",
-    "start": "node api/server.js",
+    "build": "vite build && esbuild server/server.ts --bundle --platform=node --format=cjs --external:express --external:cors --external:dotenv --external:socket.io --external:mqtt --external:firebase-admin --outfile=dist/server.cjs",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
+    "test:firestore": "node scripts/test-firestore.js",
+    "start": "node dist/server.cjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",

@@ -1,2 +1,2 @@
 // @ts-ignore
-export { default } from '../dist/server.js';
+module.exports = require('../dist/server.cjs');
