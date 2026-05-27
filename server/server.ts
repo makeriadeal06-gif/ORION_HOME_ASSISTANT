@@ -112,15 +112,21 @@ async function setupApp() {
   });
 
   app.get('/api/voice/config', (req, res) => {
-    res.json({ configuredVoiceId: elevenLabsVoiceService.getActiveVoiceId() });
+    try {
+      res.json({ configuredVoiceId: elevenLabsVoiceService.getActiveVoiceId() });
+    } catch (err) {
+      console.error('[API] /api/voice/config failed:', err);
+      res.status(500).json({ error: 'voice_config_error' });
+    }
   });
 
   app.get('/api/google-home/ecosystem', async (_req, res) => {
     try {
       const devices = await googleHomeService.getEcosystemSnapshot();
       res.json(Array.isArray(devices) ? devices : []);
-    } catch {
-      res.json(googleHomeService.getCachedDevices());
+    } catch (err) {
+      console.error('[API] /api/google-home/ecosystem failed:', err);
+      try { res.json(googleHomeService.getCachedDevices()); } catch (_) { res.status(500).json({ error: 'ecosystem_error' }); }
     }
   });
 

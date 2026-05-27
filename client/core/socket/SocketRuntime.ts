@@ -42,9 +42,15 @@ class SocketRuntime {
     // import.meta.env.VERCEL is defined at build time by Vite when
     // deploying to Vercel; if present, skip socket creation and let
     // higher-level managers fall back to HTTP-based synchronization.
-    if ((import.meta as any)?.env?.VERCEL) {
+    // Detect Vercel / serverless deployments: prefer explicit compile-time flag
+    // (import.meta.env.VERCEL) when available, but also detect known Vercel
+    // hostnames at runtime (e.g. orion-home-assistant.vercel.app). If running
+    // on Vercel we must not attempt persistent WebSocket connections.
+    const envVercel = (import.meta as any)?.env?.VERCEL;
+    const hostIsVercel = typeof window !== 'undefined' && window.location && typeof window.location.hostname === 'string' && window.location.hostname.endsWith('.vercel.app');
+    if (envVercel || hostIsVercel) {
       this.status = SocketStatus.FAILED;
-      logger.info('SOCKET_RUNTIME', 'Persistent WebSocket transport disabled in Vercel environment — skipping socket creation.');
+      logger.info('SOCKET_RUNTIME', 'Persistent WebSocket transport disabled in Vercel/serverless environment — skipping socket creation.');
       return;
     }
 
