@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx server/server.ts",
-    "build": "vite build && esbuild server/server.ts --bundle --platform=node --format=cjs --external:express --external:cors --external:dotenv --external:socket.io --external:mqtt --external:firebase-admin --outfile=dist/server.cjs",
+    "build": "vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test:firestore": "node scripts/test-firestore.js",
