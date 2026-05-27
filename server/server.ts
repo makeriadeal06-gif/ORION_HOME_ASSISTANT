@@ -13,7 +13,6 @@ import { googleHomeService } from './services/GoogleHomeService';
 import { authService } from './services/AuthService';
 import { nodeService } from './services/NodeService';
 import { ElevenLabsServiceError, elevenLabsVoiceService } from './services/ElevenLabsVoiceService';
-
 dotenv.config();
 
 // Gemini Setup
@@ -39,7 +38,7 @@ async function setupApp() {
     TRIGGERCMD_DEVICES_URL: !!process.env.TRIGGERCMD_DEVICES_URL,
     TRIGGERCMD_EXECUTE_URL: !!process.env.TRIGGERCMD_EXECUTE_URL,
   });
-  
+
   // Initialize Backend Services
   backendMqttManager.init(io);
   triggerCmdService.init(io);
@@ -74,7 +73,7 @@ async function setupApp() {
     res.setHeader('X-Frame-Options', 'DENY');
     res.setHeader('X-XSS-Protection', '1; mode=block');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
-    
+
     const csp = [
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://www.gstatic.com",
@@ -86,15 +85,15 @@ async function setupApp() {
       "media-src 'self' data: blob: https://api.elevenlabs.io",
       "object-src 'none'"
     ].join('; ');
-    
+
     res.setHeader('Content-Security-Policy', csp);
     next();
   });
 
   // API Routes
   app.get('/api/health', (req, res) => {
-    res.json({ 
-      status: 'ok', 
+    res.json({
+      status: 'ok',
       timestamp: Date.now(),
       vercel: !!process.env.VERCEL,
       node: process.version
@@ -199,7 +198,7 @@ async function setupApp() {
       socket.join(`user:${userId}`);
       socket.emit('trigger:devices', triggerCmdService.getDevicesForUser(userId));
       if (triggerCmdService.userHasConfig(userId)) {
-        triggerCmdService.syncUserDevices(userId).catch(() => {});
+        triggerCmdService.syncUserDevices(userId).catch(() => { });
         triggerCmdService.startUserAutoRefresh(userId);
       }
     });
