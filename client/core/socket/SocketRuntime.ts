@@ -33,6 +33,21 @@ class SocketRuntime {
 
     this.status = SocketStatus.CONNECTING;
     logger.info('SOCKET_RUNTIME', 'Initializing persistent transport...');
+    // If running as a Vercel-deployed static/frontend site there is no
+    // persistent socket endpoint available (Vercel serverless does not
+    // support long-lived WebSocket servers). In that environment we must
+    // avoid attempting to create a socket.io connection — doing so emits
+    // noisy wss:// errors in the browser console and may block the
+    // runtime boot sequence waiting for NETWORK readiness.
+    // import.meta.env.VERCEL is defined at build time by Vite when
+    // deploying to Vercel; if present, skip socket creation and let
+    // higher-level managers fall back to HTTP-based synchronization.
+    if ((import.meta as any)?.env?.VERCEL) {
+      this.status = SocketStatus.FAILED;
+      logger.info('SOCKET_RUNTIME', 'Persistent WebSocket transport disabled in Vercel environment — skipping socket creation.');
+      return;
+    }
+
     logger.info('SOCKET_RUNTIME', `Connection config: url=${window.location.origin} path=/socket.io transport=websocket API=ready`);
 
     this.socket = io(window.location.origin, {

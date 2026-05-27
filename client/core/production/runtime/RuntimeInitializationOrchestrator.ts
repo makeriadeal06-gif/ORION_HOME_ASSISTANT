@@ -30,34 +30,50 @@ class RuntimeInitializationOrchestrator {
        this.readiness.set(layer.id, LayerReadiness.PENDING);
      }
 
-     for (const layer of layers) {
-       if (layer.requires) {
-         await this.waitFor(layer.requires);
-       }
+      for (const layer of layers) {
+        if (layer.requires) {
+          try {
+            await this.waitFor(layer.requires);
+          } catch (err) {
+            // A dependency failed to become READY. Do not abort the entire
+            // orchestrator — log and continue so the runtime can surface a
+            // degraded UI instead of hanging indefinitely.
+            logger.error('RUNTIME_ORCHESTRATOR', `Dependency wait failed for layer ${layer.id}: ${String(err)} — continuing boot in degraded mode.`);
+          }
+        }
 
-       try {
-         logger.info('RUNTIME_ORCHESTRATOR', `Initializing Layer: ${layer.id}`);
-         this.readiness.set(layer.id, LayerReadiness.INITIALIZING);
-         await layer.init();
-         this.readiness.set(layer.id, LayerReadiness.READY);
-         logger.info('RUNTIME_ORCHESTRATOR', `Layer ${layer.id} is READY`);
-       } catch (error) {
-         logger.error('RUNTIME_ORCHESTRATOR', `Layer ${layer.id} FAILED during boot: ${error}`);
-         this.readiness.set(layer.id, LayerReadiness.FAILED);
-         // Decide if we should continue or stop
-       }
-     }
+        try {
+          logger.info('RUNTIME_ORCHESTRATOR', `Initializing Layer: ${layer.id}`);
+          this.readiness.set(layer.id, LayerReadiness.INITIALIZING);
+          await layer.init();
+          this.readiness.set(layer.id, LayerReadiness.READY);
+          logger.info('RUNTIME_ORCHESTRATOR', `Layer ${layer.id} is READY`);
+        } catch (error) {
+          logger.error('RUNTIME_ORCHESTRATOR', `Layer ${layer.id} FAILED during boot: ${error}`);
+          this.readiness.set(layer.id, LayerReadiness.FAILED);
+          // Continue to next layer to allow partial startup and degrade gracefully
+        }
+      }
 
      stateSync.setRuntimeLifecycle(RuntimeLifecycle.READY);
      logger.info('RUNTIME_ORCHESTRATOR', 'ORION Core Fully Initialized');
   }
 
   private async waitFor(layerIds: string[]) {
-    return new Promise<void>((resolve) => {
+    return new Promise<void>((resolve, reject) => {
       const check = () => {
-        const allReady = layerIds.every(id => this.readiness.get(id) === LayerReadiness.READY);
-        if (allReady) resolve();
-        else setTimeout(check, 50);
+        const statuses = layerIds.map(id => ({ id, status: this.readiness.get(id) }));
+        const allReady = statuses.every(s => s.status === LayerReadiness.READY);
+        const anyFailed = statuses.find(s => s.status === LayerReadiness.FAILED);
+
+        if (allReady) {
+          resolve();
+        } else if (anyFailed) {
+          logger.error('RUNTIME_ORCHESTRATOR', `Dependency_Failure: Layer ${anyFailed.id} failed. Breaking wait chain.`);
+          reject(new Error(`Dependency failure: ${anyFailed.id}`));
+        } else {
+          setTimeout(check, 50);
+        }
       };
       check();
     });

@@ -28,8 +28,8 @@ export class ConnectivityAwarenessEngine {
 
     const start = Date.now();
     try {
-      // Basic heartbeat to origin
-      await fetch('/favicon.ico', { method: 'HEAD', cache: 'no-store' });
+      // Basic heartbeat to origin - use index.html which is guaranteed to exist in SPA
+      await fetch('/index.html', { method: 'HEAD', cache: 'no-store' });
       const latency = Date.now() - start;
       
       let quality: 'EXCELLENT' | 'GOOD' | 'DEGRADED' = 'EXCELLENT';

@@ -63,6 +63,13 @@ export class TriggerCMDService {
   // Parse tracking
   private lastParsePath = '';
 
+  // Firestore integration (optional). If FIREBASE_SERVICE_ACCOUNT_JSON is set
+  // in the environment, we'll attempt to initialize firebase-admin and persist
+  // user configs to Firestore under collection `triggercmd_configs`.
+  private firestoreInitDone = false;
+  private firestoreEnabled = false;
+  private firestoreDb: any = null;
+
   // File-based persistence for user configs (survives server restarts)
   private persistenceDir = '';
   private persistenceFilePath = '';
@@ -71,6 +78,37 @@ export class TriggerCMDService {
   private constructor() {
     this.persistenceDir = path.resolve(process.cwd(), 'data');
     this.persistenceFilePath = path.join(this.persistenceDir, 'triggercmd-configs.json');
+  }
+
+  private async tryInitFirestore() {
+    if (this.firestoreInitDone) return;
+    this.firestoreInitDone = true;
+
+    const keyJson = process.env.FIREBASE_SERVICE_ACCOUNT_JSON || process.env.FIREBASE_SERVICE_ACCOUNT;
+    if (!keyJson) {
+      // Not configured — keep using file-based persistence
+      return;
+    }
+
+    try {
+      // Dynamic import so code does not crash if firebase-admin is not installed
+      const adminModule = await import('firebase-admin');
+      const admin = (adminModule as any).default || adminModule;
+      const serviceAccount = typeof keyJson === 'string' ? JSON.parse(keyJson) : keyJson;
+      if (!admin.apps || admin.apps.length === 0) {
+        admin.initializeApp({
+          credential: admin.credential.cert(serviceAccount),
+          projectId: serviceAccount.project_id || process.env.GCLOUD_PROJECT,
+        });
+      }
+      this.firestoreDb = admin.firestore();
+      this.firestoreEnabled = true;
+      console.log('[TRIGGER_PERSIST] Firestore persistence enabled');
+    } catch (err) {
+      console.log('[TRIGGER_PERSIST] Failed to initialize Firestore:', err);
+      this.firestoreEnabled = false;
+      this.firestoreDb = null;
+    }
   }
 
   public static getInstance(): TriggerCMDService {
@@ -103,8 +141,28 @@ export class TriggerCMDService {
 
   // ──────────────── Persistence (survives server restart) ────────────────
 
-  private loadPersistedConfigs(): void {
+  private async loadPersistedConfigs(): Promise<void> {
     try {
+      // Try Firestore first if configured
+      await this.tryInitFirestore();
+      if (this.firestoreEnabled && this.firestoreDb) {
+        try {
+          const snapshot = await this.firestoreDb.collection('triggercmd_configs').get();
+          snapshot.forEach((doc: any) => {
+            const parsed = doc.data();
+            if (parsed && parsed.token) {
+              if (parsed.endpoint) parsed.endpoint = this.normalizeTriggerEndpoint(parsed.endpoint, 'list');
+              this.userConfigs.set(doc.id, parsed as UserBridgeConfig);
+              console.log(`[TRIGGER_PERSIST] restored config from firestore userId=${doc.id} token_length=${parsed.token?.length || 0}`);
+            }
+          });
+          console.log(`[TRIGGER_PERSIST] restored ${this.userConfigs.size} user configs from firestore`);
+          return;
+        } catch (err) {
+          console.log('[TRIGGER_PERSIST] failed to read from firestore, falling back to file:', err);
+        }
+      }
+
       if (!fs.existsSync(this.persistenceFilePath)) {
         console.log('[TRIGGER_PERSIST] no persisted configs found at', this.persistenceFilePath);
         return;
@@ -129,18 +187,42 @@ export class TriggerCMDService {
   }
 
   private savePersistedConfigs(): void {
-    try {
-      if (!fs.existsSync(this.persistenceDir)) {
-        fs.mkdirSync(this.persistenceDir, { recursive: true });
+    // Run async: try Firestore first (if configured) otherwise fallback to file
+    (async () => {
+      try {
+        await this.tryInitFirestore();
+        if (this.firestoreEnabled && this.firestoreDb) {
+          try {
+            const batch = this.firestoreDb.batch();
+            for (const [userId, cfg] of this.userConfigs.entries()) {
+              const ref = this.firestoreDb.collection('triggercmd_configs').doc(userId);
+              batch.set(ref, cfg);
+            }
+            await batch.commit();
+            console.log('[TRIGGER_PERSIST] saved configs to firestore');
+            return;
+          } catch (err) {
+            console.log('[TRIGGER_PERSIST] failed to save to firestore, will fallback to file:', err);
+          }
+        }
+      } catch (err) {
+        console.log('[TRIGGER_PERSIST] firestore init error, falling back to file:', err);
       }
-      const data: Record<string, UserBridgeConfig> = {};
-      for (const [userId, cfg] of this.userConfigs.entries()) {
-        data[userId] = cfg;
+
+      try {
+        if (!fs.existsSync(this.persistenceDir)) {
+          fs.mkdirSync(this.persistenceDir, { recursive: true });
+        }
+        const data: Record<string, UserBridgeConfig> = {};
+        for (const [userId, cfg] of this.userConfigs.entries()) {
+          data[userId] = cfg;
+        }
+        fs.writeFileSync(this.persistenceFilePath, JSON.stringify(data, null, 2), 'utf-8');
+        console.log('[TRIGGER_PERSIST] saved configs to disk');
+      } catch (err) {
+        console.log(`[TRIGGER_PERSIST] failed to save configs: ${err}`);
       }
-      fs.writeFileSync(this.persistenceFilePath, JSON.stringify(data, null, 2), 'utf-8');
-    } catch (err) {
-      console.log(`[TRIGGER_PERSIST] failed to save configs: ${err}`);
-    }
+    })();
   }
 
   // ──────────────── User-Scoped Config ────────────────
@@ -190,6 +272,7 @@ export class TriggerCMDService {
       endpoint: config.endpoint,
       syncedAt: config.syncedAt,
       deviceCount: config.deviceCount,
+      devices: this.userDevicesCache.get(userId) || []
     };
   }
 
@@ -272,16 +355,16 @@ export class TriggerCMDService {
         console.log(`[TRIGGER_HYDRATION] emitted count=${outcome.devices.length} room=user:${userId}`);
       }
 
-      return { success: true, count: outcome.devices.length, status: 'synced' };
+      return { success: true, count: outcome.devices.length, status: 'synced', devices: outcome.devices };
     }
 
     // Fallback: keep existing cache if any
     const existing = this.userDevicesCache.get(userId);
     if (existing && existing.length > 0) {
-      return { success: true, count: existing.length, status: 'cache' };
+      return { success: true, count: existing.length, status: 'cache', devices: existing };
     }
 
-    return { success: false, count: 0, status: outcome.reason === 'token_rejected' ? 'invalid_token' : outcome.reason };
+    return { success: false, count: 0, status: outcome.reason === 'token_rejected' ? 'invalid_token' : outcome.reason, devices: [] };
   }
 
   public getDevicesForUser(userId: string): TriggerDevice[] {

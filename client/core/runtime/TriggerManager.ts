@@ -130,7 +130,12 @@ class TriggerManager {
       logger.info('TRIGGER_SOCKET', `auth emitted userId=${userId}`);
       this.loadConfig();
     } else if (userId && !socket) {
-      logger.info('TRIGGER_AUTH', 'Socket not ready — will authenticate when socket becomes available');
+      // No persistent socket available (serverless deployment). Fall back
+      // to HTTP-based synchronization so the user can still save tokens and
+      // sync devices via the API endpoints.
+      logger.info('TRIGGER_AUTH', 'Socket not available — using HTTP fallback for TriggerCMD');
+      // Attempt to load config via API immediately
+      void this.loadConfig();
     } else {
       logger.info('TRIGGER_AUTH_FLOW', `setting null state userId=${userId}`);
       this.config = null;
@@ -148,10 +153,16 @@ class TriggerManager {
 
     try {
       logger.info('TRIGGER_CONFIG', `loading config userId=${this.userId}`);
-      const config = await apiClient.get<BridgeUserConfig>(`/triggercmd/config?userId=${this.userId}`);
+      const config = await apiClient.get<BridgeUserConfig & { devices?: TriggerDevice[] }>(`/triggercmd/config?userId=${this.userId}`);
       logger.info('TRIGGER_HYDRATION', `applying hydrated state hasToken=${config.hasToken} endpoint=${config.endpoint || 'none'}`);
       this.config = config;
       this.connectionStatus = config.hasToken ? 'connected' : 'no_token';
+      
+      if (config.devices && Array.isArray(config.devices)) {
+        this.devices = config.devices;
+        this.notify();
+      }
+      
       this.notifyStatus();
       logger.info('TRIGGER_CONFIG', `hydrated config hasToken=${config.hasToken} userId=${this.userId}`);
       return config;
@@ -180,6 +191,10 @@ class TriggerManager {
       this.connectionStatus = 'connected';
       this.notifyStatus();
       logger.info('TRIGGER_SAVE', `persisted token_exists=true userId=${this.userId}`);
+      
+      // Auto-sync after saving config to get devices immediately
+      void this.syncDevices();
+      
       return true;
     } catch (err) {
       logger.error('TRIGGER_CONFIG', `Failed to save user bridge config err=${err}`);
@@ -191,6 +206,7 @@ class TriggerManager {
     success: boolean;
     count: number;
     status: string;
+    devices?: TriggerDevice[];
   }> {
     if (!this.userId || !runtimeIdentity.requiresExecutionPermission('trigger_sync_devices', this.userId)) {
       return { success: false, count: 0, status: 'no_user' };
@@ -204,9 +220,16 @@ class TriggerManager {
         success: boolean;
         count: number;
         status: string;
+        devices?: TriggerDevice[];
       }>('/triggercmd/sync', { userId: this.userId });
 
       this.connectionStatus = result.success ? 'connected' : 'invalid_token';
+      
+      if (result.success && result.devices) {
+        this.devices = result.devices;
+        this.notify();
+      }
+
       this.notifyStatus();
 
       if (result.success) {
@@ -275,8 +298,24 @@ class TriggerManager {
 
     const socket = socketManager.getSocket();
     if (!socket) {
-      logger.warn('VOICE_EXECUTION', `execute_called=false reason=no_socket deviceId=${deviceId}`);
-      return Promise.resolve(false);
+      logger.info('TRIGGER_RUNTIME', `no_socket_execute — falling back to HTTP execute deviceId=${deviceId} userId=${this.userId}`);
+      // Fallback to HTTP endpoint when socket is not available
+      if (!this.userId) {
+        logger.warn('TRIGGER_RUNTIME', `execute_failed_no_user deviceId=${deviceId}`);
+        return Promise.resolve(false);
+      }
+
+      try {
+        // Lazy import to avoid circular deps in some bundlers
+        const { apiClient } = await import('@core/api/client/ApiClient');
+        const res = await apiClient.post('/triggercmd/execute', { userId: this.userId, deviceId });
+        const success = res && (res.success === true);
+        logger.info('TRIGGER_RUNTIME', `http_execute result=${success} deviceId=${deviceId}`);
+        return Promise.resolve(Boolean(success));
+      } catch (err) {
+        logger.warn('TRIGGER_RUNTIME', `http_execute_failed deviceId=${deviceId} err=${err}`);
+        return Promise.resolve(false);
+      }
     }
 
     logger.info('VOICE_EXECUTION', `trigger_found=true deviceId=${deviceId} userId=${this.userId || 'none'}`);

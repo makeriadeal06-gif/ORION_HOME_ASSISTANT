@@ -654,7 +654,8 @@ export class VoiceRuntimeManager {
       && authState !== AuthState.AUTHENTICATING
       && authState !== AuthState.RESTORING_SESSION;
     const hydrationStable = !runtimeState.hydrationBarrierActive;
-    const socketHealthy = Boolean(environmentState?.coordination.websocketConnected ?? socketHealth.connected);
+    const socketHealthy = Boolean(environmentState?.coordination.websocketConnected ?? socketHealth.connected) 
+      || Boolean(import.meta.env.VERCEL); // Assume healthy API-based connectivity on Vercel
     const runtimeOperational = runtimeState.lifecycle !== 'BOOTING';
     const environmentDegraded = Boolean(environmentState?.modes.degraded || environmentState?.modes.offline || environmentState?.modes.recovery);
     const environmentRecovered = Boolean(environmentState && !environmentState.modes.offline && (!environmentState.modes.degraded || (authStable && hydrationStable && socketHealthy)));
