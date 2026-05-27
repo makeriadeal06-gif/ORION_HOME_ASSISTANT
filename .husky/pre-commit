@@ -1,0 +1,5 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Run the secret scanner on staged files
+node scripts/scan-secrets.js || exit 1
