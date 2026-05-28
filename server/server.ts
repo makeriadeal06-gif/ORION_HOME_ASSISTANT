@@ -203,6 +203,16 @@ async function setupApp() {
       }
     });
 
+    socket.on('mqtt:publish', ({ topic, message }) => {
+      console.log(`[SOCKET] mqtt:publish to ${topic}`);
+      backendMqttManager.publish(topic, message);
+    });
+
+    socket.on('mqtt:reconnect', () => {
+      console.log('[SOCKET] mqtt:reconnect requested by client');
+      backendMqttManager.forceReconnect();
+    });
+
     socket.on('trigger:execute', ({ deviceId }, ack) => {
       const userId = socket.data.userId;
       const success = userId ? triggerCmdService.executeForUser(userId, deviceId) : triggerCmdService.execute(deviceId);

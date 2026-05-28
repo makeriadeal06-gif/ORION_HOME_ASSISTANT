@@ -5,7 +5,7 @@ export class BackendMqttManager {
   private static instance: BackendMqttManager;
   private client: MqttClient | null = null;
   private io: Server | null = null;
-  private connected = false;
+  public connected = false;
   private subscriptionsHealthy = false;
   private subscriptionCount = 0;
   private lastPacketAt = 0;
@@ -27,6 +27,18 @@ export class BackendMqttManager {
     this.connect();
   }
 
+  public forceReconnect() {
+    console.log('[BACKEND_MQTT] Force reconnect requested');
+    if (this.client) {
+      this.client.end(true);
+      this.client = null;
+    }
+    this.connected = false;
+    this.subscriptionsHealthy = false;
+    this.broadcastStatus();
+    this.connect();
+  }
+
   private connect() {
     const brokerUrl = process.env.MQTT_URL || 'wss://broker.emqx.io:8084/mqtt';
     console.log(`[BACKEND_MQTT] Connecting to ${brokerUrl}...`);
@@ -40,7 +52,8 @@ export class BackendMqttManager {
         reconnectPeriod: 5000,
         protocolVersion: 5,
         rejectUnauthorized: false,
-        path: '/mqtt'
+        path: '/mqtt',
+        manualConnect: false
       });
 
       this.client.on('connect', () => {
@@ -54,6 +67,10 @@ export class BackendMqttManager {
 
       this.client.on('message', (topic, payload) => {
         this.lastPacketAt = Date.now();
+        // Log briefly to avoid flooding but show activity
+        if (topic.includes('status') || topic.includes('telemetry')) {
+          console.log(`[BACKEND_MQTT] Ingress: ${topic}`);
+        }
         this.io?.emit('mqtt:message', { topic, payload: payload.toString() });
         this.emitTelemetry('packet_flow', { topic });
       });
@@ -69,8 +86,14 @@ export class BackendMqttManager {
         }
       });
 
+      this.client.on('reconnect', () => {
+        console.log('[BACKEND_MQTT] Attempting to reconnect...');
+        this.broadcastStatus();
+      });
+
       this.client.on('error', (err) => {
         console.error(`[BACKEND_MQTT] Error: ${err.message}`);
+        this.broadcastStatus();
       });
 
     } catch (error) {
@@ -79,6 +102,7 @@ export class BackendMqttManager {
   }
 
   private subscribeTopics() {
+    console.log(`[BACKEND_MQTT] Subscribing to topics: ${this.subscribedTopics.join(', ')}`);
     this.client?.subscribe(this.subscribedTopics, (error, granted) => {
       if (error) {
         console.error(`[BACKEND_MQTT] Subscribe failed: ${error.message}`);
@@ -90,6 +114,7 @@ export class BackendMqttManager {
 
       this.subscriptionsHealthy = Array.isArray(granted) && granted.length > 0;
       this.subscriptionCount = granted?.length || 0;
+      console.log(`[BACKEND_MQTT] Subscriptions active. Count: ${this.subscriptionCount}`);
       this.broadcastStatus();
       this.emitTelemetry('subscriptions_restored');
     });
@@ -97,7 +122,7 @@ export class BackendMqttManager {
 
   private startTelemetryHeartbeat() {
     if (this.telemetryInterval) {
-      return;
+      clearInterval(this.telemetryInterval);
     }
 
     this.telemetryInterval = setInterval(() => {
@@ -106,6 +131,7 @@ export class BackendMqttManager {
       }
       this.emitTelemetry('heartbeat');
     }, 15000);
+    console.log('[BACKEND_MQTT] Telemetry heartbeat started (15s interval)');
   }
 
   private stopTelemetryHeartbeat() {

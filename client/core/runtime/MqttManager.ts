@@ -175,24 +175,43 @@ class MqttManager {
       return;
     }
     this.watchdogTimer = window.setInterval(() => {
-      const heartbeatAge = this.lastMqttHeartbeatAt ? Date.now() - this.lastMqttHeartbeatAt : -1;
-      const telemetryAge = this.lastTelemetryAt ? Date.now() - this.lastTelemetryAt : -1;
-      logger.info('MQTT_WATCHDOG', `state=${this.state} heartbeat_age_ms=${heartbeatAge} telemetry_age_ms=${telemetryAge} subs=${this.subscriptionCount} stale_hits=${this.staleWatchdogHits}`);
+      const now = Date.now();
+      const heartbeatAge = this.lastMqttHeartbeatAt ? now - this.lastMqttHeartbeatAt : -1;
+      const telemetryAge = this.lastTelemetryAt ? now - this.lastTelemetryAt : -1;
+      const socketMetrics = socketRuntime.getHealthMetrics();
+      
+      logger.info('MQTT_WATCHDOG', `state=${this.state} heartbeat_age=${heartbeatAge} telemetry_age=${telemetryAge} socket_conn=${socketMetrics.connected} subs=${this.subscriptionCount}`);
+
+      // If connected but no telemetry for a long time, mark as degraded
       if (this.state === MqttState.CONNECTED && this.lastTelemetryAt > 0 && telemetryAge > this.recoveryValidationWindowMs) {
         this.staleWatchdogHits += 1;
+        logger.warn('MQTT_WATCHDOG', `stale_detected hits=${this.staleWatchdogHits} age=${telemetryAge}`);
         this.transitionState(MqttState.DEGRADED, 'telemetry_watchdog_stale');
         this.syncHealth(false);
-        if (this.staleWatchdogHits >= 3 && !this.isSocketHealthy()) {
-          this.scheduleReconnect('telemetry_watchdog_stale', this.reconnectCooldown);
+        
+        // If it persists, try to force a backend reconnect through the socket
+        if (this.staleWatchdogHits >= 2) {
+          logger.warn('MQTT_WATCHDOG', 'forcing_backend_reconnect_via_socket');
+          const socket = socketManager.getSocket();
+          socket?.emit('mqtt:reconnect');
+          this.staleWatchdogHits = 0; // Reset hits after requesting reconnect
         }
         return;
       }
 
+      // Recovery condition
       if (this.state === MqttState.DEGRADED && telemetryAge >= 0 && telemetryAge <= this.recoveryValidationWindowMs) {
+        logger.info('MQTT_WATCHDOG', 'recovery_detected');
         this.staleWatchdogHits = 0;
         this.reconcileHealth('watchdog_recovered');
       }
-    }, 10000);
+
+      // If stuck in connecting/reconnecting without progress
+      if ((this.state === MqttState.CONNECTING || this.state === MqttState.RECONNECTING) && now - this.lastStatusChangeAt > 30000) {
+        logger.warn('MQTT_WATCHDOG', 'stuck_in_transition_detected');
+        this.connect(); // Retry connect
+      }
+    }, 15000); // Check every 15s instead of 10s to match heartbeat
   }
 
   private attachRuntimeListeners() {

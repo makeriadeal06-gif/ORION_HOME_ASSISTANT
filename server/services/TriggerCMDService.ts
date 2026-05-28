@@ -820,36 +820,69 @@ export class TriggerCMDService {
     const rootKeys = Object.keys(root);
     console.log(`[TRIGGER_PARSE] payload_type=object root_keys=${JSON.stringify(rootKeys)}`);
 
+    // Direct check for common TriggerCMD response keys
     if (Array.isArray(root.records)) {
       this.lastParsePath = 'root.records';
-      console.log(`[TRIGGER_PARSE] parser_selected=root.records count=${root.records.length}`);
       return root.records;
     }
     if (Array.isArray(root.devices)) {
       this.lastParsePath = 'root.devices';
-      console.log(`[TRIGGER_PARSE] parser_selected=root.devices count=${root.devices.length}`);
       return root.devices;
     }
     if (Array.isArray(root.commands)) {
       this.lastParsePath = 'root.commands';
-      console.log(`[TRIGGER_PARSE] parser_selected=root.commands count=${root.commands.length}`);
       return root.commands;
+    }
+    if (Array.isArray(root.triggers)) {
+      this.lastParsePath = 'root.triggers';
+      return root.triggers;
+    }
+
+    // Sometimes the response is a list of computers, each with its own commands
+    if (Array.isArray(root.computers)) {
+      this.lastParsePath = 'root.computers_flatten';
+      console.log(`[TRIGGER_PARSE] flattening computers count=${root.computers.length}`);
+      const allCommands: unknown[] = [];
+      for (const comp of root.computers) {
+        const compObj = this.toObject(comp);
+        if (Array.isArray(compObj.commands)) {
+          // Inject computer info into commands if missing
+          allCommands.push(...compObj.commands.map(cmd => ({
+            ...this.toObject(cmd),
+            server: compObj.name || compObj.computerName || compObj.voice
+          })));
+        }
+      }
+      return allCommands;
     }
 
     const data = this.toObject(root.data);
     const dataKeys = Object.keys(data);
     console.log(`[TRIGGER_PARSE] trying root.data keys=${JSON.stringify(dataKeys)}`);
+    
     if (Array.isArray(data.records)) {
       this.lastParsePath = 'root.data.records';
-      console.log(`[TRIGGER_PARSE] parser_selected=root.data.records count=${data.records.length}`);
       return data.records;
     }
 
     // Check for other common array keys inside data
-    for (const key of ['devices', 'commands', 'items', 'list', 'result', 'results', 'data']) {
+    for (const key of ['devices', 'commands', 'triggers', 'computers', 'items', 'list', 'result', 'results', 'data']) {
       if (Array.isArray(data[key])) {
+        if (key === 'computers') {
+           const allCommands: unknown[] = [];
+           for (const comp of data[key]) {
+             const compObj = this.toObject(comp);
+             if (Array.isArray(compObj.commands)) {
+               allCommands.push(...compObj.commands.map(cmd => ({
+                 ...this.toObject(cmd),
+                 server: compObj.name || compObj.computerName || compObj.voice
+               })));
+             }
+           }
+           this.lastParsePath = `root.data.computers_flatten`;
+           return allCommands;
+        }
         this.lastParsePath = `root.data.${key}`;
-        console.log(`[TRIGGER_PARSE] parser_selected=root.data.${key} count=${data[key].length}`);
         return data[key];
       }
     }
@@ -858,13 +891,12 @@ export class TriggerCMDService {
     for (const key of ['items', 'list', 'result', 'results', 'data']) {
       if (Array.isArray(root[key])) {
         this.lastParsePath = `root.${key}`;
-        console.log(`[TRIGGER_PARSE] parser_selected=root.${key} count=${root[key].length}`);
         return root[key];
       }
     }
 
     this.lastParsePath = 'none';
-    console.log(`[TRIGGER_PARSE] parser_selected=none — no array found in payload`);
+    console.log(`[TRIGGER_PARSE] parser_selected=none — no array found in payload. keys=${JSON.stringify(rootKeys)}`);
     return [];
   }
 
@@ -889,8 +921,10 @@ export class TriggerCMDService {
       this.toStringValue(device.server) ||
       this.toStringValue(device.computer) ||
       this.toStringValue(device.computerName) ||
+      this.toStringValue(device.voice) ||
       this.toStringValue(computer.name) ||
       this.toStringValue(computer.computerName) ||
+      this.toStringValue(computer.voice) ||
       'TRIGGERCMD_NODE';
 
     const id =
