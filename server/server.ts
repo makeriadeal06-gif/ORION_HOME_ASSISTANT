@@ -226,13 +226,16 @@ async function setupApp() {
 }
 
 // Start sequence
-setupApp().catch(err => console.error('Setup failed:', err));
-
 if (!process.env.VERCEL) {
+  setupApp().catch(err => console.error('Setup failed:', err));
+  
   const PORT = process.env.PORT || 3000;
   httpServer.listen(PORT, () => {
     console.log(`ORION CORE running at http://localhost:${PORT}`);
   });
+} else {
+  // On Vercel, we still need to initialize services, but they must be ready for serverless
+  setupApp().catch(err => console.error('Vercel Setup failed:', err));
 }
 
 export default app;
