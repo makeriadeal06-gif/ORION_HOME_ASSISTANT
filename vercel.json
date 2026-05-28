@@ -1,10 +1,11 @@
 {
   "version": 2,
+  "functions": {
+    "api/server.cjs": {
+      "runtime": "nodejs20.x"
+    }
+  },
   "builds": [
-    {
-      "src": "api/server.ts",
-      "use": "@vercel/node"
-    },
     {
       "src": "package.json",
       "use": "@vercel/static-build",
@@ -16,13 +17,13 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/api/server.ts"
+      "dest": "/api/server.cjs"
     },
     {
       "handle": "filesystem"
     },
     {
-      "src": "/(.*)",
+      "src": "^/(.*)$",
       "dest": "/index.html"
     }
   ]
