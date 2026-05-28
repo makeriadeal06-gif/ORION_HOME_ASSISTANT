@@ -68,6 +68,7 @@ var BackendMqttManager = class _BackendMqttManager {
   }
   init(io2) {
     this.io = io2;
+<<<<<<< HEAD
     this.connect();
   }
   forceReconnect() {
@@ -79,6 +80,8 @@ var BackendMqttManager = class _BackendMqttManager {
     this.connected = false;
     this.subscriptionsHealthy = false;
     this.broadcastStatus();
+=======
+>>>>>>> 1aa288f (fix: vercel backend runtime fase 01.2)
     this.connect();
   }
   connect() {
@@ -1897,6 +1900,7 @@ async function setupApp() {
         triggerCmdService.startUserAutoRefresh(userId);
       }
     });
+<<<<<<< HEAD
     socket.on("mqtt:publish", ({ topic, message }) => {
       console.log(`[SOCKET] mqtt:publish to ${topic}`);
       backendMqttManager.publish(topic, message);
@@ -1905,6 +1909,8 @@ async function setupApp() {
       console.log("[SOCKET] mqtt:reconnect requested by client");
       backendMqttManager.forceReconnect();
     });
+=======
+>>>>>>> 1aa288f (fix: vercel backend runtime fase 01.2)
     socket.on("trigger:execute", ({ deviceId }, ack) => {
       const userId = socket.data.userId;
       const success = userId ? triggerCmdService.executeForUser(userId, deviceId) : triggerCmdService.execute(deviceId);
@@ -1915,14 +1921,22 @@ async function setupApp() {
     });
   });
 }
+<<<<<<< HEAD
 if (!process.env.VERCEL) {
   setupApp().catch((err) => console.error("Setup failed:", err));
+=======
+setupApp().catch((err) => console.error("Setup failed:", err));
+if (!process.env.VERCEL) {
+>>>>>>> 1aa288f (fix: vercel backend runtime fase 01.2)
   const PORT = process.env.PORT || 3e3;
   httpServer.listen(PORT, () => {
     console.log(`ORION CORE running at http://localhost:${PORT}`);
   });
+<<<<<<< HEAD
 } else {
   setupApp().catch((err) => console.error("Vercel Setup failed:", err));
+=======
+>>>>>>> 1aa288f (fix: vercel backend runtime fase 01.2)
 }
 var server_default = app;
 // Annotate the CommonJS export names for ESM import in node:
