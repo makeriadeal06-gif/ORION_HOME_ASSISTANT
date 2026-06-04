@@ -63,3 +63,6 @@ export const useAndroidAwarenessStore = create<AndroidAwarenessStore>((set) => (
     lastUpdated: Date.now(),
   })),
 }));
+
+// STABILITY FREEZE
+// DO NOT MODIFY WITHOUT ARCHITECTURAL REVIEW.

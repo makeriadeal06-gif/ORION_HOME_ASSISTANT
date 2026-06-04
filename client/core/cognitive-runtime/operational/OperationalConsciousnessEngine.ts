@@ -8,6 +8,9 @@ import {
   OperationalDecision 
 } from './types';
 
+// STABILITY FREEZE
+// DO NOT MODIFY WITHOUT ARCHITECTURAL REVIEW.
+
 /**
  * OPERATIONAL CONSCIOUSNESS ENGINE
  * 

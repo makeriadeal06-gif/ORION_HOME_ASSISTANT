@@ -6,6 +6,9 @@ import { useAndroidAwarenessStore } from './useAndroidAwarenessStore';
 // STABILITY FREEZE
 // DO NOT MODIFY WITHOUT ARCHITECTURAL REVIEW.
 
+// STABILITY FREEZE
+// DO NOT MODIFY WITHOUT ARCHITECTURAL REVIEW.
+
 class AndroidAwarenessEngine {
   private static instance: AndroidAwarenessEngine;
   private initialized = false;

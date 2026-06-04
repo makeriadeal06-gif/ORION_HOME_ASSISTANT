@@ -7,6 +7,9 @@ import { AutomationActionHandler } from './handlers/AutomationActionHandler';
 // STABILITY FREEZE
 // DO NOT MODIFY WITHOUT ARCHITECTURAL REVIEW.
 
+// STABILITY FREEZE
+// DO NOT MODIFY WITHOUT ARCHITECTURAL REVIEW.
+
 class ActionExecutorEngine {
   private static instance: ActionExecutorEngine;
   private handlers: ActionHandler[] = [];

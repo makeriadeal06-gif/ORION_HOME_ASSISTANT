@@ -71,3 +71,6 @@ export type AwarenessEventPayload =
   | { type: 'audio'; payload: Partial<AudioState> }
   | { type: 'location'; payload: Partial<LocationState> }
   | { type: 'permissions'; payload: Partial<PermissionState> };
+
+// STABILITY FREEZE
+// DO NOT MODIFY WITHOUT ARCHITECTURAL REVIEW.
