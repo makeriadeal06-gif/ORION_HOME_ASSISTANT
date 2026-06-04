@@ -5,6 +5,9 @@ import { socketRuntime } from '../../socket/SocketRuntime';
 import { realtimeDeviceStateEngine } from '../../device-runtime/realtime/RealtimeDeviceStateEngine';
 import { DeviceMonitoring } from '../../device-runtime/monitoring/DeviceMonitoring';
 
+// STABILITY FREEZE
+// DO NOT MODIFY WITHOUT ARCHITECTURAL REVIEW.
+
 class GoogleHomeRuntime {
   private static instance: GoogleHomeRuntime;
   private initialized = false;

@@ -27,7 +27,7 @@ export interface AndroidRuntimeSnapshot {
 }
 
 export interface AndroidBridgeEvent {
-  type: 'lifecycle' | 'permission' | 'execution' | 'service' | 'state' | 'audio' | 'connectivity';
+  type: 'lifecycle' | 'permission' | 'execution' | 'service' | 'state' | 'audio' | 'connectivity' | 'awareness';
   action: string;
   payload?: Record<string, unknown>;
 }
@@ -60,6 +60,17 @@ export interface AndroidNativeBridge {
   updateRuntimeState?: (snapshot: AndroidRuntimeSnapshot) => Promise<void> | void;
   getPermissionState?: (permission: 'microphone' | 'notifications') => Promise<AndroidPermissionState> | AndroidPermissionState;
   dispatchEvent?: (event: AndroidBridgeEvent) => Promise<void> | void;
+  
+  // Awareness Layer Getters
+  getBatteryState?: () => Promise<any> | any;
+  getNetworkState?: () => Promise<any> | any;
+  getBluetoothState?: () => Promise<any> | any;
+  getPowerState?: () => Promise<any> | any;
+  getAudioState?: () => Promise<any> | any;
+  getLocationState?: () => Promise<any> | any;
+
+  // Action Executor Layer
+  executeAndroidAction?: (action: any) => Promise<void> | void;
 }
 
 declare global {

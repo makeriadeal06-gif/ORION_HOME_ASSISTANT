@@ -6,6 +6,9 @@ import { socketRuntime } from '@core/socket/SocketRuntime';
 import { runtimeIdentity } from './RuntimeIdentity';
 import { AuthState } from '@core/state/stores/useAuthStore';
 
+// STABILITY FREEZE
+// DO NOT MODIFY WITHOUT ARCHITECTURAL REVIEW.
+
 export enum MqttState {
   IDLE = 'IDLE',
   CONNECTING = 'CONNECTING',
@@ -315,11 +318,9 @@ class MqttManager {
   private reconcileHealth(reason: string) {
     this.recoveryFlags.socketHealthy = this.isSocketHealthy();
     this.recoveryFlags.heartbeatHealthy = this.isHeartbeatHealthy();
-    this.recoveryFlags.subscriptionsHealthy = this.recoveryFlags.subscriptionsHealthy && this.subscriptionCount > 0;
     this.recoveryFlags.telemetryHealthy = this.isTelemetryHealthy();
     this.recoveryFlags.mqttSessionHealthy = this.isMqttSessionHealthy();
     this.recoveryFlags.bridgeHealthy = this.recoveryFlags.bridgeHealthy || this.recoveryFlags.socketHealthy;
-    this.recoveryFlags.meshHealthy = this.recoveryFlags.meshHealthy || (this.recoveryFlags.socketHealthy && this.recoveryFlags.subscriptionsHealthy && this.recoveryFlags.telemetryHealthy);
 
     logger.info(
       'RECOVERY_COMPLETION',

@@ -851,24 +851,12 @@ var TriggerCMDService = class _TriggerCMDService {
     const method = "POST";
     console.log(`[TRIGGER_HTTP] executeRemoteWithToken_enter method=${method} url=${sanitizedEndpoint} deviceId=${device.id}`);
     const payload = {
-      id: device.id,
-      deviceId: device.id,
-      // Prefer an explicit computerId if the normalizer preserved one. The
-      // official TriggerCMD API examples show payloads with `computer` (name)
-      // but several clients prefer sending the computer identifier. Sending
-      // both `computer` and `trigger` (and `params`) is compatible with the
-      // API. If a computerId is available, include it in the `computer` key.
-      command: device.cmd,
-      server: device.server,
-      name: device.name,
-      // Send both the computer friendly name and the preserved computer id
-      // when available. Some API variants accept the id under `computer`;
-      // others accept an explicit `computer_id` field. Including both is
-      // harmless and increases compatibility with different backends.
-      computer: device.computerId || device.server,
-      computer_id: device.computerId || void 0,
+      computer: device.server,
+      // The name of the computer
       trigger: device.cmd,
+      // The name of the trigger
       params: ""
+      // Optional parameters
     };
     console.log("[TRIGGER_HTTP_REQUEST]", {
       url: sanitizedEndpoint,
@@ -1011,7 +999,7 @@ var TriggerCMDService = class _TriggerCMDService {
     const category = this.toStringValue(device.category) || this.toStringValue(device.type) || this.toStringValue(device.group) || this.inferCategory(name || commandText || "");
     const app2 = this.toStringValue(device.app) || this.toStringValue(device.application) || this.toStringValue(device.process) || this.toStringValue(device.executable) || this.extractLabel(commandText || name || "");
     const cmd = trigger || this.toStringValue(device.cmd) || commandText || name;
-    const server = this.toStringValue(device.server) || this.toStringValue(device.computer) || this.toStringValue(device.computerName) || this.toStringValue(device.voice) || this.toStringValue(computer.name) || this.toStringValue(computer.computerName) || this.toStringValue(computer.voice) || "TRIGGERCMD_NODE";
+    const server = this.toStringValue(device.server) || this.toStringValue(device.computer) || this.toStringValue(device.computerName) || this.toStringValue(computer.name) || this.toStringValue(computer.computerName) || "TRIGGERCMD_NODE";
     const id = this.toStringValue(device.id) || this.toStringValue(device.deviceId) || this.toStringValue(device._id) || `${server}:${cmd}`;
     let status = "ONLINE";
     if (device.status !== void 0) {

@@ -16,6 +16,9 @@ import {
   AndroidRuntimeSnapshot,
 } from './types';
 
+// STABILITY FREEZE
+// DO NOT MODIFY WITHOUT ARCHITECTURAL REVIEW.
+
 const SNAPSHOT_STORAGE_KEY = 'orion.android.runtime.snapshot.v1';
 const SNAPSHOT_BACKUP_STORAGE_KEY = 'orion.android.runtime.snapshot.backup.v1';
 
@@ -88,6 +91,11 @@ class AndroidRuntimeManager {
     await this.transitionLifecycle(this.getInitialLifecycleState(), 'init');
     this.startHeartbeat();
     this.startWatchdog();
+
+    // Initialize Awareness Engine without blocking boot
+    import('./awareness/AndroidAwarenessEngine')
+      .then(({ androidAwarenessEngine }) => androidAwarenessEngine.init())
+      .catch((err) => logger.warn('ANDROID_AWARENESS', `engine_init_failed error=${err?.message || err}`));
 
     logger.info('ANDROID_RUNTIME', `boot_completed platform=${this.snapshot.platform} boot_id=${this.bootId}`);
   }
