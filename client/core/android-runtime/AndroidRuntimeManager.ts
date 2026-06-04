@@ -97,6 +97,11 @@ class AndroidRuntimeManager {
       .then(({ androidAwarenessEngine }) => androidAwarenessEngine.init())
       .catch((err) => logger.warn('ANDROID_AWARENESS', `engine_init_failed error=${err?.message || err}`));
 
+    // Initialize Operational Consciousness Engine
+    import('@core/cognitive-runtime/operational/OperationalConsciousnessEngine')
+      .then(({ operationalConsciousnessEngine }) => operationalConsciousnessEngine.init())
+      .catch((err) => logger.warn('OPERATIONAL_CONSCIOUSNESS', `engine_init_failed error=${err?.message || err}`));
+
     logger.info('ANDROID_RUNTIME', `boot_completed platform=${this.snapshot.platform} boot_id=${this.bootId}`);
   }
 
