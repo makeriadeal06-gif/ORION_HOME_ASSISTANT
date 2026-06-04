@@ -1,6 +1,9 @@
 import { logger } from '@core/logger/Logger';
 import { useAuthStore, AuthState } from '@core/state/stores/useAuthStore';
 
+// STABILITY FREEZE
+// DO NOT MODIFY WITHOUT ARCHITECTURAL REVIEW.
+
 const RUNTIME_DEVICE_ID_STORAGE_KEY = 'orion.runtime.device-id.v1';
 
 type RuntimeScopeValidationInput = {
@@ -65,6 +68,7 @@ class RuntimeIdentity {
       }
 
       if (nextOwnerId === previousOwnerId) {
+        const previousSnapshot = this.snapshot;
         this.snapshot = {
           ...this.snapshot,
           authState: nextAuthState,
@@ -75,6 +79,15 @@ class RuntimeIdentity {
           'AUTH_TRANSITION',
           `auth_state_updated owner=${nextOwnerId || 'preview'} session_preserved=${this.snapshot.runtimeSessionId} auth=${nextAuthState}`,
         );
+        // Notify listeners on auth state changes even when the owner did not change.
+        for (const listener of this.listeners) {
+          try {
+            listener(this.snapshot, previousSnapshot);
+          } catch (e) {
+            // Protect runtime from listener errors
+            logger.warn('AUTH_TRANSITION', `listener_error owner=${nextOwnerId || 'preview'} error=${(e as any)?.message || e}`);
+          }
+        }
         previousAuthState = nextAuthState;
         return;
       }
@@ -124,15 +137,31 @@ class RuntimeIdentity {
 
   public requiresAuthenticatedRuntime(reason: string): boolean {
     const allowed = this.snapshot.authenticated;
-    if (!allowed) {
-      logger.warn('AUTH_EXECUTION', `requires_authenticated_runtime blocked=true reason=${reason} auth=${this.snapshot.authState} owner=${this.snapshot.ownerId || 'preview'}`);
+    if (allowed) {
+      return true;
     }
-    return allowed;
+
+    // If we are currently restoring a session, allow system-level recovery and
+    // transport reconciliation actions to proceed. This prevents the runtime from
+    // being fully blocked while Firebase or the backend takes a bit longer to
+    // emit the authenticated state. Only allow when the reason looks like a
+    // recovery/restore/transport operation to avoid opening a security hole for
+    // user-triggered executions.
+    if (
+      this.snapshot.authState === AuthState.RESTORING_SESSION &&
+      /recovery|restore|reconnect|mqtt|socket|hydration|reconcile/i.test(reason)
+    ) {
+      logger.info('AUTH_EXECUTION', `allow_during_restore reason=${reason} auth=${this.snapshot.authState} owner=${this.snapshot.ownerId || 'preview'}`);
+      return true;
+    }
+
+    logger.warn('AUTH_EXECUTION', `requires_authenticated_runtime blocked=true reason=${reason} auth=${this.snapshot.authState} owner=${this.snapshot.ownerId || 'preview'}`);
+    return false;
   }
 
   public runtimeExecutionGuard(reason: string, scope: RuntimeScopeValidationInput = {}): boolean {
     if (!this.requiresAuthenticatedRuntime(reason)) {
-      logger.warn('EXECUTION_GUARD', `blocked=true reason=${reason} guard=unauthenticated`);
+      logger.warn('EXECUTION_GUARD', `blocked=true reason=${reason} guard=unauthenticated auth=${this.snapshot.authState} owner=${this.snapshot.ownerId || 'preview'} previewMode=${String(this.snapshot.previewMode)}`);
       return false;
     }
 
@@ -160,7 +189,14 @@ class RuntimeIdentity {
   }
 
   public requiresExecutionPermission(reason: string, ownerId?: string | null): boolean {
-    return this.runtimeExecutionGuard(reason, { ownerId });
+    logger.info('AUTH_DEBUG', `permission_check reason=${reason} requested_owner=${ownerId || 'preview'} active_owner=${this.snapshot.ownerId || 'preview'} auth=${this.snapshot.authState} preview=${String(this.snapshot.previewMode)}`);
+    const allowed = this.runtimeExecutionGuard(reason, { ownerId });
+    if (!allowed) {
+      logger.warn('EXECUTION_PERMISSION', `denied=true reason=${reason} requested_owner=${ownerId || 'preview'} active_owner=${this.snapshot.ownerId || 'preview'}`);
+    } else {
+      logger.info('EXECUTION_PERMISSION', `granted=true reason=${reason} owner=${this.snapshot.ownerId || 'preview'}`);
+    }
+    return allowed;
   }
 
   public hydrationOwnerValidation(reason: string, scope: RuntimeScopeValidationInput = {}): boolean {

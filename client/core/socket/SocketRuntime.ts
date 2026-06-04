@@ -3,6 +3,9 @@ import { logger } from '../logger/Logger';
 import { SocketHealthMetrics, SocketStatus } from './SocketLifecycle';
 import { ProductionRecoveryEngine } from '../production/recovery/ProductionRecoveryEngine';
 
+// STABILITY FREEZE
+// DO NOT MODIFY WITHOUT ARCHITECTURAL REVIEW.
+
 class SocketRuntime {
   private static instance: SocketRuntime;
   private socket: Socket | null = null;

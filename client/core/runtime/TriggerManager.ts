@@ -3,6 +3,9 @@ import { logger } from '../logger/Logger';
 import { apiClient } from '../api/client/ApiClient';
 import { runtimeIdentity } from './RuntimeIdentity';
 
+// STABILITY FREEZE
+// DO NOT MODIFY WITHOUT ARCHITECTURAL REVIEW.
+
 export interface TriggerDevice {
   id: string;
   name: string;
@@ -279,20 +282,27 @@ class TriggerManager {
   }
 
   public execute(deviceId: string): Promise<boolean> {
+    logger.info('TRIGGER_DEBUG', `execute_called deviceId=${deviceId} userId=${this.userId || 'null'} auth=${runtimeIdentity.getAuthState()} owner=${runtimeIdentity.getOwnerId() || 'preview'} preview=${runtimeIdentity.isPreviewMode()}`);
     if (!runtimeIdentity.requiresExecutionPermission('trigger_execute', this.userId)) {
-      logger.warn('AUTH_RUNTIME', `preview_execution_blocked runtime=triggercmd deviceId=${deviceId}`);
+      logger.warn('AUTH_RUNTIME', `preview_execution_blocked runtime=triggercmd deviceId=${deviceId} auth=${runtimeIdentity.getAuthState()} owner=${runtimeIdentity.getOwnerId() || 'preview'} preview=${runtimeIdentity.isPreviewMode()}`);
       return Promise.resolve(false);
     }
 
     const socket = socketManager.getSocket();
+    logger.info(
+      'TRIGGER_DEBUG',
+      `socket_status deviceId=${deviceId} socket=${socket ? 'available' : 'null'} connected=${String(Boolean(socket?.connected))} runtime_status=${socketManager.getState()} userId=${this.userId || 'none'}`,
+    );
     if (!socket) {
-      logger.warn('VOICE_EXECUTION', `execute_called=false reason=no_socket deviceId=${deviceId}`);
+      logger.warn('VOICE_EXECUTION', `execute_called=false reason=no_socket deviceId=${deviceId} socket=null`);
       return Promise.resolve(false);
     }
 
     logger.info('VOICE_EXECUTION', `trigger_found=true deviceId=${deviceId} userId=${this.userId || 'none'}`);
     logger.info('VOICE_EXECUTION', `execute_called=true deviceId=${deviceId}`);
 
+    logger.info('TRIGGER_DEBUG', `socket_emit_attempt deviceId=${deviceId} socketConnected=${Boolean(socket.connected)}`);
+    logger.info('TRIGGER_DEBUG', `emitting trigger_execute deviceId=${deviceId} userId=${this.userId || 'none'}`);
     return new Promise((resolve) => {
       let settled = false;
       const timer = window.setTimeout(() => {
@@ -303,6 +313,7 @@ class TriggerManager {
       }, 3000);
 
       socket.emit('trigger:execute', { deviceId }, (ack?: { success?: boolean }) => {
+        logger.info('TRIGGER_DEBUG', `socket_ack_received deviceId=${deviceId} ack=${JSON.stringify(ack)}`);
         if (settled) return;
         settled = true;
         window.clearTimeout(timer);

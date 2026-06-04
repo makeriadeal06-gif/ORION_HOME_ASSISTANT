@@ -2,6 +2,9 @@ import { Server } from 'socket.io';
 import * as fs from 'fs';
 import * as path from 'path';
 
+// STABILITY FREEZE
+// DO NOT MODIFY WITHOUT ARCHITECTURAL REVIEW.
+
 export interface TriggerDevice {
   id: string;
   name: string;
@@ -11,6 +14,8 @@ export interface TriggerDevice {
   aliases?: string[];
   provider?: string;
   source?: string;
+  // Optional: keep the original computer id when present in upstream payloads
+  computerId?: string;
   app?: string;
   category?: string;
 }
@@ -258,6 +263,7 @@ export class TriggerCMDService {
     endpoint?: string;
     syncedAt?: number;
     deviceCount?: number;
+    devices?: TriggerDevice[];
   } | null {
     if (!userId) return null;
     const config = this.userConfigs.get(userId);
@@ -302,6 +308,7 @@ export class TriggerCMDService {
     success: boolean;
     count: number;
     status: string;
+    devices?: TriggerDevice[];
   }> {
     console.log(`[TRIGGER_SYNC] enter_sync userId=${userId}`);
     const config = this.getUserConfigRaw(userId);
@@ -335,8 +342,14 @@ export class TriggerCMDService {
     console.log(`[TRIGGER_SYNC] payload parsed format=direct devices=${outcome.devices.length} attempted=${outcome.attempted}`);
 
     if (outcome.devices.length > 0) {
+      console.log(
+        `[TRIGGER_CACHE] before_store userId=${userId} existing_count=${existingCache?.length || 0} existing_ids=${JSON.stringify((existingCache || []).map((d) => d.id))} new_ids=${JSON.stringify(outcome.devices.map((d) => d.id))}`,
+      );
       this.userDevicesCache.set(userId, outcome.devices);
       console.log(`[TRIGGER_CACHE] storing devices=${outcome.devices.length} userId=${userId}`);
+      console.log(
+        `[TRIGGER_CACHE] after_store userId=${userId} stored_count=${this.userDevicesCache.get(userId)?.length || 0} stored_ids=${JSON.stringify((this.userDevicesCache.get(userId) || []).map((d) => d.id))}`,
+      );
 
       const signature = JSON.stringify(
         outcome.devices.map((d) => `${d.id}:${d.name}:${d.cmd}:${d.status}:${d.server}`).sort()
@@ -373,24 +386,58 @@ export class TriggerCMDService {
   }
 
   public executeForUser(userId: string, deviceId: string): boolean {
-    if (!userId || !deviceId) return false;
-
-    const devices = this.userDevicesCache.get(userId) || [];
-    const device = devices.find(d => d.id === deviceId);
-    if (!device) return false;
-
+    console.log(`[TRIGGER_EXEC_DEBUG] enter userId=${userId} deviceId=${deviceId}`);
+    const cacheExists = this.userDevicesCache.has(userId);
+    const cachedDevices = this.userDevicesCache.get(userId) || [];
     const config = this.getUserConfigRaw(userId);
     const token = config?.token || '';
     const endpoint = this.resolveExecuteEndpoint(config?.endpoint || process.env.TRIGGERCMD_EXECUTE_URL || '');
+    console.log(`[TRIGGER_EXEC_DEBUG] cache_state userId=${userId} deviceId=${deviceId} cache_exists=${cacheExists} device_count=${cachedDevices.length}`);
 
-    if (!token || !endpoint) {
-      console.warn(`[TRIGGER_RUNTIME] Execute skipped for user=${userId}: missing token or endpoint`);
+    if (!userId || !deviceId) {
+      console.log(`[TRIGGER_EXEC_DEBUG] exit userId=${userId} deviceId=${deviceId} reason=missing_user_or_device`);
       return false;
     }
 
-    console.log(`[TRIGGER_RUNTIME] isolated runtime ready — executing ${device.name} for user=${userId}`);
+    const devices = cachedDevices;
+    console.log(
+      `[TRIGGER_EXEC_DEBUG] cache_snapshot userId=${userId} cache_exists=${this.userDevicesCache.has(userId)} device_count=${devices.length} device_ids=${JSON.stringify(devices.map((d) => d.id))} devices=${JSON.stringify(devices.map((d) => ({ id: d.id, name: d.name, server: d.server, status: d.status })))}`,
+    );
 
-    this.executeRemoteWithToken(endpoint, token, device).catch((error) => {
+    const device = devices.find(d => d.id === deviceId);
+    console.log(`[TRIGGER_EXEC_DEBUG] device_lookup userId=${userId} deviceId=${deviceId} match=${device ? 'found' : 'not_found'} device=${device ? JSON.stringify({ id: device.id, name: device.name, server: device.server, status: device.status }) : 'null'}`);
+
+    if (!device) {
+      console.log(`[TRIGGER_EXEC_DEBUG] exit userId=${userId} deviceId=${deviceId} reason=device_not_in_cache`);
+      return false;
+    }
+
+    console.log(
+      `[TRIGGER_EXEC_DEBUG] execution_context userId=${userId} has_config=${Boolean(config)} token_present=${Boolean(token)} endpoint=${endpoint || '(empty)'} raw_endpoint=${config?.endpoint || process.env.TRIGGERCMD_EXECUTE_URL || '(empty)'}`,
+    );
+    console.log(`[TRIGGER_EXEC_DEBUG] token_endpoint_validation userId=${userId} deviceId=${deviceId} token_exists=${Boolean(token)} endpoint_exists=${Boolean(endpoint)}`);
+
+    // Diagnostic: log resolved execution context for this user request
+    console.log(`[TRIGGER_EXEC_DEBUG] user=${userId} requested_deviceId=${deviceId} resolved_device_id=${device.id} command=${device.cmd} endpoint=${endpoint} token_present=${Boolean(token)} token_masked=${this.maskToken(token)}`);
+
+    if (!token || !endpoint) {
+      console.warn(`[TRIGGER_RUNTIME] Execute skipped for user=${userId}: missing token or endpoint token_present=${Boolean(token)} endpoint_present=${Boolean(endpoint)}`);
+      console.log(`[TRIGGER_EXEC_DEBUG] exit userId=${userId} deviceId=${deviceId} reason=missing_token_or_endpoint`);
+      return false;
+    }
+
+    console.log(`[TRIGGER_RUNTIME] isolated runtime ready — executing ${device.name} for user=${userId} endpoint=${endpoint}`);
+    console.log(`[TRIGGER_EXEC_DEBUG] entering_remote_execution userId=${userId} deviceId=${deviceId} endpoint=${endpoint}`);
+    console.log(`[TRIGGER_EXEC_DEBUG] calling executeRemoteWithToken userId=${userId} deviceId=${deviceId} endpoint=${endpoint}`);
+
+    // Important: ACK is returned synchronously to the client. Log that we
+    // are returning ack BEFORE performing the actual remote HTTP call so we
+    // can correlate client success=true with backend execution steps.
+    console.log(`[TRIGGER_REMOTE_EXECUTE] ack_returned=true user=${userId} device=${deviceId} endpoint=${endpoint} token_present=${Boolean(token)}`);
+
+    this.executeRemoteWithToken(endpoint, token, device).then(() => {
+      console.log(`[TRIGGER_RUNTIME] remote_execute_sent user=${userId} device=${deviceId}`);
+    }).catch((error) => {
       const message = error instanceof Error ? error.message : 'unknown_error';
       console.warn(`[TRIGGER_RUNTIME] Remote execute failed for user=${userId} (${message})`);
     });
@@ -754,36 +801,68 @@ export class TriggerCMDService {
   // ──────────────── Internal: Execute ────────────────
 
   private async executeRemoteWithToken(endpoint: string, token: string, device: TriggerDevice) {
+    console.log(
+      `[TRIGGER_EXEC_DEBUG] executeRemoteWithToken_called raw_endpoint=${endpoint} deviceId=${device.id} deviceName=${device.name} server=${device.server} token_present=${Boolean(token)}`,
+    );
+
     const sanitizedEndpoint = this.sanitizeUrl(endpoint);
-    if (!sanitizedEndpoint) return;
+    if (!sanitizedEndpoint) {
+      console.log(`[TRIGGER_EXEC_DEBUG] executeRemoteWithToken_exit reason=missing_endpoint deviceId=${device.id}`);
+      return;
+    }
 
     const sanitizedToken = this.sanitizeToken(token);
     if (!sanitizedToken) {
       console.warn('[TRIGGER_RUNTIME] Execute skipped: missing token');
+      console.log(`[TRIGGER_EXEC_DEBUG] executeRemoteWithToken_exit reason=missing_token deviceId=${device.id}`);
       return;
     }
+
+    console.log(
+      `[TRIGGER_EXEC_DEBUG] executeRemoteWithToken_entered endpoint=${sanitizedEndpoint} deviceId=${device.id} deviceName=${device.name} server=${device.server} token_present=${Boolean(sanitizedToken)} token_masked=${this.maskToken(sanitizedToken)}`,
+    );
 
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${sanitizedToken}`
     };
+    const method = 'POST';
+    console.log(`[TRIGGER_HTTP] executeRemoteWithToken_enter method=${method} url=${sanitizedEndpoint} deviceId=${device.id}`);
 
+    // Official TriggerCMD API format for /api/run/trigger or /api/run/triggerSave
+    // requires exactly computer, trigger, and optionally params.
+    // Sending extra fields like `id`, `server`, or using `computerId` instead of
+    // the computer name often causes 400 Bad Request or silent failures.
     const payload = {
-      id: device.id,
-      deviceId: device.id,
-      command: device.cmd,
-      server: device.server,
-      name: device.name,
-      computer: device.server,
-      trigger: device.cmd,
-      params: ''
+      computer: device.server, // The name of the computer
+      trigger: device.cmd,     // The name of the trigger
+      params: ''               // Optional parameters
     };
 
-    const response = await fetch(sanitizedEndpoint, {
+    // Diagnostic: Log exact request details before calling remote API
+    console.log('[TRIGGER_HTTP_REQUEST]', {
+      url: sanitizedEndpoint,
       method: 'POST',
+      headers: { Authorization: `Bearer ${this.maskToken(sanitizedToken)}` },
+      payload
+    });
+
+    const response = await fetch(sanitizedEndpoint, {
+      method,
       headers,
       body: JSON.stringify(payload)
     });
+
+    const responseText = await response.text().catch(() => '<no body>');
+
+    console.log('[TRIGGER_HTTP_RESPONSE]', {
+      url: sanitizedEndpoint,
+      method,
+      status: response.status,
+      ok: response.ok,
+      body_preview: String(responseText).substring(0, 2000)
+    });
+    console.log(`[TRIGGER_HTTP] final url=${sanitizedEndpoint} method=${method} status=${response.status} body=${String(responseText).substring(0, 500)}`);
 
     if (!response.ok) {
       if (response.status === 401) {
@@ -791,6 +870,8 @@ export class TriggerCMDService {
       }
       throw new Error(`trigger_execute_${response.status}`);
     }
+
+    console.log('[TRIGGER_REMOTE_RESPONSE]', { url: sanitizedEndpoint, status: response.status });
   }
 
   private async executeRemote(device: TriggerDevice) {
@@ -846,10 +927,16 @@ export class TriggerCMDService {
       for (const comp of root.computers) {
         const compObj = this.toObject(comp);
         if (Array.isArray(compObj.commands)) {
-          // Inject computer info into commands if missing
+          // Inject computer info into commands so downstream normalization can
+          // preserve computer id/name. Some API responses put commands under a
+          // computers array and expect the client to associate them.
+          const compId = this.toStringValue(compObj.id) || this.toStringValue(compObj._id) || this.toStringValue(compObj.computer_id) || this.toStringValue(compObj.computerId) || undefined;
+          const compName = compObj.name || compObj.computerName || compObj.voice;
           allCommands.push(...compObj.commands.map(cmd => ({
             ...this.toObject(cmd),
-            server: compObj.name || compObj.computerName || compObj.voice
+            server: compName,
+            computer: compObj,
+            computer_id: compId
           })));
         }
       }
@@ -870,15 +957,19 @@ export class TriggerCMDService {
       if (Array.isArray(data[key])) {
         if (key === 'computers') {
            const allCommands: unknown[] = [];
-           for (const comp of data[key]) {
-             const compObj = this.toObject(comp);
-             if (Array.isArray(compObj.commands)) {
-               allCommands.push(...compObj.commands.map(cmd => ({
-                 ...this.toObject(cmd),
-                 server: compObj.name || compObj.computerName || compObj.voice
-               })));
-             }
-           }
+            for (const comp of data[key]) {
+              const compObj = this.toObject(comp);
+              if (Array.isArray(compObj.commands)) {
+                const compId = this.toStringValue(compObj.id) || this.toStringValue(compObj._id) || this.toStringValue(compObj.computer_id) || this.toStringValue(compObj.computerId) || undefined;
+                const compName = compObj.name || compObj.computerName || compObj.voice;
+                allCommands.push(...compObj.commands.map(cmd => ({
+                  ...this.toObject(cmd),
+                  server: compName,
+                  computer: compObj,
+                  computer_id: compId
+                })));
+              }
+            }
            this.lastParsePath = `root.data.computers_flatten`;
            return allCommands;
         }
@@ -909,6 +1000,17 @@ export class TriggerCMDService {
     const device = raw as Record<string, unknown>;
     const rawKeys = Object.keys(device);
     const computer = this.toObject(device.computer);
+    // Try to preserve an explicit computer identifier when present in the
+    // upstream payload. Some TriggerCMD responses include computer IDs in
+    // different keys (computer_id, computerId, computer.id, computer._id)
+    // — keep the first one we can stringify so execute can prefer it.
+    const computerIdCandidate =
+      this.toStringValue(device['computer_id']) ||
+      this.toStringValue(device['computerId']) ||
+      this.toStringValue(device['computerID']) ||
+      this.toStringValue(computer.id) ||
+      this.toStringValue(computer._id) ||
+      null;
     const trigger = this.toStringValue(device.trigger);
     const commandText = this.toStringValue(device.command) || this.toStringValue(device.cmd);
     const name = this.toStringValue(device.name) || trigger || commandText;
@@ -921,10 +1023,8 @@ export class TriggerCMDService {
       this.toStringValue(device.server) ||
       this.toStringValue(device.computer) ||
       this.toStringValue(device.computerName) ||
-      this.toStringValue(device.voice) ||
       this.toStringValue(computer.name) ||
       this.toStringValue(computer.computerName) ||
-      this.toStringValue(computer.voice) ||
       'TRIGGERCMD_NODE';
 
     const id =
@@ -947,7 +1047,19 @@ export class TriggerCMDService {
     }
 
     console.log(`[TRIGGER_NORMALIZE] accepted=true id=${id} name=${name} server=${server} status=${status}`);
-    return { id, name, cmd, server, status: status.toUpperCase(), aliases, provider: 'TriggerCMD', source: server, app, category };
+    return {
+      id,
+      name,
+      cmd,
+      server,
+      status: status.toUpperCase(),
+      aliases,
+      provider: 'TriggerCMD',
+      source: server,
+      app,
+      category,
+      computerId: computerIdCandidate || undefined
+    };
   }
 
   // ──────────────── Helpers ────────────────

@@ -1,8 +1,8 @@
 {
   "TkOA4D6sywhUn5OfHE9w0IIYbTG2": {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ODkyMGUyOGE5MTlmMDAxMzkxMGFjYiIsImlhdCI6MTc3OTQwMzE3Nn0.oebXKsX0D9gwAxD7pqq5iCt1sFXBzT4xWoUt6z5M2F8",
-    "endpoint": "https://www.triggercmd.com/api/command/list",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ODkyMGUyOGE5MTlmMDAxMzkxMGFjYiIsImlhdCI6MTc3OTk4ODg0MH0.rekkBGa_sbhy9Vyk-eoKs-W5u_wa7PGAkbHaazz_L28",
+    "endpoint": "https://www.triggercmd.com/api/command/list?computer_id=6989225147bf4a0016d93efd",
     "deviceCount": 16,
-    "syncedAt": 1779403173450
+    "syncedAt": 1780016262627
   }
 }

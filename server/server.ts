@@ -192,14 +192,43 @@ async function setupApp() {
     const devices = googleHomeService.getCachedDevices();
     if (devices.length > 0) socket.emit('google:device_sync', devices);
 
-    socket.on('user:auth', ({ userId }) => {
+    socket.on('user:auth', async ({ userId }) => {
       if (!userId) return;
+
       socket.data.userId = userId;
       socket.join(`user:${userId}`);
-      socket.emit('trigger:devices', triggerCmdService.getDevicesForUser(userId));
-      if (triggerCmdService.userHasConfig(userId)) {
-        triggerCmdService.syncUserDevices(userId).catch(() => { });
-        triggerCmdService.startUserAutoRefresh(userId);
+
+      try {
+        if (triggerCmdService.userHasConfig(userId)) {
+
+          console.log(`[TRIGGER_AUTH] syncing devices for ${userId}`);
+
+          await triggerCmdService.syncUserDevices(userId);
+
+          console.log(`[TRIGGER_AUTH] sync completed for ${userId}`);
+
+          socket.emit(
+            'trigger:devices',
+            triggerCmdService.getDevicesForUser(userId)
+          );
+
+          triggerCmdService.startUserAutoRefresh(userId);
+
+        } else {
+
+          socket.emit(
+            'trigger:devices',
+            triggerCmdService.getDevicesForUser(userId)
+          );
+
+        }
+      } catch (err) {
+        console.error('[TRIGGER_AUTH] sync failed:', err);
+
+        socket.emit(
+          'trigger:devices',
+          triggerCmdService.getDevicesForUser(userId)
+        );
       }
     });
 
@@ -214,13 +243,21 @@ async function setupApp() {
     });
 
     socket.on('trigger:execute', ({ deviceId }, ack) => {
+      console.log(`[SOCKET_DEBUG] trigger:execute received deviceId=${deviceId} userId=${socket.data.userId || 'null'} socketId=${socket.id}`);
+      console.log(`[SOCKET_DEBUG] trigger:execute start deviceId=${deviceId} userId=${socket.data.userId || 'null'} socketId=${socket.id}`);
       const userId = socket.data.userId;
       const success = userId ? triggerCmdService.executeForUser(userId, deviceId) : triggerCmdService.execute(deviceId);
+      console.log(`[SOCKET_DEBUG] trigger:execute processed deviceId=${deviceId} userId=${userId || 'null'} socketId=${socket.id} success=${success}`);
       ack?.({ success });
     });
 
     socket.on('disconnect', () => {
-      if (socket.data.userId) triggerCmdService.cleanupUserSession(socket.data.userId);
+      console.log(
+        `[TRIGGER_DISCONNECT] user=${socket.data.userId || 'none'} socket=${socket.id}`
+      );
+
+      if (socket.data.userId)
+        triggerCmdService.cleanupUserSession(socket.data.userId);
     });
   });
 }
@@ -228,7 +265,7 @@ async function setupApp() {
 // Start sequence
 if (!process.env.VERCEL) {
   setupApp().catch(err => console.error('Setup failed:', err));
-  
+
   const PORT = process.env.PORT || 3000;
   httpServer.listen(PORT, () => {
     console.log(`ORION CORE running at http://localhost:${PORT}`);

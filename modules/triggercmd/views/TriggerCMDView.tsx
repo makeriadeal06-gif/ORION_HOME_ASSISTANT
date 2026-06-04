@@ -9,15 +9,16 @@ import { OrionCard, OrionPanel, OrionButton, OrionStatusBadge } from '@client/co
 import { Input } from '@ui/input';
 import { motion, AnimatePresence } from 'framer-motion';
 import { triggerManager, TriggerDevice, BridgeConnectionStatus } from '@core/runtime/TriggerManager';
+import { socketManager } from '@core/runtime/SocketManager';
 import { useAuthStore } from '@core/state/stores/useAuthStore';
 import { cn } from '@lib/utils';
 
 const STATUS_META: Record<BridgeConnectionStatus, { label: string; color: string; dot: string }> = {
-  connected:       { label: 'connected',     color: 'text-emerald-500 border-emerald-500/20 bg-emerald-500/10', dot: 'bg-emerald-500' },
-  disconnected:   { label: 'disconnected',   color: 'text-red-500 border-red-500/20 bg-red-500/10',             dot: 'bg-red-500' },
-  syncing:         { label: 'syncing',        color: 'text-amber-500 border-amber-500/20 bg-amber-500/10',         dot: 'bg-amber-500' },
-  invalid_token:   { label: 'invalid token',  color: 'text-red-500 border-red-500/20 bg-red-500/10',             dot: 'bg-red-500' },
-  no_token:        { label: 'no token',       color: 'text-neutral-500 border-neutral-500/20 bg-neutral-500/10',   dot: 'bg-neutral-500' },
+  connected: { label: 'connected', color: 'text-emerald-500 border-emerald-500/20 bg-emerald-500/10', dot: 'bg-emerald-500' },
+  disconnected: { label: 'disconnected', color: 'text-red-500 border-red-500/20 bg-red-500/10', dot: 'bg-red-500' },
+  syncing: { label: 'syncing', color: 'text-amber-500 border-amber-500/20 bg-amber-500/10', dot: 'bg-amber-500' },
+  invalid_token: { label: 'invalid token', color: 'text-red-500 border-red-500/20 bg-red-500/10', dot: 'bg-red-500' },
+  no_token: { label: 'no token', color: 'text-neutral-500 border-neutral-500/20 bg-neutral-500/10', dot: 'bg-neutral-500' },
 };
 
 export function TriggerCMDView() {
@@ -126,7 +127,35 @@ export function TriggerCMDView() {
   }, []);
 
   const handleRun = useCallback((id: string) => {
-    triggerManager.execute(id);
+    console.log('[TRIGGERCMD_CLICK] id=' + id);
+    console.log('[TRIGGERCMD_EXECUTE_START] id=' + id);
+    console.log(
+      '[TRIGGERCMD_VIEW] socket_status connected=' +
+      String(Boolean(socketManager.getSocket()?.connected)) +
+      ' status=' +
+      socketManager.getState() +
+      ' userId=' +
+      (triggerManager.getUserId() || 'null'),
+    );
+
+    (async () => {
+      try {
+        console.log('[TRIGGERCMD_EXECUTE_CALL] deviceId=' + id);
+      } catch (e) {
+        // best-effort
+      }
+
+      const result = await triggerManager.execute(id);
+
+      console.log(
+        '[TRIGGERCMD_EXECUTE_END] deviceId=' +
+        id +
+        ' result=' +
+        result
+      );
+
+      return result;
+    })();
   }, []);
 
   const scheduleClearSyncResult = useCallback((delayMs: number) => {

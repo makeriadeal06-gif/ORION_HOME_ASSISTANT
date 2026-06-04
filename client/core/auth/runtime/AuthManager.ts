@@ -13,6 +13,8 @@ class AuthManager {
   private initialized = false;
   private _isAuthenticated = false;
   private lastKnownUserId: string | null = null;
+  private restoreTimeoutTimer: number | null = null;
+  private readonly RESTORE_TIMEOUT_MS = 10000; // Give Firebase ~10s to emit auth state before falling back to preview
 
   private constructor() { }
 
@@ -32,11 +34,43 @@ class AuthManager {
     if (this.initialized) return;
 
     logger.info('AUTH_RUNTIME', 'Initializing Firebase Auth transition layer...');
+    // Enter restoring session phase and schedule a guarded fallback in case
+    // the Firebase adapter never invokes its change callback (network issues,
+    // blocked 3rd-party cookies, or platform restrictions). This prevents the
+    // runtime from permanently staying in RESTORING_SESSION and blocking
+    // recovery/health loops.
     useAuthStore.getState().setAuth(null, AuthState.RESTORING_SESSION);
     stateSync.setAuthenticating(true);
     authTransitionCoordinator.beginRestore(null);
 
+    try {
+      // Schedule a defensive timeout to release the auth transition to preview
+      // if no auth event arrives within RESTORE_TIMEOUT_MS.
+      this.restoreTimeoutTimer = window.setTimeout(() => {
+        const current = useAuthStore.getState().state;
+        if (current === AuthState.RESTORING_SESSION && !this.lastKnownUserId) {
+          logger.warn('AUTH_RUNTIME', `restore_timeout reason=auth_restore_timed_out ms=${this.RESTORE_TIMEOUT_MS}`);
+          // Move to preview/unauthenticated so the rest of the runtime can stabilize.
+          useAuthStore.getState().setAuth(null, AuthState.UNAUTHENTICATED);
+          stateSync.setAuthenticating(false);
+          SessionPersistence.setStickySession(false);
+          authTransitionCoordinator.completePreviewMode();
+          triggerManager.setUserId(null);
+        }
+        this.restoreTimeoutTimer = null;
+      }, this.RESTORE_TIMEOUT_MS) as unknown as number;
+    } catch (e) {
+      // If timers aren't available in the environment, ignore — the
+      // onAuthChanged handler below will still drive transitions.
+    }
+
     FirebaseAdapter.onAuthChanged(async (user) => {
+      // An auth event arrived — cancel any fallback timer we previously scheduled.
+      if (this.restoreTimeoutTimer) {
+        window.clearTimeout(this.restoreTimeoutTimer);
+        this.restoreTimeoutTimer = null;
+      }
+
       const previousUserId = this.lastKnownUserId;
       stateSync.setAuthenticating(true);
 

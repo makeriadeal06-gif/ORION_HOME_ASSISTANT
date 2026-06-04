@@ -9,6 +9,9 @@ import { useRuntimeStore } from '@core/state/stores/useRuntimeStore';
 import { AuthState } from '@core/state/stores/useAuthStore';
 import { socketRuntime } from '@core/socket/SocketRuntime';
 
+// STABILITY FREEZE
+// DO NOT MODIFY WITHOUT ARCHITECTURAL REVIEW.
+
 const FALLBACK_LEASE_TTL_MS = 12000;
 
 type VoiceRecoverySnapshot = {

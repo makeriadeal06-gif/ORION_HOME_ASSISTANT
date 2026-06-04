@@ -1,5 +1,8 @@
 import { Server } from 'socket.io';
 
+// STABILITY FREEZE
+// DO NOT MODIFY WITHOUT ARCHITECTURAL REVIEW.
+
 type DeviceTrait = {
   name: string;
   value: unknown;

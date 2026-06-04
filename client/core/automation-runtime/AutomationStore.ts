@@ -21,6 +21,9 @@ import {
   createDefaultAutomationTemplate,
 } from './types';
 
+// STABILITY FREEZE
+// DO NOT MODIFY WITHOUT ARCHITECTURAL REVIEW.
+
 const STORAGE_KEY = 'orion.automation.snapshot.v2';
 const STORAGE_BACKUP_KEY = 'orion.automation.snapshot.backup.v2';
 const DRAFT_STORAGE_KEY = 'orion.automation.editor.draft.v1';

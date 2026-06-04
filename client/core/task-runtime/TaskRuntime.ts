@@ -13,6 +13,9 @@ import {
   TaskStatus,
 } from './types';
 
+// STABILITY FREEZE
+// DO NOT MODIFY WITHOUT ARCHITECTURAL REVIEW.
+
 const STORAGE_KEY = 'orion.task.runtime.snapshot.v1';
 const STORAGE_BACKUP_KEY = 'orion.task.runtime.snapshot.backup.v1';
 const SNAPSHOT_VERSION = 1;

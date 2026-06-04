@@ -3,6 +3,8 @@ import { stateSync } from '@core/state/synchronization/StateSync';
 import { logger } from '../logger/Logger';
 import { ProductionRecoveryEngine } from '../production/recovery/ProductionRecoveryEngine';
 import { socketRuntime } from '@core/socket/SocketRuntime';
+import { runtimeIdentity } from './RuntimeIdentity';
+import { AuthState } from '@core/state/stores/useAuthStore';
 
 export enum MqttState {
   IDLE = 'IDLE',
@@ -251,6 +253,18 @@ class MqttManager {
   }
 
   private handleDisconnectedStatus(reason: string) {
+    // If we're still restoring auth, ignore transient MQTT disconnects so
+    // that the MQTT layer is not prematurely marked as degraded/offline due
+    // to authentication restoration delays.
+    try {
+      const authState = runtimeIdentity.getAuthState();
+      if (authState === AuthState.RESTORING_SESSION) {
+        logger.info('MQTT_RECOVERY', `disconnect_ignored reason=${reason} auth=${authState}`);
+        return;
+      }
+    } catch (e) {
+      // If runtimeIdentity isn't ready or throws, continue with normal handling
+    }
     this.lastDisconnectedAt = Date.now();
     this.recoveryFlags.mqttSessionHealthy = false;
     this.recoveryFlags.bridgeHealthy = false;
@@ -302,9 +316,9 @@ class MqttManager {
     this.recoveryFlags.socketHealthy = this.isSocketHealthy();
     this.recoveryFlags.heartbeatHealthy = this.isHeartbeatHealthy();
     this.recoveryFlags.subscriptionsHealthy = this.recoveryFlags.subscriptionsHealthy && this.subscriptionCount > 0;
-    this.recoveryFlags.mqttSessionHealthy = this.recoveryFlags.mqttSessionHealthy || this.state === MqttState.CONNECTED;
-    this.recoveryFlags.bridgeHealthy = this.recoveryFlags.bridgeHealthy || this.recoveryFlags.socketHealthy;
     this.recoveryFlags.telemetryHealthy = this.isTelemetryHealthy();
+    this.recoveryFlags.mqttSessionHealthy = this.isMqttSessionHealthy();
+    this.recoveryFlags.bridgeHealthy = this.recoveryFlags.bridgeHealthy || this.recoveryFlags.socketHealthy;
     this.recoveryFlags.meshHealthy = this.recoveryFlags.meshHealthy || (this.recoveryFlags.socketHealthy && this.recoveryFlags.subscriptionsHealthy && this.recoveryFlags.telemetryHealthy);
 
     logger.info(
@@ -322,6 +336,15 @@ class MqttManager {
     this.syncHealth(true);
     ProductionRecoveryEngine.ping('MQTT_LAYER');
     logger.info('BRIDGE_ACTIVE', `mqtt_active reason=${reason} recovery_ms=${this.lastRecoveryCompletedAt - this.lastRecoveryStartedAt}`);
+  }
+
+  private isMqttSessionHealthy() {
+    return this.recoveryFlags.mqttSessionHealthy
+      || this.state === MqttState.CONNECTED
+      || (this.recoveryFlags.socketHealthy
+        && this.recoveryFlags.heartbeatHealthy
+        && this.recoveryFlags.subscriptionsHealthy
+        && this.recoveryFlags.telemetryHealthy);
   }
 
   private isSocketHealthy() {
@@ -365,6 +388,17 @@ class MqttManager {
   private scheduleReconnect(reason: string, delayMs: number) {
     if (this.reconnectTimer) {
       logger.info('MQTT_RECOVERY', `reconnect_loop_suppressed reason=${reason}`);
+      return;
+    }
+
+    // If we've progressively backed off to the maximum cooldown and a
+    // substantial amount of time has passed since we started recovery,
+    // escalate to FAILED to avoid infinite reconnect loops and let higher-
+    // level recovery coordinate a larger reset.
+    if (this.reconnectCooldown >= this.maxCooldown && Date.now() - this.lastRecoveryStartedAt > this.recoveryValidationWindowMs * 2) {
+      logger.error('MQTT_RECOVERY', `reconnect_escalation reason=${reason} cooldown_ms=${this.reconnectCooldown}`);
+      this.transitionState(MqttState.FAILED, `escalated:${reason}`);
+      this.syncHealth(false);
       return;
     }
 
