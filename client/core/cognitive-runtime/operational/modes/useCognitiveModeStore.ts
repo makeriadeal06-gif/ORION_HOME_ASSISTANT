@@ -2,6 +2,9 @@ import { create } from 'zustand';
 import { CognitiveModeType, CognitiveModeState } from './types';
 import { logger } from '@core/logger/Logger';
 
+// STABILITY FREEZE
+// DO NOT MODIFY WITHOUT ARCHITECTURAL REVIEW.
+
 interface CognitiveModeActions {
   setActiveMode: (mode: CognitiveModeType) => void;
 }

@@ -7,6 +7,9 @@ import {
 import { CognitiveModeType } from './types';
 import { logger } from '@core/logger/Logger';
 
+// STABILITY FREEZE
+// DO NOT MODIFY WITHOUT ARCHITECTURAL REVIEW.
+
 /**
  * COGNITIVE MODE ADAPTER
  * 
