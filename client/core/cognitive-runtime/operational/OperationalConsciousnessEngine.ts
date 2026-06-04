@@ -1,6 +1,8 @@
 import { logger } from '@core/logger/Logger';
 import { useAndroidAwarenessStore } from '@core/android-runtime/awareness/useAndroidAwarenessStore';
 import { actionExecutorEngine } from '@core/action-executor/ActionExecutorEngine';
+import { useCognitiveModeStore } from './modes/useCognitiveModeStore';
+import { CognitiveModeAdapter } from './modes/CognitiveModeAdapter';
 import { 
   OperationalImportance, 
   OperationalDecisionType, 
@@ -17,6 +19,8 @@ import {
  * Interprets system states from Android Awareness, 
  * classifies situations by importance, and produces 
  * operational decisions to be executed by the Action Executor.
+ * 
+ * Modulated by Cognitive Modes.
  */
 class OperationalConsciousnessEngine {
   private static instance: OperationalConsciousnessEngine;
@@ -130,31 +134,20 @@ class OperationalConsciousnessEngine {
   }
 
   private makeDecision(situation: OperationalSituation): OperationalDecision | null {
-    let decisionType = OperationalDecisionType.NO_ACTION;
-    let reason = '';
-
-    switch (situation.importance) {
-      case OperationalImportance.CRITICAL:
-        decisionType = OperationalDecisionType.REDUCE_BACKGROUND_ACTIVITY;
-        reason = `Handling critical situation: ${situation.description}`;
-        break;
-      case OperationalImportance.HIGH:
-        decisionType = OperationalDecisionType.ENTER_POWER_SAVE_MODE;
-        reason = `Handling high priority situation: ${situation.description}`;
-        break;
-      case OperationalImportance.MEDIUM:
-        decisionType = OperationalDecisionType.PRESERVE_NETWORK_USAGE;
-        reason = `Handling medium priority situation: ${situation.description}`;
-        break;
-      case OperationalImportance.LOW:
-        decisionType = OperationalDecisionType.REDUCE_BACKGROUND_ACTIVITY;
-        reason = `Handling low priority situation: ${situation.description}`;
-        break;
+    const activeMode = useCognitiveModeStore.getState().activeMode;
+    
+    // Adapt decision based on active Cognitive Mode
+    const decisionType = CognitiveModeAdapter.adapt(situation, activeMode);
+    
+    if (decisionType === OperationalDecisionType.NO_ACTION) {
+      return null;
     }
 
     if (this.isDecisionOnCooldown(decisionType)) {
       return null;
     }
+
+    const reason = `Mode: ${activeMode} | Situation: ${situation.description}`;
 
     return {
       id: `dec_${Date.now()}`,
