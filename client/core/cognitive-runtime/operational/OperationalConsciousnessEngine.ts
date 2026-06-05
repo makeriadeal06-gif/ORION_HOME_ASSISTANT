@@ -3,6 +3,7 @@ import { useAndroidAwarenessStore } from '@core/android-runtime/awareness/useAnd
 import { actionExecutorEngine } from '@core/action-executor/ActionExecutorEngine';
 import { useCognitiveModeStore } from './modes/useCognitiveModeStore';
 import { CognitiveModeAdapter } from './modes/CognitiveModeAdapter';
+import { operationalMemoryEngine } from './memory/OperationalMemoryEngine';
 import { 
   OperationalImportance, 
   OperationalDecisionType, 
@@ -12,6 +13,7 @@ import {
 
 // STABILITY FREEZE
 // DO NOT MODIFY WITHOUT ARCHITECTURAL REVIEW.
+// FREEZE_PHASE_09_OPERATIONAL_MEMORY
 
 /**
  * OPERATIONAL CONSCIOUSNESS ENGINE
@@ -20,7 +22,7 @@ import {
  * classifies situations by importance, and produces 
  * operational decisions to be executed by the Action Executor.
  * 
- * Modulated by Cognitive Modes.
+ * Modulated by Cognitive Modes and Operational Memory.
  */
 class OperationalConsciousnessEngine {
   private static instance: OperationalConsciousnessEngine;
@@ -54,8 +56,16 @@ class OperationalConsciousnessEngine {
 
   private subscribeToAwareness(): void {
     useAndroidAwarenessStore.subscribe((state) => {
+      this.recordAwarenessToMemory(state);
       this.evaluateSituations(state);
     });
+  }
+
+  private recordAwarenessToMemory(state: any): void {
+    // FREEZE_PHASE_09_OPERATIONAL_MEMORY
+    operationalMemoryEngine.record('awareness_update', 'battery', state.battery);
+    operationalMemoryEngine.record('awareness_update', 'network', state.network);
+    operationalMemoryEngine.record('awareness_update', 'power', state.power);
   }
 
   private evaluateSituations(state: any): void {
@@ -106,6 +116,7 @@ class OperationalConsciousnessEngine {
     }
 
     if (situations.length > 0) {
+      situations.forEach(s => operationalMemoryEngine.record('situation', s.source, s));
       this.processSituations(situations);
     }
   }
@@ -135,7 +146,26 @@ class OperationalConsciousnessEngine {
 
   private makeDecision(situation: OperationalSituation): OperationalDecision | null {
     const activeMode = useCognitiveModeStore.getState().activeMode;
+    // FREEZE_PHASE_09_OPERATIONAL_MEMORY
+    const memory = operationalMemoryEngine.getContextSnapshot();
     
+    // Memory-based refinements
+    if (situation.source === 'battery' && situation.importance === OperationalImportance.HIGH) {
+      // If battery is rising (charging), ignore low battery situation
+      if (memory.batteryTrend === 'rising') {
+        logger.info('OPERATIONAL_CONSCIOUSNESS', 'ignoring_battery_situation trend=rising');
+        return null;
+      }
+    }
+
+    if (situation.source === 'battery' && situation.description.includes('temperature')) {
+      // If temperature is falling, maybe we don't need critical action yet
+      if (memory.temperatureTrend === 'falling' && situation.importance !== OperationalImportance.CRITICAL) {
+        logger.info('OPERATIONAL_CONSCIOUSNESS', 'ignoring_temp_situation trend=falling');
+        return null;
+      }
+    }
+
     // Adapt decision based on active Cognitive Mode
     const decisionType = CognitiveModeAdapter.adapt(situation, activeMode);
     
@@ -147,7 +177,7 @@ class OperationalConsciousnessEngine {
       return null;
     }
 
-    const reason = `Mode: ${activeMode} | Situation: ${situation.description}`;
+    const reason = `Mode: ${activeMode} | Situation: ${situation.description} | BatteryTrend: ${memory.batteryTrend}`;
 
     return {
       id: `dec_${Date.now()}`,
