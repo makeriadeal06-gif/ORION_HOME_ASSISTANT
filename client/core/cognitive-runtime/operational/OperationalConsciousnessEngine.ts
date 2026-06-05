@@ -1,9 +1,10 @@
 import { logger } from '@core/logger/Logger';
 import { useAndroidAwarenessStore } from '@core/android-runtime/awareness/useAndroidAwarenessStore';
-import { actionExecutorEngine } from '@core/action-executor/ActionExecutorEngine';
 import { useCognitiveModeStore } from './modes/useCognitiveModeStore';
 import { CognitiveModeAdapter } from './modes/CognitiveModeAdapter';
 import { operationalMemoryEngine } from './memory/OperationalMemoryEngine';
+import { decisionEngine } from '../decision/DecisionEngine';
+import { PriorityLevel, DecisionCandidate } from '../decision/types';
 import { 
   OperationalImportance, 
   OperationalDecisionType, 
@@ -122,25 +123,45 @@ class OperationalConsciousnessEngine {
   }
 
   private processSituations(situations: OperationalSituation[]): void {
-    // Sort by importance (CRITICAL > HIGH > MEDIUM > LOW)
-    const importanceMap = {
-      [OperationalImportance.CRITICAL]: 4,
-      [OperationalImportance.HIGH]: 3,
-      [OperationalImportance.MEDIUM]: 2,
-      [OperationalImportance.LOW]: 1,
-    };
+    const candidates: DecisionCandidate[] = [];
 
-    const sortedSituations = [...situations].sort((a, b) => 
-      importanceMap[b.importance] - importanceMap[a.importance]
-    );
-
-    for (const situation of sortedSituations) {
+    for (const situation of situations) {
       const decision = this.makeDecision(situation);
       if (decision && decision.type !== OperationalDecisionType.NO_ACTION) {
-        this.dispatchDecision(decision);
-        // Only process the most important decision per evaluation cycle for now
-        break; 
+        const actionPayload = this.mapDecisionToAction(decision);
+        if (actionPayload) {
+          candidates.push({
+            id: decision.id,
+            priority: this.mapImportanceToPriority(situation.importance),
+            action: actionPayload,
+            source: situation.source,
+            reason: decision.reason,
+            timestamp: decision.timestamp
+          });
+
+          // Track cooldown locally
+          this.lastDecisionAt[decision.type] = Date.now();
+        }
       }
+    }
+
+    if (candidates.length > 0) {
+      void decisionEngine.decide(candidates);
+    }
+  }
+
+  private mapImportanceToPriority(importance: OperationalImportance): PriorityLevel {
+    switch (importance) {
+      case OperationalImportance.CRITICAL:
+        return PriorityLevel.CRITICAL;
+      case OperationalImportance.HIGH:
+        return PriorityLevel.HIGH;
+      case OperationalImportance.MEDIUM:
+        return PriorityLevel.MEDIUM;
+      case OperationalImportance.LOW:
+        return PriorityLevel.LOW;
+      default:
+        return PriorityLevel.LOW;
     }
   }
 
@@ -191,17 +212,6 @@ class OperationalConsciousnessEngine {
   private isDecisionOnCooldown(type: OperationalDecisionType): boolean {
     const lastTime = this.lastDecisionAt[type];
     return (Date.now() - lastTime) < this.DECISION_COOLDOWN;
-  }
-
-  private dispatchDecision(decision: OperationalDecision): void {
-    this.lastDecisionAt[decision.type] = Date.now();
-    logger.info('OPERATIONAL_CONSCIOUSNESS', `decision_dispatched type=${decision.type} reason=${decision.reason}`);
-
-    // Map decision to Action Executor payload
-    const actionPayload = this.mapDecisionToAction(decision);
-    if (actionPayload) {
-      void actionExecutorEngine.execute(actionPayload);
-    }
   }
 
   private mapDecisionToAction(decision: OperationalDecision): any {

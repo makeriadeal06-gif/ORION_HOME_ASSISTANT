@@ -316,27 +316,42 @@ class MqttManager {
   }
 
   private reconcileHealth(reason: string) {
-    this.recoveryFlags.socketHealthy = this.isSocketHealthy();
-    this.recoveryFlags.heartbeatHealthy = this.isHeartbeatHealthy();
-    this.recoveryFlags.telemetryHealthy = this.isTelemetryHealthy();
-    this.recoveryFlags.mqttSessionHealthy = this.isMqttSessionHealthy();
-    this.recoveryFlags.bridgeHealthy = this.recoveryFlags.bridgeHealthy || this.recoveryFlags.socketHealthy;
+    const socketHealthy = this.isSocketHealthy();
+    const heartbeatHealthy = this.isHeartbeatHealthy();
+    const telemetryHealthy = this.isTelemetryHealthy();
+    const sessionHealthy = this.isMqttSessionHealthy();
+    const subscriptionsHealthy = this.recoveryFlags.subscriptionsHealthy;
+    
+    // Bridge and Mesh are considered healthy if we have telemetry/heartbeat 
+    // and the backend says so. If they were healthy once and we haven't 
+    // disconnected, we maintain that state until proven otherwise.
+    const meshHealthy = this.recoveryFlags.meshHealthy;
+    const bridgeHealthy = this.recoveryFlags.bridgeHealthy || socketHealthy;
+
+    // Sync recovery flags for logging
+    this.recoveryFlags.socketHealthy = socketHealthy;
+    this.recoveryFlags.heartbeatHealthy = heartbeatHealthy;
+    this.recoveryFlags.telemetryHealthy = telemetryHealthy;
+    this.recoveryFlags.mqttSessionHealthy = sessionHealthy;
+    this.recoveryFlags.bridgeHealthy = bridgeHealthy;
 
     logger.info(
       'RECOVERY_COMPLETION',
-      `reason=${reason} socket=${String(this.recoveryFlags.socketHealthy)} heartbeat=${String(this.recoveryFlags.heartbeatHealthy)} subscriptions=${String(this.recoveryFlags.subscriptionsHealthy)} mqtt_session=${String(this.recoveryFlags.mqttSessionHealthy)} telemetry=${String(this.recoveryFlags.telemetryHealthy)} mesh=${String(this.recoveryFlags.meshHealthy)} bridge=${String(this.recoveryFlags.bridgeHealthy)}`,
+      `reason=${reason} socket=${String(socketHealthy)} heartbeat=${String(heartbeatHealthy)} subscriptions=${String(subscriptionsHealthy)} mqtt_session=${String(sessionHealthy)} telemetry=${String(telemetryHealthy)} mesh=${String(meshHealthy)} bridge=${String(bridgeHealthy)}`,
     );
 
-    if (!this.recoveryFlags.socketHealthy || !this.recoveryFlags.heartbeatHealthy || !this.recoveryFlags.subscriptionsHealthy || !this.recoveryFlags.mqttSessionHealthy || !this.recoveryFlags.telemetryHealthy || !this.recoveryFlags.meshHealthy || !this.recoveryFlags.bridgeHealthy) {
-      logger.info('MQTT_RECONCILIATION', `recovery_incomplete reason=${reason}`);
+    // CRITICAL FIX: If all core components are healthy, we ARE connected.
+    // We don't want to stay in DEGRADED if the data is flowing.
+    if (socketHealthy && heartbeatHealthy && subscriptionsHealthy && sessionHealthy && telemetryHealthy) {
+      this.lastRecoveryCompletedAt = Date.now();
+      this.transitionState(MqttState.CONNECTED, `reconciled:${reason}`);
+      this.syncHealth(true);
+      ProductionRecoveryEngine.ping('MQTT_LAYER');
+      logger.info('BRIDGE_ACTIVE', `mqtt_active reason=${reason} recovery_ms=${this.lastRecoveryCompletedAt - this.lastRecoveryStartedAt}`);
       return;
     }
 
-    this.lastRecoveryCompletedAt = Date.now();
-    this.transitionState(MqttState.CONNECTED, `reconciled:${reason}`);
-    this.syncHealth(true);
-    ProductionRecoveryEngine.ping('MQTT_LAYER');
-    logger.info('BRIDGE_ACTIVE', `mqtt_active reason=${reason} recovery_ms=${this.lastRecoveryCompletedAt - this.lastRecoveryStartedAt}`);
+    logger.info('MQTT_RECONCILIATION', `recovery_incomplete reason=${reason} state=${this.state}`);
   }
 
   private isMqttSessionHealthy() {
