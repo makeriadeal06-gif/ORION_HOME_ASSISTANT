@@ -6,6 +6,7 @@ import { operationalMemoryEngine } from '../memory/OperationalMemoryEngine';
 // STABILITY FREEZE
 // DO NOT MODIFY WITHOUT ARCHITECTURAL REVIEW.
 // FREEZE_PHASE_09_OPERATIONAL_MEMORY
+// FREEZE_PHASE_14_CONTROLLED_AUTONOMY
 
 interface CognitiveModeActions {
   setActiveMode: (mode: CognitiveModeType) => void;
@@ -16,6 +17,7 @@ export const useCognitiveModeStore = create<CognitiveModeState & CognitiveModeAc
   lastChangedAt: Date.now(),
 
   setActiveMode: (mode) => {
+    // FREEZE_PHASE_14_CONTROLLED_AUTONOMY
     logger.info('COGNITIVE_MODES', `mode_transition target=${mode}`);
     
     // FREEZE_PHASE_09_OPERATIONAL_MEMORY

@@ -15,6 +15,7 @@ import {
 // STABILITY FREEZE
 // DO NOT MODIFY WITHOUT ARCHITECTURAL REVIEW.
 // FREEZE_PHASE_09_OPERATIONAL_MEMORY
+// FREEZE_PHASE_14_CONTROLLED_AUTONOMY
 
 /**
  * OPERATIONAL CONSCIOUSNESS ENGINE
@@ -123,6 +124,7 @@ class OperationalConsciousnessEngine {
   }
 
   private processSituations(situations: OperationalSituation[]): void {
+    // FREEZE_PHASE_14_CONTROLLED_AUTONOMY
     const candidates: DecisionCandidate[] = [];
 
     for (const situation of situations) {
@@ -146,6 +148,7 @@ class OperationalConsciousnessEngine {
     }
 
     if (candidates.length > 0) {
+      // FREEZE_PHASE_14_CONTROLLED_AUTONOMY
       void decisionEngine.decide(candidates);
     }
   }

@@ -8,6 +8,7 @@ import { AuthState } from '@core/state/stores/useAuthStore';
 
 // STABILITY FREEZE
 // DO NOT MODIFY WITHOUT ARCHITECTURAL REVIEW.
+// FREEZE_PHASE_12_MQTT_HEALTH_REFINEMENT
 
 export enum MqttState {
   IDLE = 'IDLE',
@@ -46,6 +47,7 @@ class MqttManager {
   private lastRecoveryCompletedAt = 0;
   private subscriptionCount = 0;
   private staleWatchdogHits = 0;
+  // FREEZE_PHASE_12_MQTT_HEALTH_REFINEMENT
   private recoveryFlags = {
     socketHealthy: false,
     heartbeatHealthy: false,
@@ -112,6 +114,7 @@ class MqttManager {
     });
 
     socket.on('mqtt:telemetry', (data: { type: string; connected: boolean; subscriptionsHealthy?: boolean; subscriptionCount?: number; lastPacketAt?: number; heartbeatAt?: number; meshState?: string; topic?: string }) => {
+      // FREEZE_PHASE_12_MQTT_HEALTH_REFINEMENT
       this.lastTelemetryAt = Date.now();
       this.recoveryFlags.telemetryHealthy = true;
       if (typeof data.heartbeatAt === 'number') {
@@ -137,6 +140,7 @@ class MqttManager {
     });
 
     socket.on('mqtt:message', ({ topic, payload }: { topic: string, payload: string }) => {
+      // FREEZE_PHASE_12_MQTT_HEALTH_REFINEMENT
       // Trace-only reporting for data packets to keep log clean
       logger.trace('MQTT', `Payload_Ingress: ${topic}`);
       this.lastMqttHeartbeatAt = Date.now();
@@ -180,6 +184,7 @@ class MqttManager {
       return;
     }
     this.watchdogTimer = window.setInterval(() => {
+      // FREEZE_PHASE_12_MQTT_HEALTH_REFINEMENT
       const now = Date.now();
       const heartbeatAge = this.lastMqttHeartbeatAt ? now - this.lastMqttHeartbeatAt : -1;
       const telemetryAge = this.lastTelemetryAt ? now - this.lastTelemetryAt : -1;
@@ -256,6 +261,7 @@ class MqttManager {
   }
 
   private handleDisconnectedStatus(reason: string) {
+    // FREEZE_PHASE_12_MQTT_HEALTH_REFINEMENT
     // If we're still restoring auth, ignore transient MQTT disconnects so
     // that the MQTT layer is not prematurely marked as degraded/offline due
     // to authentication restoration delays.
@@ -297,6 +303,7 @@ class MqttManager {
   }
 
   private reconcileOrReconnect(reason: string) {
+    // FREEZE_PHASE_12_MQTT_HEALTH_REFINEMENT
     const socketHealthy = this.isSocketHealthy();
     const mqttFresh = this.isMqttFresh();
     logger.info('MQTT_WATCHDOG', `reconnect_gate reason=${reason} socket_healthy=${String(socketHealthy)} mqtt_fresh=${String(mqttFresh)} telemetry_healthy=${String(this.recoveryFlags.telemetryHealthy)} state=${this.state}`);
@@ -316,6 +323,7 @@ class MqttManager {
   }
 
   private reconcileHealth(reason: string) {
+    // FREEZE_PHASE_12_MQTT_HEALTH_REFINEMENT
     const socketHealthy = this.isSocketHealthy();
     const heartbeatHealthy = this.isHeartbeatHealthy();
     const telemetryHealthy = this.isTelemetryHealthy();
@@ -355,6 +363,7 @@ class MqttManager {
   }
 
   private isMqttSessionHealthy() {
+    // FREEZE_PHASE_12_MQTT_HEALTH_REFINEMENT
     return this.recoveryFlags.mqttSessionHealthy
       || this.state === MqttState.CONNECTED
       || (this.recoveryFlags.socketHealthy
@@ -427,6 +436,7 @@ class MqttManager {
   }
 
   private transitionState(nextState: MqttState, reason: string) {
+    // FREEZE_PHASE_12_MQTT_HEALTH_REFINEMENT
     if (this.state === nextState) {
       logger.info('MQTT_STATE_TRANSITION', `state_unchanged state=${nextState} reason=${reason}`);
       return;

@@ -1,5 +1,5 @@
 import { logger } from '../../logger/Logger';
-import { actionExecutorEngine } from '../../action-executor/ActionExecutorEngine';
+import { autonomyEngine } from '../autonomy/AutonomyEngine';
 import { DecisionCandidate, DecisionResult, PriorityLevel } from './types';
 
 /**
@@ -8,6 +8,7 @@ import { DecisionCandidate, DecisionResult, PriorityLevel } from './types';
  * Orchestrates multiple operational situations, filters them by priority,
  * and selects the optimal action to execute.
  */
+// FREEZE_PHASE_14_CONTROLLED_AUTONOMY
 class DecisionEngine {
   private static instance: DecisionEngine;
 
@@ -25,6 +26,7 @@ class DecisionEngine {
    * and chooses the best action to execute.
    */
   public async decide(candidates: DecisionCandidate[]): Promise<DecisionResult> {
+    // FREEZE_PHASE_14_CONTROLLED_AUTONOMY
     if (candidates.length === 0) {
       return {
         selected: null,
@@ -58,8 +60,9 @@ class DecisionEngine {
       });
     }
 
-    // Execute the best action
-    void actionExecutorEngine.execute(selected.action);
+    // Delegate to Autonomy Engine to decide HOW to execute
+    // FREEZE_PHASE_14_CONTROLLED_AUTONOMY
+    void autonomyEngine.process(selected);
 
     return {
       selected,

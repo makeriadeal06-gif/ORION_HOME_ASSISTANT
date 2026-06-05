@@ -9,6 +9,7 @@ import { AutomationActionHandler } from './handlers/AutomationActionHandler';
 
 // STABILITY FREEZE
 // DO NOT MODIFY WITHOUT ARCHITECTURAL REVIEW.
+// FREEZE_PHASE_14_CONTROLLED_AUTONOMY
 
 class ActionExecutorEngine {
   private static instance: ActionExecutorEngine;
@@ -38,6 +39,7 @@ class ActionExecutorEngine {
   }
 
   public async execute(action: ActionPayload): Promise<ExecutionResult> {
+    // FREEZE_PHASE_14_CONTROLLED_AUTONOMY
     const handler = this.handlers.find((h) => h.canHandle(action));
 
     if (!handler) {
