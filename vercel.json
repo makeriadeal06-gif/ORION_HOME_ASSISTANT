@@ -2,7 +2,8 @@
   "version": 2,
   "functions": {
     "api/server.cjs": {
-      "runtime": "nodejs20.x"
+      "runtime": "nodejs20.x",
+      "includeFiles": "dist/server.cjs"
     }
   },
   "rewrites": [

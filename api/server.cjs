@@ -5,8 +5,8 @@
 
 try {
   const srv = require('../dist/server.cjs');
-  // If the bundled module exports the app as default (ESM -> transpiled), prefer that
-  const exported = srv && (srv.default || srv);
+  // Handle esbuild CJS exports: named 'app' or default
+  const exported = srv && (srv.app || srv.default || srv);
   module.exports = exported;
 } catch (err) {
   // Provide a clearer error at runtime rather than a cryptic module not found
