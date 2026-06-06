@@ -1,11 +1,4 @@
 {
-  "version": 2,
-  "functions": {
-    "api/server.cjs": {
-      "runtime": "nodejs",
-      "includeFiles": "dist/server.cjs"
-    }
-  },
   "rewrites": [
     {
       "source": "/api/(.*)",
