@@ -144,14 +144,54 @@ async function setupApp() {
   app.post('/api/voice/tts', async (req, res) => {
     const { text, sessionId, voiceConfig } = req.body;
     if (!text) return res.status(400).json({ error: 'Text required' });
-    if (!elevenLabsVoiceService.isConfigured(voiceConfig?.voiceId)) return res.status(503).json({ error: 'TTS not configured' });
+    // Expose the requested/resolved voice hints even when backend is not configured
+    const requestedVoiceId = voiceConfig?.voiceId || 'none';
+    if (!elevenLabsVoiceService.isConfigured(voiceConfig?.voiceId)) {
+      // Forward lightweight diagnostic headers so the client can observe what was sent
+      try {
+        res.set('X-TTS-Requested-Voice-Id', String(requestedVoiceId));
+        res.set('X-TTS-Resolved-Voice-Id', String(elevenLabsVoiceService.getActiveVoiceId() || 'none'));
+        res.set('X-TTS-Voice-Source', 'none');
+        res.set('X-TTS-Voice-Validated', 'unknown');
+        res.set('X-TTS-Likely-Profile-Alias', 'unknown');
+        res.set('X-TTS-Model', String(elevenLabsVoiceService.getModelId() || 'none'));
+        res.set('X-TTS-Output-Format', String(elevenLabsVoiceService.getOutputFormat() || 'none'));
+      } catch (e) {
+        // Intentionally ignore header-setting errors to avoid changing behaviour
+      }
+      return res.status(503).json({ error: 'TTS not configured' });
+    }
+    console.log(
+      `[VOICE_TRACE] source=BackendVoiceRoute action=request_received sessionId=${sessionId || 'none'} requestedVoiceId=${voiceConfig?.voiceId || 'none'} textLength=${typeof text === 'string' ? text.length : 0}`
+    );
+
+    // concise backend trace for voice id received at server
+    console.log(`[VOICE_TRACE] source=Backend voiceId=${voiceConfig?.voiceId || 'none'} sessionId=${sessionId || 'none'}`);
 
     try {
       const result = await elevenLabsVoiceService.synthesize(req.body);
-      res.set('Content-Type', result.contentType);
-      res.set('X-TTS-Provider', 'elevenlabs');
+      console.log(
+        `[VOICE_TRACE] source=BackendVoiceRoute action=response_ready sessionId=${sessionId || 'none'} requestedVoiceId=${voiceConfig?.voiceId || 'none'} contentType=${result.contentType} voiceId=${result.voiceId}`
+      );
+      // Forward forensic headers so the browser can observe requested vs resolved voice
+      try {
+        res.set('Content-Type', result.contentType);
+        res.set('X-TTS-Provider', 'elevenlabs');
+        res.set('X-TTS-Requested-Voice-Id', String(result.requestedVoiceId || 'none'));
+        res.set('X-TTS-Resolved-Voice-Id', String(result.voiceId || 'none'));
+        res.set('X-TTS-Voice-Source', String(result.voiceSource || 'unknown'));
+        res.set('X-TTS-Voice-Validated', String(result.voiceValidationState || 'unknown'));
+        res.set('X-TTS-Likely-Profile-Alias', String(result.likelyProfileAlias ?? 'unknown'));
+        res.set('X-TTS-Model', String(result.modelId || 'unknown'));
+        res.set('X-TTS-Output-Format', String(result.outputFormat || 'unknown'));
+      } catch (e) {
+        // Do not alter behavior if header setting fails
+      }
       result.audioStream.pipe(res);
     } catch (err: any) {
+      console.error(
+        `[VOICE_TRACE] source=BackendVoiceRoute action=response_error sessionId=${sessionId || 'none'} requestedVoiceId=${voiceConfig?.voiceId || 'none'} error=${err?.message || err}`
+      );
       res.status(err instanceof ElevenLabsServiceError ? err.statusCode : 502).json({ error: err.message });
     }
   });
