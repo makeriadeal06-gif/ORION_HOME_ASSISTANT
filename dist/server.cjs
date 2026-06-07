@@ -249,15 +249,43 @@ var TriggerCMDService = class _TriggerCMDService {
   async tryInitFirestore() {
     if (this.firestoreInitDone) return;
     this.firestoreInitDone = true;
+    console.log("[FIRESTORE_INIT] Starting initialization...");
     const keyJson = process.env.FIREBASE_SERVICE_ACCOUNT_JSON || process.env.FIREBASE_SERVICE_ACCOUNT;
     if (!keyJson) {
+      console.log("[FIRESTORE_INIT] Skipping: FIREBASE_SERVICE_ACCOUNT not configured");
       return;
     }
     try {
       const adminModule = await import("firebase-admin");
       const admin = adminModule.default || adminModule;
-      const serviceAccount = typeof keyJson === "string" ? JSON.parse(keyJson) : keyJson;
+      let serviceAccount;
+      if (typeof keyJson === "string") {
+        const trimmed = keyJson.trim();
+        console.log(`[FIRESTORE_CONFIG] Raw length: ${trimmed.length} chars`);
+        try {
+          serviceAccount = JSON.parse(trimmed);
+          if (typeof serviceAccount === "string") {
+            console.log("[FIRESTORE_CONFIG] Detected doubly-encoded JSON string, parsing second layer...");
+            serviceAccount = JSON.parse(serviceAccount);
+          }
+        } catch (parseErr) {
+          console.error("[FIRESTORE_ERROR] Initial JSON parse failed:", parseErr.message);
+          const start = trimmed.substring(0, 15);
+          const end = trimmed.substring(trimmed.length - 15);
+          console.error(`[FIRESTORE_CONFIG] Format check - starts with: "${start}", ends with: "${end}"`);
+          if (trimmed.startsWith("'") && trimmed.endsWith("'")) {
+            console.log("[FIRESTORE_CONFIG] Found literal single quotes wrapper, attempting recovery...");
+            const unquoted = trimmed.slice(1, -1).trim();
+            serviceAccount = JSON.parse(unquoted);
+          } else {
+            throw parseErr;
+          }
+        }
+      } else {
+        serviceAccount = keyJson;
+      }
       if (!admin.apps || admin.apps.length === 0) {
+        console.log("[FIRESTORE_INIT] Initializing Firebase Admin SDK...");
         admin.initializeApp({
           credential: admin.credential.cert(serviceAccount),
           projectId: serviceAccount.project_id || process.env.GCLOUD_PROJECT
@@ -265,9 +293,9 @@ var TriggerCMDService = class _TriggerCMDService {
       }
       this.firestoreDb = admin.firestore();
       this.firestoreEnabled = true;
-      console.log("[TRIGGER_PERSIST] Firestore persistence enabled");
+      console.log("[FIRESTORE_INIT] Firestore initialized successfully");
     } catch (err) {
-      console.log("[TRIGGER_PERSIST] Failed to initialize Firestore:", err);
+      console.error("[FIRESTORE_ERROR] Initialization failed:", err.message || err);
       this.firestoreEnabled = false;
       this.firestoreDb = null;
     }

@@ -44,7 +44,7 @@ OrionCard.displayName = "OrionCard";
 
 // --- OrionButton ---
 export interface OrionButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost' | 'outline' | 'cognitive';
+  variant?: 'primary' | 'secondary' | 'ghost' | 'outline' | 'cognitive' | 'destructive';
   size?: 'sm' | 'md' | 'lg' | 'icon';
 }
 
@@ -56,6 +56,7 @@ export const OrionButton = React.forwardRef<HTMLButtonElement, OrionButtonProps>
       ghost: "text-neutral-400 hover:text-white hover:bg-white/5",
       outline: "border border-primary/50 text-primary hover:bg-primary/10 font-medium",
       cognitive: "bg-state-cognitive/20 text-state-cognitive border border-state-cognitive/30 animate-cognitive-pulse",
+      destructive: "bg-red-500/20 text-red-500 border border-red-500/30 hover:bg-red-500/40 transition-colors",
     };
 
     const sizes = {

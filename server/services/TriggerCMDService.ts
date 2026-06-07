@@ -89,9 +89,11 @@ export class TriggerCMDService {
     if (this.firestoreInitDone) return;
     this.firestoreInitDone = true;
 
+    console.log('[FIRESTORE_INIT] Starting initialization...');
+
     const keyJson = process.env.FIREBASE_SERVICE_ACCOUNT_JSON || process.env.FIREBASE_SERVICE_ACCOUNT;
     if (!keyJson) {
-      // Not configured — keep using file-based persistence
+      console.log('[FIRESTORE_INIT] Skipping: FIREBASE_SERVICE_ACCOUNT not configured');
       return;
     }
 
@@ -99,18 +101,57 @@ export class TriggerCMDService {
       // Dynamic import so code does not crash if firebase-admin is not installed
       const adminModule = await import('firebase-admin');
       const admin = (adminModule as any).default || adminModule;
-      const serviceAccount = typeof keyJson === 'string' ? JSON.parse(keyJson) : keyJson;
+      
+      let serviceAccount: any;
+      
+      if (typeof keyJson === 'string') {
+        const trimmed = keyJson.trim();
+        console.log(`[FIRESTORE_CONFIG] Raw length: ${trimmed.length} chars`);
+        
+        try {
+          // Attempt 1: Standard JSON parse
+          serviceAccount = JSON.parse(trimmed);
+          
+          // Handle doubly-encoded JSON (common in some CI/CD or platform env vars)
+          if (typeof serviceAccount === 'string') {
+            console.log('[FIRESTORE_CONFIG] Detected doubly-encoded JSON string, parsing second layer...');
+            serviceAccount = JSON.parse(serviceAccount);
+          }
+        } catch (parseErr: any) {
+          console.error('[FIRESTORE_ERROR] Initial JSON parse failed:', parseErr.message);
+          
+          // Log non-sensitive metadata for debugging
+          const start = trimmed.substring(0, 15);
+          const end = trimmed.substring(trimmed.length - 15);
+          console.error(`[FIRESTORE_CONFIG] Format check - starts with: "${start}", ends with: "${end}"`);
+
+          // Attempt recovery: if it's wrapped in literal single quotes
+          if (trimmed.startsWith("'") && trimmed.endsWith("'")) {
+            console.log('[FIRESTORE_CONFIG] Found literal single quotes wrapper, attempting recovery...');
+            const unquoted = trimmed.slice(1, -1).trim();
+            serviceAccount = JSON.parse(unquoted);
+          } else {
+            throw parseErr;
+          }
+        }
+      } else {
+        serviceAccount = keyJson;
+      }
+
       if (!admin.apps || admin.apps.length === 0) {
+        console.log('[FIRESTORE_INIT] Initializing Firebase Admin SDK...');
         admin.initializeApp({
           credential: admin.credential.cert(serviceAccount),
           projectId: serviceAccount.project_id || process.env.GCLOUD_PROJECT,
         });
       }
+
       this.firestoreDb = admin.firestore();
       this.firestoreEnabled = true;
-      console.log('[TRIGGER_PERSIST] Firestore persistence enabled');
-    } catch (err) {
-      console.log('[TRIGGER_PERSIST] Failed to initialize Firestore:', err);
+      console.log('[FIRESTORE_INIT] Firestore initialized successfully');
+    } catch (err: any) {
+      console.error('[FIRESTORE_ERROR] Initialization failed:', err.message || err);
+      // Fallback: stay on file-based persistence
       this.firestoreEnabled = false;
       this.firestoreDb = null;
     }

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { OrionDevice, EcosystemMap } from '../types';
+import { OrionDevice, EcosystemMap, DeviceType } from '../types';
+import { DeviceConnectionStatus } from '../../device-runtime/lifecycle/DeviceLifecycle';
 import { EcosystemMapper } from '../ecosystem/EcosystemMapper';
 
 interface DeviceState {
@@ -61,7 +62,7 @@ export const useDeviceStore = create<DeviceState & DeviceActions>((set, get) => 
     set((state) => {
       const d = state.devices[id];
       if (!d) return state;
-      return { devices: { ...state.devices, [id]: { ...d, status: 'ONLINE' } } };
+      return { devices: { ...state.devices, [id]: { ...d, status: DeviceConnectionStatus.ONLINE } } };
     });
     get().syncEcosystem();
   },
@@ -70,7 +71,7 @@ export const useDeviceStore = create<DeviceState & DeviceActions>((set, get) => 
     set((state) => {
       const d = state.devices[id];
       if (!d) return state;
-      return { devices: { ...state.devices, [id]: { ...d, status: 'OFFLINE' } } };
+      return { devices: { ...state.devices, [id]: { ...d, status: DeviceConnectionStatus.OFFLINE } } };
     });
     get().syncEcosystem();
   },

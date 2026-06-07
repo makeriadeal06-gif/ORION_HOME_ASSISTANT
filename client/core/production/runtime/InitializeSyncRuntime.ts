@@ -35,7 +35,7 @@ class InitializeSyncRuntime {
     try {
       // Automations snapshot/hydration is managed by automationStoreService.init during RuntimeManager boot
       // We still ensure owner-specific reconciliation if authenticated
-      if (runtimeIdentity.getAuthState && runtimeIdentity.getAuthState() !== 'ANONYMOUS') {
+      if (runtimeIdentity.isAuthenticated()) {
         // AutomationStoreService already initialized earlier; force a reconcile
         automationStoreService.listAutomations();
         logger.info('INITIALIZE_SYNC', 'Automation Store reconciled');

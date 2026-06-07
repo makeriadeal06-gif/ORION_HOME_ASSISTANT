@@ -27,10 +27,27 @@ async function main() {
 
   try {
     if (keyEnv && !emulator) {
-      // keyEnv may be raw JSON or a path
       let serviceAccount;
-      if (keyEnv.trim().startsWith('{')) {
-        serviceAccount = JSON.parse(keyEnv);
+      const trimmed = keyEnv.trim();
+      
+      if (trimmed.startsWith('{') || trimmed.startsWith('"') || trimmed.startsWith("'")) {
+        try {
+          // Attempt 1: Standard JSON parse
+          serviceAccount = JSON.parse(trimmed);
+          
+          // Handle doubly-encoded JSON
+          if (typeof serviceAccount === 'string') {
+            serviceAccount = JSON.parse(serviceAccount);
+          }
+        } catch (parseErr) {
+          // Attempt recovery: if it's wrapped in literal single quotes
+          if (trimmed.startsWith("'") && trimmed.endsWith("'")) {
+            const unquoted = trimmed.slice(1, -1).trim();
+            serviceAccount = JSON.parse(unquoted);
+          } else {
+            throw parseErr;
+          }
+        }
       } else {
         // treat as path
         const fs = require('fs');

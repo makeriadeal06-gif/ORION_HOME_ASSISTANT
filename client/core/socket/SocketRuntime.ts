@@ -52,7 +52,7 @@ class SocketRuntime {
     const envVercel = (import.meta as any)?.env?.VERCEL;
     const hostIsVercel = typeof window !== 'undefined' && window.location && typeof window.location.hostname === 'string' && window.location.hostname.endsWith('.vercel.app');
     if (envVercel || hostIsVercel) {
-      this.status = SocketStatus.FAILED;
+      this.status = SocketStatus.ERROR;
       logger.info('SOCKET_RUNTIME', 'Persistent WebSocket transport disabled in Vercel/serverless environment — skipping socket creation.');
       return;
     }
