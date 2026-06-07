@@ -1,4 +1,4 @@
-import{br as en}from"./vendor-core-DLgxGhcl.js";const tn=()=>{};var Ve={};/**
+import{bu as en}from"./vendor-core-BJ0wfRok.js";const tn=()=>{};var Ve={};/**
  * @license
  * Copyright 2017 Google LLC
  *

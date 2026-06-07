@@ -7,6 +7,7 @@ Status: active during Phase 14 only.
 Structural Freeze Scope
 - `SpeechPipeline`
 - `VoiceRuntimeManager`
+- `docs/VOICE_MANAGER_V1_FREEZE.md`
 - voice queue system
 - stale protection
 - `TriggerCMD` integration
